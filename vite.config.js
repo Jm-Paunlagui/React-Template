@@ -1,11 +1,56 @@
-import { defineConfig } from 'vite'
-import react, { reactCompilerPreset } from '@vitejs/plugin-react'
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 import babel from '@rolldown/plugin-babel'
 
 // https://vite.dev/config/
+// export default defineConfig({
+//   plugins: [
+//     react(),
+//     babel({ presets: [reactCompilerPreset()] })
+//   ],
+// })
+
 export default defineConfig({
-  plugins: [
-    react(),
-    babel({ presets: [reactCompilerPreset()] })
-  ],
-})
+    plugins: [react(), tailwindcss(), babel({ presets: [reactCompilerPreset()] })],
+    server: {
+        host: true,
+        port: 5173,
+    },
+    base: "/", // Important for IIS deployment
+    build: {
+        outDir: "dist",
+        assetsDir: "assets",
+        // Ensure static files are properly copied
+        rollupOptions: {
+            input: {
+                main: "index.html",
+            },
+            output: {
+                manualChunks(id) {
+                    if (id.includes("node_modules")) {
+                        if (id.includes("react") || id.includes("react-dom")) {
+                            return "vendor-react";
+                        }
+                        if (id.includes("react-router-dom")) {
+                            return "vendor-router";
+                        }
+                        if (
+                            id.includes("react-toastify") ||
+                            id.includes("@headlessui") ||
+                            id.includes("@heroicons") ||
+                            id.includes("@fortawesome")
+                        ) {
+                            return "vendor-ui";
+                        }
+                        return "vendor";
+                    }
+                },
+            },
+        },
+        chunkSizeWarningLimit: 1500,
+        // Copy additional files if needed
+        copyPublicDir: true,
+    },
+    // Ensure static files from public directory are copied
+    publicDir: "public",
+});
