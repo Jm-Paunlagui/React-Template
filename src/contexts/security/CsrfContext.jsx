@@ -1,66 +1,39 @@
 /**
- * CsrfContext.jsx
- * ───────────────
- * React context that exposes the CSRF token lifecycle to the component tree.
- * Wraps csrfManager so UI components never import it directly.
+ * CsrfContext — React context wrapper around CsrfMiddleware singleton.
+ *
+ * Initializes CSRF on app startup and exposes token state for
+ * debug UIs or status displays. HttpClient uses CsrfMiddleware
+ * directly — you rarely need useCsrf() in feature code.
  */
 
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import csrfMiddleware from "../../middleware/security/CsrfMiddleware";
+
 /* eslint-disable react-refresh/only-export-components */
-import {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
-import csrfManager from "../../middleware/security/CsrfMiddleware";
 
 const CsrfContext = createContext(null);
 
-// Module-level flag prevents double-initialisation during StrictMode double-mount.
-let _globalContextInitialized = false;
-
-// ── Provider ───────────────────────────────────────────────────────────────
-
-export const CsrfProvider = ({ children }) => {
+export function CsrfProvider({ children }) {
     const [csrfToken, setCsrfToken] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isInitialized, setIsInitialized] = useState(false);
-    const [tokenExpiration, setTokenExpiration] = useState(null);
-    const initRef = useRef(false);
+    const initialized = useRef(false);
 
-    // ── One-time initialisation ────────────────────────────────────────────
     useEffect(() => {
-        if (initRef.current || _globalContextInitialized) return;
+        if (initialized.current) return;
+        initialized.current = true;
 
         const init = async () => {
             try {
-                initRef.current = true;
-                _globalContextInitialized = true;
                 setLoading(true);
                 setError(null);
-
-                console.debug("[CsrfContext] initialising …");
-                const refreshed = await csrfManager.handlePageRefresh();
-                const token = refreshed
-                    ? csrfManager.getToken()
-                    : await csrfManager.initialize();
-
+                const token = await csrfMiddleware.initialize();
                 setCsrfToken(token);
                 setIsInitialized(true);
-
-                const info = csrfManager.getDebugInfo();
-                if (info.tokenExpiresAt)
-                    setTokenExpiration(info.tokenExpiresAt);
-                console.debug("[CsrfContext] ready");
             } catch (err) {
-                console.error("[CsrfContext] init failed:", err);
                 setError(err.message);
-                setCsrfToken(null);
-                initRef.current = false;
-                _globalContextInitialized = false;
+                initialized.current = false;
             } finally {
                 setLoading(false);
             }
@@ -69,64 +42,52 @@ export const CsrfProvider = ({ children }) => {
         init();
     }, []);
 
-    // ── Listen for token updates ───────────────────────────────────────────
     useEffect(() => {
         if (!isInitialized) return;
-        return csrfManager.addListener((token) => {
+        const unsubscribe = csrfMiddleware.addListener((token) => {
             setCsrfToken(token);
-            const info = csrfManager.getDebugInfo();
-            if (info.tokenExpiresAt) setTokenExpiration(info.tokenExpiresAt);
         });
+        return unsubscribe;
     }, [isInitialized]);
 
-    // ── Actions ───────────────────────────────────────────────────────────
-    const refreshToken = useCallback(async () => {
+    const refreshToken = async () => {
         try {
             setLoading(true);
-            setError(null);
-            const token = await csrfManager.forceRefresh();
+            const token = await csrfMiddleware.forceRefresh();
             setCsrfToken(token);
-            const info = csrfManager.getDebugInfo();
-            if (info.tokenExpiresAt) setTokenExpiration(info.tokenExpiresAt);
         } catch (err) {
             setError(err.message);
-            console.error("[CsrfContext] refresh failed:", err);
         } finally {
             setLoading(false);
         }
-    }, []);
+    };
 
-    const clearToken = useCallback(() => {
-        csrfManager.clearToken();
+    const clearToken = () => {
+        csrfMiddleware.clearToken();
         setCsrfToken(null);
-        setTokenExpiration(null);
-        setError(null);
         setIsInitialized(false);
-        initRef.current = false;
-        _globalContextInitialized = false;
-    }, []);
-
-    const value = {
-        csrfToken,
-        loading,
-        error,
-        tokenExpiration,
-        isInitialized,
-        refreshToken,
-        clearToken,
-        manager: csrfManager,
+        initialized.current = false;
     };
 
     return (
-        <CsrfContext.Provider value={value}>{children}</CsrfContext.Provider>
+        <CsrfContext.Provider
+            value={{
+                csrfToken,
+                loading,
+                error,
+                isInitialized,
+                refreshToken,
+                clearToken,
+                manager: csrfMiddleware,
+            }}
+        >
+            {children}
+        </CsrfContext.Provider>
     );
-};
+}
 
-// ── Hook ──────────────────────────────────────────────────────────────────
-
-export const useCsrfContext = () => {
+export function useCsrf() {
     const ctx = useContext(CsrfContext);
-    if (!ctx)
-        throw new Error("useCsrfContext must be used within a <CsrfProvider>");
+    if (!ctx) throw new Error("useCsrf must be used within CsrfProvider");
     return ctx;
-};
+}

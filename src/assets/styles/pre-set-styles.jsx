@@ -61,7 +61,7 @@ export const ACCENT_COLOR = "bg-purple-400/8 border border-purple-400/25";
 // ============================================================================
 export const STANDARD_BORDER = "border border-grey-500/40 shadow-sm";
 export const SECONDARY_COLOR_BORDER = "border border-purple-400/20 shadow-sm";
-export const ACCENT_COLOR_BORDER = "border border-orange-400/25 shadow-sm";
+export const SECONDARY_BORDER = "border border-orange-400/25 shadow-sm";
 
 // ============================================================================
 // TRANSITIONS

@@ -1,28 +1,29 @@
 /**
- * httpClient.js
- * ─────────────
- * Axios-based HTTP client with:
- *   • Automatic JWT injection (from cookie)
- *   • Automatic CSRF token injection for unsafe methods
- *   • CSRF error → automatic token refresh + request retry
- *   • No domain-specific payload injection (removed MATERIALID)
+ * HttpClient — Axios instance with automatic JWT + CSRF injection.
+ *
+ * This is the ONLY place Axios is configured. Never import Axios directly
+ * in feature files. Always use this module.
+ *
+ * What it does automatically:
+ *   - Injects Authorization: Bearer <token> from cookie
+ *   - Injects x-csrf-token on POST/PUT/DELETE/PATCH via CsrfMiddleware
+ *   - Retries once on CSRF 403 errors after token refresh
+ *   - Adds X-Client-Username header for server-side traceability
  *
  * Usage:
- *   import httpClient from './httpClient';
- *   const res = await httpClient.get('users');
- *   const res = await httpClient.post('users', { name: 'Alice' });
+ *   import httpClient from '../../middleware/HttpClient';
+ *   const response = await httpClient.get('users');
+ *   const response = await httpClient.post('users', { name: 'John' });
  */
 
 import axios from "axios";
-import { getCookie, getLocalStorage } from "../helpers/Auth";
-import csrfManager from "./security/CsrfMiddleware";
+import AuthMiddleware from "./authentication/AuthMiddleware";
+import CsrfMiddleware from "./security/CsrfMiddleware";
 
-const VITE_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL ||
-    import.meta.env.VITE_BaseURL ||
-    "http://localhost:3000";
+const BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1/";
 
-/** Endpoints that never need a CSRF token. */
+// CSRF is not required for these endpoints (they ARE the CSRF endpoints)
 const CSRF_EXEMPT = [
     "csrf/token",
     "csrf/refresh",
@@ -30,218 +31,154 @@ const CSRF_EXEMPT = [
     "csrf/status",
 ];
 
+// These endpoints do not need Authorization headers
+const AUTH_EXEMPT = ["csrf/token", "csrf/refresh"];
+
 class HttpClient {
     constructor() {
-        const base = VITE_BASE_URL.endsWith("/")
-            ? VITE_BASE_URL
-            : `${VITE_BASE_URL}/`;
-
-        this.client = axios.create({
+        this._client = axios.create({
+            baseURL: BASE_URL,
             withCredentials: true,
-            baseURL: base,
             headers: { "Content-Type": "application/json" },
         });
 
-        this._setupInterceptors();
+        this._setupRequestInterceptor();
+        this._setupResponseInterceptor();
         this._initCsrf();
     }
 
-    // ── Initialisation ──────────────────────────────────────────────────────
+    // ─── Setup ────────────────────────────────────────────────────────────────
 
     async _initCsrf() {
         try {
-            await csrfManager.initialize();
-            console.debug("[HttpClient] CSRF ready");
-        } catch (err) {
-            console.error("[HttpClient] CSRF init failed:", err);
-            if (typeof window !== "undefined")
-                window.location.href = "/bad-request";
+            await CsrfMiddleware.initialize();
+        } catch {
+            // CSRF init failure is handled per-request in the interceptor
         }
     }
 
-    // ── Interceptors ────────────────────────────────────────────────────────
-
-    _setupInterceptors() {
-        // ── REQUEST ──────────────────────────────────────────────────────────
-        this.client.interceptors.request.use(
+    _setupRequestInterceptor() {
+        this._client.interceptors.request.use(
             async (config) => {
-                // 1. Auth token
-                const token = getCookie("token");
-                if (token) config.headers.Authorization = `Bearer ${token}`;
-
-                // 2. Client identity header (username@userId or anonymous)
-                const user = getLocalStorage("user");
-                config.headers["X-Client-Username"] = user?.user_data
-                    ? `${user.user_data.username}@${user.user_data.userId}`
-                    : "anonymous@unknown";
-
-                // 3. CSRF token for unsafe methods
-                const isUnsafe = ["POST", "PUT", "DELETE", "PATCH"].includes(
-                    config.method?.toUpperCase(),
-                );
-                const isExempt = CSRF_EXEMPT.some((p) =>
+                const isExemptAuth = AUTH_EXEMPT.some((p) =>
                     config.url?.includes(p),
                 );
+                const isExemptCsrf = CSRF_EXEMPT.some((p) =>
+                    config.url?.includes(p),
+                );
+                const isMutating = ["POST", "PUT", "DELETE", "PATCH"].includes(
+                    config.method?.toUpperCase(),
+                );
 
-                if (isUnsafe && !isExempt) {
+                // JWT header
+                if (!isExemptAuth) {
+                    const token = AuthMiddleware.getCookie('token');
+                    if (token) {
+                        config.headers["Authorization"] = `Bearer ${token}`;
+                    }
+
+                    // Client identity for server traceability
+                    const user = AuthMiddleware.getLocalStorage("user");
+                    config.headers["X-Client-Username"] = user?.user_data
+                        ? `${user.user_data.username}@${user.user_data.userId}`
+                        : "anonymous@unknown";
+                }
+
+                // CSRF header
+                if (isMutating && !isExemptCsrf) {
                     try {
-                        const csrfToken = await csrfManager.ensureTokenReady();
-                        if (csrfToken) {
-                            config.headers["x-csrf-token"] = csrfToken;
-                        } else {
-                            throw new Error("CSRF token unavailable");
-                        }
-                    } catch (err) {
-                        console.error("[HttpClient] CSRF inject failed:", err);
-                        if (typeof window !== "undefined")
-                            window.location.href = "/bad-request";
-                        throw new Error(
-                            `CSRF token required but unavailable: ${err.message}`,
+                        const csrfToken =
+                            await CsrfMiddleware.ensureTokenReady();
+                        if (!csrfToken)
+                            throw new Error("No CSRF token available");
+                        config.headers["x-csrf-token"] = csrfToken;
+                    } catch {
+                        return Promise.reject(
+                            new Error("CSRF token required but unavailable"),
                         );
                     }
                 }
 
                 return config;
             },
-            (err) => {
-                if (typeof window !== "undefined")
-                    window.location.href = "/bad-request";
-                return Promise.reject(err);
-            },
+            (error) => Promise.reject(error),
         );
+    }
 
-        // ── RESPONSE ─────────────────────────────────────────────────────────
-        this.client.interceptors.response.use(
-            (res) => res,
-            async (err) => {
-                const original = err.config;
+    _setupResponseInterceptor() {
+        this._client.interceptors.response.use(
+            (response) => response,
+            async (error) => {
+                const originalRequest = error.config;
+                const errorCode = error.response?.data?.code;
+                const requiresRefresh = error.response?.data?.requiresRefresh;
 
-                const code = err.response?.data?.code;
-                const requiresRefresh = err.response?.data?.requiresRefresh;
                 const isCsrfError =
-                    err.response?.status === 403 &&
-                    code &&
+                    error.response?.status === 403 &&
+                    errorCode &&
                     [
                         "CSRF_SECRET_MISSING",
                         "CSRF_TOKEN_MISSING",
                         "CSRF_TOKEN_INVALID",
                         "CSRF_TOKEN_EXPIRED",
-                    ].includes(code);
+                    ].includes(errorCode);
 
-                const shouldRetry =
+                const isMutating = ["post", "put", "delete", "patch"].includes(
+                    originalRequest?.method?.toLowerCase(),
+                );
+
+                // Retry once on CSRF errors
+                if (
                     (isCsrfError || requiresRefresh) &&
-                    ["post", "put", "delete", "patch"].includes(
-                        original.method?.toLowerCase(),
-                    ) &&
-                    !original._retry;
-
-                if (shouldRetry) {
-                    original._retry = true;
+                    isMutating &&
+                    !originalRequest._retry
+                ) {
+                    originalRequest._retry = true;
                     try {
-                        console.debug(
-                            `[HttpClient] CSRF error (${code || "requiresRefresh"}), refreshing …`,
-                        );
-                        const newToken = csrfManager.getToken()
-                            ? await csrfManager.refreshToken()
-                            : await csrfManager
-                                  .forceRefresh()
-                                  .then(() => csrfManager.getToken());
-
+                        const newToken = await CsrfMiddleware.forceRefresh();
                         if (newToken) {
-                            original.headers["x-csrf-token"] = newToken;
-                            return this.client(original);
+                            originalRequest.headers["x-csrf-token"] = newToken;
+                            return this._client(originalRequest);
                         }
-                    } catch (csrfErr) {
-                        console.error(
-                            "[HttpClient] retry after CSRF refresh failed:",
-                            csrfErr,
-                        );
+                    } catch {
+                        /* fall through */
                     }
                 }
 
-                return Promise.reject(err);
+                return Promise.reject(error);
             },
         );
     }
 
-    // ── HTTP methods ─────────────────────────────────────────────────────────
+    // ─── Public HTTP methods ──────────────────────────────────────────────────
 
     get(url, config) {
-        return this.client.get(url, config);
+        return this._client.get(url, config);
     }
-    delete(url, config) {
-        return this.client.delete(url, config);
-    }
+
     post(url, data, config) {
-        return this.client.post(url, data, config);
+        return this._client.post(url, data, config);
     }
+
     put(url, data, config) {
-        return this.client.put(url, data, config);
+        return this._client.put(url, data, config);
     }
+
     patch(url, data, config) {
-        return this.client.patch(url, data, config);
+        return this._client.patch(url, data, config);
     }
 
-    /** Generic request (for advanced use). */
-    request(endpoint, options = {}) {
-        return this.client({ url: endpoint, ...options });
+    delete(url, config) {
+        return this._client.delete(url, config);
     }
 
-    // ── CSRF helpers (for UI components) ─────────────────────────────────────
-
-    getCsrfInfo() {
-        return {
-            csrfToken: csrfManager.getToken(),
-            isInitialized: csrfManager.isInitialized,
-            loading: csrfManager._initializing || false,
-            tokenExpiration: csrfManager.tokenExpiresAt,
-            manager: csrfManager,
-        };
-    }
-
-    async testCsrf() {
-        try {
-            await csrfManager.forceRefresh();
-            const res = await this.post("csrf/verify", {
-                test: true,
-                timestamp: Date.now(),
-            });
-            return { success: true, data: res.data };
-        } catch (err) {
-            if (typeof window !== "undefined")
-                window.location.href = "/bad-request";
-            return { success: false, error: err.response?.data || err.message };
-        }
-    }
-
-    async refreshCsrfToken() {
-        try {
-            await csrfManager.forceRefresh();
-            return { success: true };
-        } catch (err) {
-            if (typeof window !== "undefined")
-                window.location.href = "/bad-request";
-            return { success: false, error: err.message };
-        }
-    }
-
-    isEndpointCsrfExempt(url) {
-        return CSRF_EXEMPT.some((p) => url?.includes(p));
-    }
-
-    getDebugInfo() {
-        return {
-            baseURL: this.client.defaults.baseURL,
-            csrfManager: csrfManager.getDebugInfo(),
-        };
-    }
-
-    /** Direct access to the underlying Axios instance. */
+    /** Direct access to the Axios instance for edge cases */
     get axios() {
-        return this.client;
+        return this._client;
     }
 }
 
+// Singleton export
 const httpClient = new HttpClient();
 export default httpClient;
 export { HttpClient };

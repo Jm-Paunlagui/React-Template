@@ -1,324 +1,96 @@
 @import "tailwindcss";
-@import "tailwindcss/utilities";
 
-/* ============================================================================
-   AUMOVIO DESIGN SYSTEM — TAILWIND v4 THEME TOKENS
-   Full 50–950 range with interpolated filler shades
-   Primary:   Orange (#FF4208)  — 60%
-   Secondary: Purple (#4827AF)  — 30%
-   Accents:   Blue, Turquoise, Yellow, Grey — 10%
-   Validation: Red, Yellow, Green
-   ============================================================================ */
-
+/* ─── Aumovio Design Tokens ─────────────────────────────────────────────── */
 @theme {
-  /* ── Orange ── */
-  --color-orange-50:  #fff5f2;
-  --color-orange-100: #FFB7A1;
-  --color-orange-200: #ff906e;
-  --color-orange-300: #ff693b;
-  --color-orange-400: #FF4208;
-  --color-orange-500: #da3806;
-  --color-orange-600: #b52e05;
-  --color-orange-700: #902504;
-  --color-orange-800: #6b1b03;
-  --color-orange-900: #461202;
-  --color-orange-950: #230901;
+    --color-primary-100: #FFB7A1;
+    --color-primary-200: #ff906e;
+    --color-primary-300: #ff693b;
+    --color-primary-400: #FF4208;
+    --color-primary-500: #da3806;
 
-  /* ── Purple ── */
-  --color-purple-50:  #f4f2fd;
-  --color-purple-100: #a08ae5;
-  --color-purple-200: #7e60dc;
-  --color-purple-300: #5c37d2;
-  --color-purple-400: #4827AF;
-  --color-purple-500: #341c7d;
-  --color-purple-600: #2a1665;
-  --color-purple-700: #20114d;
-  --color-purple-800: #160b35;
-  --color-purple-900: #0c061d;
-  --color-purple-950: #06030e;
+    --color-secondary-100: #a08ae5;
+    --color-secondary-200: #7e60dc;
+    --color-secondary-300: #5c37d2;
+    --color-secondary-400: #4827AF;
+    --color-secondary-500: #341c7d;
 
-  /* ── Blue (accent) ── */
-  --color-blue-50:  #f0faff;
-  --color-blue-100: #a3ddf5;
-  --color-blue-200: #75ccf0;
-  --color-blue-300: #46baec;
-  --color-blue-400: #18a9e7;
-  --color-blue-500: #1b8dce;
-  --color-blue-600: #1672a8;
-  --color-blue-700: #115782;
-  --color-blue-800: #0b3c5c;
-  --color-blue-900: #062136;
-  --color-blue-950: #031018;
+    --color-blue-100: #a3ddf5;
+    --color-blue-400: #18a9e7;
+    --color-blue-500: #1b8dce;
 
-  /* ── Turquoise (accent) ── */
-  --color-turquoise-50:  #f0fefc;
-  --color-turquoise-100: #a1f7ea;
-  --color-turquoise-200: #68f3de;
-  --color-turquoise-300: #12e3c3;
-  --color-turquoise-400: #12caae;
-  --color-turquoise-500: #0faa92;
-  --color-turquoise-600: #0c8a76;
-  --color-turquoise-700: #09695a;
-  --color-turquoise-800: #06493e;
-  --color-turquoise-900: #032822;
-  --color-turquoise-950: #011411;
+    --color-turquoise-100: #a1f7ea;
+    --color-turquoise-400: #12caae;
 
-  /* ── Yellow (accent) ── */
-  --color-yellow-50:  #fefdf0;
-  --color-yellow-100: #ebe9b5;
-  --color-yellow-200: #e2dd8c;
-  --color-yellow-300: #d8d063;
-  --color-yellow-400: #cec43a;
-  --color-yellow-500: #aea633;
-  --color-yellow-600: #8e882b;
-  --color-yellow-700: #6e6a22;
-  --color-yellow-800: #4e4c18;
-  --color-yellow-900: #2e2d0e;
-  --color-yellow-950: #171607;
+    --color-yellow-100: #ebe9b5;
+    --color-yellow-400: #cec43a;
 
-  /* ── Grey (neutral) ── */
-  --color-grey-50:  #fafafa;
-  --color-grey-100: #f0f0f0;
-  --color-grey-200: #dcdcdc;
-  --color-grey-300: #c8c8c8;
-  --color-grey-400: #aaaaaa;
-  --color-grey-500: #787878;
-  --color-grey-600: #5f5f5f;
-  --color-grey-700: #464646;
-  --color-grey-800: #2d2d2d;
-  --color-grey-900: #1a1a1a;
-  --color-grey-950: #0d0d0d;
+    --color-grey-100: #f0f0f0;
+    --color-grey-400: #aaaaaa;
+    --color-grey-500: #787878;
 
-  /* ── Validation: Red ── */
-  --color-danger-50:  #fdf2f3;
-  --color-danger-100: #f0d3dc;
-  --color-danger-200: #e8adb9;
-  --color-danger-300: #df8796;
-  --color-danger-400: #d82822;
-  --color-danger-500: #b82020;
-  --color-danger-600: #96191a;
-  --color-danger-700: #741214;
-  --color-danger-800: #520c0d;
-  --color-danger-900: #300607;
-  --color-danger-950: #180303;
+    --color-danger-default: #d82822;
+    --color-danger-light: #f0d3dc;
+    --color-warn-default: #ffd600;
+    --color-warn-light: #ffee99;
+    --color-success-default: #32cb70;
+    --color-success-light: #adebc6;
 
-  /* ── Validation: Warning ── */
-  --color-warn-50:  #fffef0;
-  --color-warn-100: #ffee99;
-  --color-warn-200: #ffe566;
-  --color-warn-300: #ffdb33;
-  --color-warn-400: #ffd600;
-  --color-warn-500: #ccab00;
-  --color-warn-600: #998100;
-  --color-warn-700: #665600;
-  --color-warn-800: #332b00;
-  --color-warn-900: #1a1500;
-  --color-warn-950: #0d0b00;
-
-  /* ── Validation: Success ── */
-  --color-success-50:  #f0fdf6;
-  --color-success-100: #adebc6;
-  --color-success-200: #7ddda9;
-  --color-success-300: #52cf8d;
-  --color-success-400: #32cb70;
-  --color-success-500: #28a65b;
-  --color-success-600: #1e8146;
-  --color-success-700: #165c32;
-  --color-success-800: #0e371f;
-  --color-success-900: #07120a;
-  --color-success-950: #030905;
-
-  /* ── Gradient helper ── */
-  --color-gradient-orange: #ff850a;
-
-  /* ── Fonts ── */
-  --font-aumovio: 'Aumovio', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    --font-sans: 'Aumovio', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* ============================================================================
-   CSS CUSTOM PROPERTIES (legacy / runtime usage)
-   ============================================================================ */
-:root {
-  --color-primary:   #FF4208;
-  --color-secondary: #4827AF;
-
-  --color-grey:  #f0f0f0;
-  --color-white: #FFFFFF;
-  --color-black: #000000;
-
-  --validation-red-default:    #D82822;
-  --validation-red-light:      #F0D3DC;
-  --validation-yellow-default: #FFD600;
-  --validation-yellow-light:   #FFEE99;
-  --validation-green-default:  #32CB70;
-  --validation-green-light:    #ADEBC6;
-
-  --font-aumovio:            'Aumovio', ui-sans-serif, system-ui;
-  --font-aumovio-bold:       'Aumovio', ui-sans-serif, system-ui;
-  --font-aumovio-italic:     'Aumovio', ui-sans-serif, system-ui;
-  --font-aumovio-bold-italic:'Aumovio', ui-sans-serif, system-ui;
-}
-
-/* ============================================================================
-   FONT FACES
-   ============================================================================ */
 @font-face {
-  font-family: 'Aumovio';
-  src: url('../fonts/AUMOVIOScreen-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Aumovio';
-  src: url('../fonts/AUMOVIOScreen-Italic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
-}
-@font-face {
-  font-family: 'Aumovio';
-  src: url('../fonts/AUMOVIOScreen-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Aumovio';
-  src: url('../fonts/AUMOVIOScreen-BoldItalic.ttf') format('truetype');
-  font-weight: 700;
-  font-style: italic;
+    font-family: 'Aumovio';
+    src: url('../fonts/AUMOVIOScreen-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
 }
 
-/* ============================================================================
-   FONT UTILITY CLASSES
-   ============================================================================ */
-.font-aumovio            { font-family: var(--font-aumovio) !important; }
-.font-aumovio-bold       { font-family: var(--font-aumovio-bold) !important; font-weight: 700; }
-.font-aumovio-italic     { font-family: var(--font-aumovio-italic) !important; font-style: italic; }
-.font-aumovio-bold-italic{ font-family: var(--font-aumovio-bold-italic) !important; font-weight: 700; font-style: italic; }
-
-/* ============================================================================
-   ANIMATIONS
-   ============================================================================ */
-@keyframes wiggle {
-  0%, 40%, 80%  { transform: translateX( 0.25rem); color: #d82822; border-color: #d82822; }
-  20%, 60%, 100%{ transform: translateX(-0.25rem); color: #d82822; border-color: #d82822; }
+@font-face {
+    font-family: 'Aumovio';
+    src: url('../fonts/AUMOVIOScreen-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
 }
+
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0);    }
+
+@keyframes slide-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes fade-out-up {
-  from { opacity: 1; transform: translateY(0);    }
-  to   { opacity: 0; transform: translateY(20px); }
-}
+
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.8); }
-  to   { opacity: 1; transform: scale(1);   }
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
 }
-@keyframes slide-right {
-  from { opacity: 0; transform: translateX(-20px); }
-  to   { opacity: 1; transform: translateX(0);     }
-}
+
 @keyframes bounce-slow {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0);  }
-  40%                      { transform: translateY(-8px);}
-  60%                      { transform: translateY(-4px);}
-}
-@keyframes shake {
-  0%, 40%, 80%  { transform: translateX( 0.10rem); color: #d82822; border-color: #d82822; }
-  20%, 60%, 100%{ transform: translateX(-0.10rem); color: #d82822; border-color: #d82822; }
-}
-@keyframes slide-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-@keyframes modalSlideUp {
-  from { opacity: 0; transform: translateY(20px) scale(0.95); }
-  to   { opacity: 1; transform: translateY(0)    scale(1);    }
-}
-@keyframes progressShimmer {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(400%);  }
+    0%, 100% { transform: translateY(0); }
+    40%       { transform: translateY(-8px); }
+    60%       { transform: translateY(-4px); }
 }
 
-/* ── Animation utility classes ── */
-.animate-wiggle       { animation: wiggle 300ms ease-in-out; }
-.animate-fade-in      { animation: fade-in 0.3s ease-in forwards; }
-.animate-fade-in-up   { animation: fade-in-up 0.6s ease-out forwards; opacity: 0; }
-.animate-fade-out-up  { animation: fade-out-up 0.36s ease-in forwards; opacity: 1; }
-.animate-scale-in     { animation: scale-in 0.5s ease-out forwards; }
-.animate-scale-out    { animation: scale-in 0.4s ease-in reverse forwards; }
-.animate-slide-right  { animation: slide-right 0.5s ease-out forwards; opacity: 0; }
-.animate-bounce-slow  { animation: bounce-slow 2s infinite; }
-.animate-shake        { animation: shake 250ms ease-in-out; }
-.animate-slide-in     { animation: slide-in 0.4s ease-out forwards; opacity: 0; }
-.animate-modalSlideUp { animation: modalSlideUp 0.3s ease-out forwards; }
-.animate-scale-in-center { animation: scale-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both; }
-.animate-slide-up { animation: fade-in-up 0.6s ease-out both; }
+.animate-fade-in     { animation: fade-in 0.3s ease-in forwards; }
+.animate-slide-up    { animation: slide-up 0.5s ease-out forwards; }
+.animate-scale-in    { animation: scale-in 0.4s ease-out forwards; }
+.animate-bounce-slow { animation: bounce-slow 2s infinite; }
 
-/* ============================================================================
-   TRANSITION UTILITIES
-   ============================================================================ */
 .transition-smooth {
-  transition: transform 180ms ease-in-out, opacity 180ms ease-in-out, box-shadow 200ms ease-in-out;
-  will-change: transform, opacity, box-shadow;
+    transition: transform 180ms ease-in-out, opacity 180ms ease-in-out, box-shadow 200ms ease-in-out;
+    will-change: transform, opacity, box-shadow;
 }
+
 .backface-hidden {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
-.btn-transition {
-  transition: background-color 150ms ease-in-out, color 150ms ease-in-out,
-              transform 150ms ease-in-out, box-shadow 150ms ease-in-out;
-  -webkit-tap-highlight-color: transparent;
-  will-change: transform, background-color, color, box-shadow;
-}
-.page-size-transition,
-.row-transition {
-  transition-duration: 40ms !important;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1) !important;
-}
-.transitions-disabled * {
-  transition: none !important;
-  animation: none !important;
-}
-.fade-out { opacity: 0.5 !important; transform: translateY(6px) !important; }
-.fade-in  { opacity: 1   !important; transform: none !important; }
 
-/* ============================================================================
-   SCROLLBAR UTILITIES
-   ============================================================================ */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #dcdcdc #f0f0f0;
+.hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
-.custom-scrollbar::-webkit-scrollbar       { width: 6px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 3px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: #dcdcdc; border-radius: 3px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #aaaaaa; }
 
-.hide-scrollbar              { scrollbar-width: none; -ms-overflow-style: none; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
-
-/* ============================================================================
-   PROGRESS BAR
-   ============================================================================ */
-.progress-bar { position: relative; overflow: hidden; }
-.progress-bar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.4) 50%, transparent 100%);
-  animation: progressShimmer 2s infinite;
-  z-index: 1;
-}
-
-/* ============================================================================
-   SECTION EXPAND
-   ============================================================================ */
-.section-expand {
-  transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease-in-out;
-}
