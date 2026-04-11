@@ -27,7 +27,7 @@ export function SearchBar({
 }) {
     return (
         <div
-            className={`relative flex items-center bg-white border border-grey-200 rounded-lg
+            className={`relative flex items-center bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700 rounded-lg
                 shadow-sm focus-within:ring-2 focus-within:ring-orange-400/40
                 focus-within:border-orange-400/50 focus-within:shadow-md
                 focus-within:shadow-orange-400/10 transition-all duration-300 ${className}`}
@@ -58,7 +58,7 @@ export function SearchBar({
                 placeholder={placeholder}
                 disabled={disabled}
                 className="w-full pl-9 pr-9 py-2 text-sm font-aumovio tracking-wide
-                    text-black/85 bg-transparent outline-none
+                    text-black/85 dark:text-white/85 bg-transparent outline-none
                     placeholder-grey-400 disabled:opacity-50 disabled:cursor-not-allowed"
             />
 

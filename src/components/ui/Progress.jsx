@@ -16,7 +16,7 @@ const COLORS = {
     success: "bg-success-400",
     danger: "bg-danger-400",
     warning: "bg-warn-400",
-    gradient: "bg-gradient-to-r from-orange-400 to-purple-400",
+    gradient: "bg-linear-to-r from-orange-400 to-purple-400",
     purple: "bg-purple-400",
 };
 
@@ -46,7 +46,7 @@ export function Progress({
                         cy={sz / 2}
                         r={radius}
                         fill="none"
-                        stroke="#F0F0F0"
+                        stroke="var(--ring-track)"
                         strokeWidth="8"
                     />
                     <circle

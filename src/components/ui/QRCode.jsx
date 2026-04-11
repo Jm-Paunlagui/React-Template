@@ -51,7 +51,7 @@ export function QRCode({
             )}
             <div
                 ref={ref}
-                className="p-3 bg-white border shadow-lg rounded-xl border-grey-200 dark:border-grey-300"
+                className="p-3 bg-white border shadow-lg rounded-xl border-grey-200 dark:border-grey-700"
             >
                 <QRCodeSVG
                     value={value || "https://aumovio.com"}

@@ -22,7 +22,7 @@ export function Text({ variant = "bold", color, className = "", children }) {
     if (variant === "mark")
         return (
             <mark
-                className={`bg-warn-100 text-black px-0.5 rounded ${col} ${className}`}
+                className={`bg-warn-100 dark:bg-warn-400/20 text-black dark:text-warn-100 px-0.5 rounded ${col} ${className}`}
             >
                 {children}
             </mark>
@@ -43,7 +43,9 @@ export function Text({ variant = "bold", color, className = "", children }) {
         return <em className={`italic ${col} ${className}`}>{children}</em>;
     if (variant === "small")
         return (
-            <small className={`text-xs text-grey-500 ${col} ${className}`}>
+            <small
+                className={`text-xs text-grey-500 dark:text-grey-400 ${col} ${className}`}
+            >
                 {children}
             </small>
         );

@@ -166,6 +166,8 @@
   --text-secondary:#484848;
   --text-muted:    #787878;
   --border-color:  #DCDCDC;
+  --track-bg:      #DCDCDC;
+  --ring-track:    #F0F0F0;
 }
 
 [data-theme='dark'] {
@@ -176,6 +178,8 @@
   --text-secondary:#C8C8C8;
   --text-muted:    #787878;
   --border-color:  #303030;
+  --track-bg:      #484848;
+  --ring-track:    #303030;
 }
 
 @variant dark (&:where([data-theme=dark], [data-theme=dark] *));

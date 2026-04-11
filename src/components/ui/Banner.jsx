@@ -20,7 +20,7 @@ const BANNERS = {
     success: "bg-success-500 text-white",
     warning: "bg-warn-400 text-black",
     danger: "bg-danger-400 text-white",
-    promo: "bg-gradient-to-r from-orange-400 via-[#ff850a] to-purple-400 text-white",
+    promo: "bg-linear-to-r from-orange-400 via-[#ff850a] to-purple-400 text-white",
 };
 
 export function Banner({

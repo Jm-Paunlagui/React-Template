@@ -39,7 +39,7 @@ export default function Dashboard() {
                 ].map((s) => (
                     <div
                         key={s.label}
-                        className="bg-white rounded-xl border border-grey-200 shadow-sm p-6 space-y-3"
+                        className="bg-white dark:bg-[#1a1030] rounded-xl border border-grey-200 dark:border-grey-700 shadow-sm p-6 space-y-3"
                     >
                         <p className={`text-sm ${BASE_COLOR_TEXT}`}>
                             {s.label}
@@ -59,7 +59,7 @@ export default function Dashboard() {
             </div>
 
             {/* Placeholder content area */}
-            <div className="bg-white rounded-xl border border-grey-200 shadow-sm p-8 text-center">
+            <div className="bg-white dark:bg-[#1a1030] rounded-xl border border-grey-200 dark:border-grey-700 shadow-sm p-8 text-center">
                 <p className={`${BASE_COLOR_TEXT} text-lg`}>
                     Your dashboard content goes here.
                 </p>

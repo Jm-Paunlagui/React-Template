@@ -46,7 +46,7 @@ export function Tabs({
             a,
         ) => `border-r last:border-0 border-grey-200 dark:border-grey-700 font-aumovio-bold
       transition-all duration-200
-      ${a ? "bg-orange-400 text-white" : "bg-white dark:bg-[#1a1030] text-grey-500 hover:bg-orange-50 hover:text-orange-400"}`,
+      ${a ? "bg-orange-400 text-white" : "bg-white dark:bg-[#1a1030] text-grey-500 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-400"}`,
         vertical: (
             a,
         ) => `rounded-lg text-left transition-all duration-200 font-aumovio-bold

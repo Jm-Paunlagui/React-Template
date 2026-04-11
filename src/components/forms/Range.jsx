@@ -63,7 +63,7 @@ export function Range({
             [&::-webkit-slider-thumb]:hover:scale-125
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
                     style={{
-                        background: `linear-gradient(to right, ${col} ${pct}%, #DCDCDC ${pct}%)`,
+                        background: `linear-gradient(to right, ${col} ${pct}%, var(--track-bg) ${pct}%)`,
                     }}
                 />
                 {showTicks && (

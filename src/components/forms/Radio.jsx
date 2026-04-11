@@ -35,7 +35,7 @@ export function Radio({
               ${
                   value === opt.value
                       ? "bg-orange-400 text-white"
-                      : "bg-white dark:bg-[#1a1030] text-grey-600 dark:text-grey-300 hover:bg-orange-50 hover:text-orange-400"
+                      : "bg-white dark:bg-[#1a1030] text-grey-600 dark:text-grey-300 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-400"
               }`}
                         >
                             <input

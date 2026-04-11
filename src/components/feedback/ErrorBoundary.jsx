@@ -9,7 +9,7 @@
  * Omit fallback to use the default Aumovio-styled error UI.
  */
 
-import { Component } from 'react';
+import { Component } from "react";
 
 export class ErrorBoundary extends Component {
     constructor(props) {
@@ -23,7 +23,7 @@ export class ErrorBoundary extends Component {
     }
 
     componentDidCatch(error, info) {
-        console.error('[ErrorBoundary]', error, info);
+        console.error("[ErrorBoundary]", error, info);
     }
 
     handleReset() {
@@ -42,11 +42,12 @@ export class ErrorBoundary extends Component {
                 >
                     !
                 </div>
-                <h2 className="text-base font-aumovio-bold text-black/85 mb-1">
+                <h2 className="text-base font-aumovio-bold text-black/85 dark:text-white/85 mb-1">
                     Something went wrong
                 </h2>
-                <p className="text-sm font-aumovio text-grey-500 mb-4 max-w-xs">
-                    An unexpected error occurred. Refresh the page or contact support if it persists.
+                <p className="text-sm font-aumovio text-grey-500 dark:text-grey-400 mb-4 max-w-xs">
+                    An unexpected error occurred. Refresh the page or contact
+                    support if it persists.
                 </p>
                 <button
                     onClick={this.handleReset}
@@ -57,8 +58,10 @@ export class ErrorBoundary extends Component {
                     Try again
                 </button>
                 {import.meta.env.DEV && this.state.error && (
-                    <pre className="mt-4 text-left text-xs text-danger-400 bg-danger-100
-                        p-3 rounded-lg max-w-full overflow-auto">
+                    <pre
+                        className="mt-4 text-left text-xs text-danger-400 bg-danger-100 dark:bg-danger-400/10
+                        p-3 rounded-lg max-w-full overflow-auto"
+                    >
                         {this.state.error.message}
                     </pre>
                 )}

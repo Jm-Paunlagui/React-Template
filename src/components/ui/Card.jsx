@@ -20,7 +20,7 @@ const VARIANTS = {
     outlined:
         "bg-transparent border-2 border-orange-400/30 dark:border-orange-400/20",
     filled: "bg-orange-400/5 dark:bg-orange-400/10 border border-orange-400/20",
-    glass: "bg-white/60 dark:bg-white/5 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-xl",
+    glass: "bg-white/60 dark:bg-[#1a1030] backdrop-blur-md border border-white/30 dark:border-white/10 shadow-xl",
 };
 
 const PAD = { none: "", sm: "p-4", md: "p-5 md:p-6", lg: "p-6 md:p-8" };
@@ -31,6 +31,7 @@ export function Card({
     hover = false,
     clickable = false,
     onClick,
+    onAnimationEnd,
     header,
     footer,
     image,
@@ -42,6 +43,7 @@ export function Card({
     return (
         <Tag
             onClick={onClick}
+            onAnimationEnd={onAnimationEnd}
             className={`rounded-xl overflow-hidden font-aumovio
         transition-all duration-300
         ${VARIANTS[variant] ?? VARIANTS.default}

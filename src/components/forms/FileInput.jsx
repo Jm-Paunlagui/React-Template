@@ -54,7 +54,7 @@ export function FileInput({
                     multiple={multiple}
                     disabled={disabled}
                     onChange={(e) => handle(e.target.files)}
-                    className="block w-full text-sm text-grey-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-aumovio-bold file:text-xs file:bg-orange-400/10 file:text-orange-400 hover:file:bg-orange-400 hover:file:text-white file:cursor-pointer file:transition-all file:duration-200"
+                    className="block w-full text-sm text-grey-500 dark:text-grey-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-aumovio-bold file:text-xs file:bg-orange-400/10 file:text-orange-400 hover:file:bg-orange-400 hover:file:text-white file:cursor-pointer file:transition-all file:duration-200"
                 />
             </div>
         );

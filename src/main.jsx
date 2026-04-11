@@ -13,9 +13,10 @@ import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import LoadingScreen from "./components/layout/loading/LoadingScreen";
+import LoadingScreen from "./components/layout/LoadingScreen";
 import { LayoutProvider } from "./contexts/layout/LayoutContext";
 import { CsrfProvider, useCsrf } from "./contexts/security/CsrfContext";
+import { ThemeProvider } from "./contexts/theme/ThemeContext";
 
 // Minimum time (ms) the LoadingScreen stays visible, regardless of how fast
 // the CSRF token resolves. Keeps the screen from flickering on fast backends.
@@ -47,13 +48,15 @@ function CsrfGate({ children }) {
 createRoot(document.getElementById("root")).render(
     <StrictMode>
         <BrowserRouter>
-            <CsrfProvider>
-                <CsrfGate>
-                    <LayoutProvider>
-                        <App />
-                    </LayoutProvider>
-                </CsrfGate>
-            </CsrfProvider>
+            <ThemeProvider>
+                <CsrfProvider>
+                    <CsrfGate>
+                        <LayoutProvider>
+                            <App />
+                        </LayoutProvider>
+                    </CsrfGate>
+                </CsrfProvider>
+            </ThemeProvider>
         </BrowserRouter>
     </StrictMode>,
 );

@@ -14,9 +14,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./assets/styles/index.css";
 
-import Footer from "./components/layout/footer/Footer";
-import Navbar from "./components/layout/navbar/Navbar";
-import Sidebar from "./components/layout/sidebar/Sidebar";
+import Footer from "./components/layout/Footer";
+import Navbar from "./components/layout/Navbar";
+import Sidebar from "./components/layout/Sidebar";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 import { useLayout } from "./contexts/layout/LayoutContext";
 import {
@@ -82,7 +82,7 @@ function ConditionalFooter() {
 function PageLoader() {
     return (
         <div className="flex items-center justify-center min-h-screen">
-            <div className="w-8 h-8 border-4 rounded-full animate-spin border-primary-400 border-t-transparent" />
+            <div className="w-8 h-8 border-4 border-orange-400 rounded-full animate-spin border-t-transparent" />
         </div>
     );
 }
@@ -94,7 +94,7 @@ function AppContent() {
     const useSidebar = !bare && layout === "sidebar";
 
     return (
-        <div className="flex min-h-screen bg-white">
+        <div className="flex min-h-screen bg-white dark:bg-[#0D0D14] transition-colors duration-300">
             <ConditionalSidebar />
             <div
                 className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ${

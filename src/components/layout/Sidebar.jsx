@@ -33,9 +33,7 @@ import {
     TITLE_COLOR_TEXT,
 } from "../../assets/styles/pre-set-styles";
 import { useLayout } from "../../contexts/layout/LayoutContext";
-
-// ── Logo ──────────────────────────────────────────────────────────────────
-const LOGO_PLACEHOLDER = null;
+import Logo from "../ui/Logo";
 
 export default function Sidebar({
     navLinks = [],
@@ -49,42 +47,23 @@ export default function Sidebar({
 
     return (
         <aside
-            className={`fixed top-0 left-0 z-40 h-screen ${MAIN_OVERLAY_COLOR_BG} border-r border-grey-200 transition-all duration-300 ease-in-out flex flex-col ${
+            className={`fixed top-0 left-0 z-40 h-screen ${MAIN_OVERLAY_COLOR_BG} border-r border-grey-200 dark:border-grey-700 transition-all duration-300 ease-in-out flex flex-col ${
                 sidebarOpen ? "w-64" : "w-16"
             }`}
         >
             {/* ── Header / Logo ──────────────────────────────────────── */}
-            <div className="flex items-center justify-between h-16 md:h-20 px-3 border-b border-grey-200">
+            <div className="flex items-center justify-between h-16 md:h-20 px-3 border-b border-grey-200 dark:border-grey-700">
                 {sidebarOpen && (
                     <NavLink
                         to="/"
                         className="flex items-center gap-2 overflow-hidden"
                     >
-                        {LOGO_PLACEHOLDER ? (
-                            <img
-                                src={LOGO_PLACEHOLDER}
-                                alt="Logo"
-                                className="h-8 w-auto"
-                            />
-                        ) : (
-                            <>
-                                <div className="w-8 h-8 bg-orange-400 rounded-lg flex items-center justify-center shrink-0">
-                                    <span className="text-white font-aumovio-bold text-sm">
-                                        A
-                                    </span>
-                                </div>
-                                <span
-                                    className={`font-aumovio-bold text-lg ${MAIN_STRONG_COLOR_TEXT} truncate`}
-                                >
-                                    AppName
-                                </span>
-                            </>
-                        )}
+                        <Logo className="h-8 w-auto" />
                     </NavLink>
                 )}
                 <button
                     onClick={toggleSidebar}
-                    className={`p-1.5 rounded-lg hover:bg-orange-50 ${MAIN_STRONG_COLOR_TEXT} transition-colors duration-200 shrink-0 ${!sidebarOpen ? "mx-auto" : ""}`}
+                    className={`p-1.5 rounded-lg hover:bg-orange-50 dark:hover:bg-white/5 ${MAIN_STRONG_COLOR_TEXT} transition-colors duration-200 shrink-0 ${!sidebarOpen ? "mx-auto" : ""}`}
                 >
                     {sidebarOpen ? (
                         <ChevronDoubleLeftIcon className="w-5 h-5" />
@@ -119,7 +98,7 @@ export default function Sidebar({
 
             {/* ── Footer / User ──────────────────────────────────────── */}
             {user && (
-                <div className="border-t border-grey-200 px-2 py-3 space-y-1">
+                <div className="border-t border-grey-200 dark:border-grey-700 px-2 py-3 space-y-1">
                     {sidebarOpen && (
                         <p
                             className={`px-3 py-1 text-xs uppercase tracking-wider ${TITLE_COLOR_TEXT}`}
@@ -148,7 +127,7 @@ function SidebarLink({ item, collapsed, isActive }) {
             className={`${
                 isActive
                     ? `${MAIN_FOREGROUND_COLOR_TEXT} ${SECONDARY_BORDER} shadow`
-                    : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 hover:text-orange-600`
+                    : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`
             } flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-200 cursor-pointer ${
                 collapsed ? "justify-center" : ""
             }`}
@@ -201,7 +180,7 @@ function SidebarGroup({ group, collapsed, currentPath }) {
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
                     isGroupActive
                         ? `${MAIN_FOREGROUND_COLOR_TEXT} ${SECONDARY_BORDER} shadow`
-                        : `${TITLE_COLOR_TEXT} hover:bg-orange-50 hover:text-orange-600`
+                        : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`
                 }`}
             >
                 <span className="font-aumovio-bold">{group.label}</span>
@@ -212,14 +191,14 @@ function SidebarGroup({ group, collapsed, currentPath }) {
                 )}
             </button>
             {expanded && (
-                <div className="ml-3 mt-1 space-y-0.5 border-l-2 border-orange-100 pl-2">
+                <div className="ml-3 mt-1 space-y-0.5 border-l-2 border-orange-100 dark:border-orange-400/20 pl-2">
                     {group.items.map((item) => (
                         <NavLink key={item.name} to={item.href}>
                             <div
                                 className={`${
                                     currentPath === item.href
-                                        ? `${MAIN_COLOR_TEXT} bg-orange-50`
-                                        : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 hover:text-orange-500`
+                                        ? `${MAIN_COLOR_TEXT} bg-orange-50 dark:bg-orange-400/10`
+                                        : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-500`
                                 } px-3 py-1.5 rounded-lg text-sm transition-all duration-200`}
                             >
                                 {item.name}

@@ -49,7 +49,7 @@ export function Breadcrumb({
                         ) : (
                             <NavLink
                                 to={item.href ?? "#"}
-                                className="flex items-center gap-1 transition-colors duration-200 text-grey-500 hover:text-orange-400"
+                                className="flex items-center gap-1 transition-colors duration-200 text-grey-500 dark:text-grey-400 hover:text-orange-400"
                             >
                                 {i === 0 && homeIcon ? (
                                     <HomeIcon className="w-3.5 h-3.5" />

@@ -30,7 +30,7 @@ export function LoadingSpinner({ size = "md", fullPage = false, label }) {
 
     if (fullPage) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-white">
+            <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14] transition-colors duration-300">
                 {spinner}
             </div>
         );

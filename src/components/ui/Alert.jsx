@@ -109,7 +109,7 @@ export function Alert({
                 <button
                     onClick={dismiss}
                     aria-label="Dismiss"
-                    className="transition-colors shrink-0 text-grey-400 hover:text-grey-600"
+                    className="transition-colors shrink-0 text-grey-400 hover:text-grey-600 dark:hover:text-grey-300"
                 >
                     <XMarkIcon className="w-4 h-4" />
                 </button>

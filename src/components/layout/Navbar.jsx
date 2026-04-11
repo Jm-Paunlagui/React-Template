@@ -42,8 +42,8 @@ import { AuthMiddleware } from "../../middleware/authentication/AuthMiddleware";
 import httpClient from "../../middleware/HttpClient";
 
 // ── Logo ──────────────────────────────────────────────────────────────────
-// Replace with your own logo image import.
-import logo from "../../../assets/aumovio/AUMOVIO_Logo_orange_black_RGB.png";
+import Logo from "../ui/Logo";
+import { ThemeToggle } from "../ui/ThemeToggle";
 
 // Display name shown beside the logo (set to null to hide).
 const APP_DISPLAY_NAME = import.meta.env.VITE_APP_NAME || null;
@@ -65,7 +65,7 @@ const NavItem = ({ item }) => (
             className={`${
                 item.current
                     ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow`
-                    : `${TITLE_COLOR_TEXT} hover:bg-orange-50 hover:text-orange-600`
+                    : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`
             } px-2 py-2 rounded-lg text-base transition-all duration-200 ease-out cursor-pointer`}
         >
             {item.name}
@@ -82,7 +82,7 @@ const DropdownGroup = ({ label, isActive: active, isLoading, items }) => (
                     ? `${SECONDARY_COLOR_TEXT} animate-pulse ${MAIN_PULSE_COLOR_BG} cursor-default`
                     : active
                       ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow`
-                      : `${TITLE_COLOR_TEXT} hover:bg-orange-50 hover:text-orange-600`
+                      : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`
             } px-2 py-2 rounded-lg text-base transition-all duration-200 ease-out backface-hidden cursor-pointer`}
         >
             {isLoading ? (
@@ -96,10 +96,10 @@ const DropdownGroup = ({ label, isActive: active, isLoading, items }) => (
             )}
         </div>
         {items.length > 0 && (
-            <div className="absolute z-10 invisible py-6 mt-2 transition-all duration-300 ease-out origin-top transform -translate-x-1/2 bg-white rounded-lg shadow-2xl opacity-0 left-1/2 w-96 ring-1 ring-black ring-opacity-5 group-hover:opacity-100 group-hover:visible">
+            <div className="absolute z-10 invisible py-6 mt-2 transition-all duration-300 ease-out origin-top transform -translate-x-1/2 bg-white dark:bg-[#1a1030] rounded-lg shadow-2xl opacity-0 left-1/2 w-96 ring-1 ring-black/5 dark:ring-white/10 group-hover:opacity-100 group-hover:visible">
                 <div className="px-6">
                     <div className="mb-4">
-                        <h3 className="mb-3 text-base tracking-wider text-gray-900 uppercase">
+                        <h3 className="mb-3 text-base tracking-wider text-gray-900 dark:text-white uppercase">
                             {label}
                         </h3>
                         <div className="grid grid-cols-1 gap-2">
@@ -109,20 +109,20 @@ const DropdownGroup = ({ label, isActive: active, isLoading, items }) => (
                                     to={item.href}
                                     className="group/item"
                                 >
-                                    <div className="flex items-center p-3 transition-all duration-200 rounded-lg hover:bg-gray-50">
+                                    <div className="flex items-center p-3 transition-all duration-200 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5">
                                         <div className="flex-1">
                                             <div
-                                                className={`${item.current ? `${MAIN_COLOR_TEXT} ` : "text-gray-900 group-hover/item:text-orange-600"} text-base transition-colors duration-200`}
+                                                className={`${item.current ? `${MAIN_COLOR_TEXT} ` : "text-gray-900 dark:text-white group-hover/item:text-orange-600"} text-base transition-colors duration-200`}
                                             >
                                                 {item.name}
                                             </div>
                                             {item.description && (
-                                                <div className="mt-1 text-gray-500">
+                                                <div className="mt-1 text-gray-500 dark:text-grey-400">
                                                     {item.description}
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="text-gray-400 transition-colors duration-200 group-hover/item:text-orange-500">
+                                        <div className="text-gray-400 dark:text-grey-500 transition-colors duration-200 group-hover/item:text-orange-500">
                                             →
                                         </div>
                                     </div>
@@ -295,7 +295,7 @@ export default function Navbar() {
                 <>
                     {/* Mobile backdrop */}
                     {open && (
-                        <div className="lg:hidden fixed inset-0 bg-black/10 z-40" />
+                        <div className="fixed inset-0 z-40 lg:hidden bg-black/10" />
                     )}
 
                     <div className="relative">
@@ -306,11 +306,7 @@ export default function Navbar() {
                                     <div
                                         className={`relative group flex items-center ${SECONDARY_COLOR_TEXT} transition-all duration-300 ease-out delay-75 backface-hidden rounded-md`}
                                     >
-                                        <img
-                                            alt="logo"
-                                            className="w-auto h-16 md:h-20 lg:h-24"
-                                            src={logo}
-                                        />
+                                        <Logo className="w-auto h-16 md:h-20 lg:h-24" />
                                         {APP_DISPLAY_NAME && (
                                             <h1
                                                 className={`tracking-widest ${DELAY_1} md:flex ${BASE_COLOR_TEXT} hidden text-lg`}
@@ -373,6 +369,9 @@ export default function Navbar() {
 
                             {/* ── Right side: avatar + mobile burger ─────────────────── */}
                             <div className="flex items-center pr-4 space-x-4">
+                                {/* Theme toggle */}
+                                <ThemeToggle size="sm" />
+
                                 {/* User avatar (desktop + tablet) */}
                                 {(user || isLoading) && token && (
                                     <Menu
@@ -406,7 +405,7 @@ export default function Navbar() {
                                             leaveFrom="opacity-100 scale-100 translate-y-0"
                                             leaveTo="opacity-0 scale-95 -translate-y-2"
                                         >
-                                            <MenuItems className="absolute right-0 z-10 w-48 py-2 mt-2 origin-top-right bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                            <MenuItems className="absolute right-0 z-10 w-48 py-2 mt-2 origin-top-right bg-white dark:bg-[#1a1030] rounded-lg shadow-lg ring-1 ring-black/5 dark:ring-white/10 focus:outline-none">
                                                 {profileLinks.map((item) => (
                                                     <MenuItem key={item.name}>
                                                         <NavLink
@@ -419,7 +418,7 @@ export default function Navbar() {
                                                                 className={`${
                                                                     item.current
                                                                         ? `${MAIN_COLOR_TEXT} ${SECONDARY_COLOR} rounded-lg`
-                                                                        : "text-gray-700 hover:bg-gray-50 rounded-lg hover:text-orange-600"
+                                                                        : "text-gray-700 dark:text-grey-300 hover:bg-gray-50 dark:hover:bg-white/5 rounded-lg hover:text-orange-600"
                                                                 } px-2 py-2 text-base transition-all duration-200 ease-out backface-hidden`}
                                                             >
                                                                 {item.name}
@@ -434,7 +433,7 @@ export default function Navbar() {
 
                                 {/* Mobile burger */}
                                 <MenuButton
-                                    className={`lg:hidden inline-flex items-center justify-center p-2 ${MAIN_STRONG_COLOR_TEXT} hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-all duration-200 ease-out backface-hidden`}
+                                    className={`lg:hidden inline-flex items-center justify-center p-2 ${MAIN_STRONG_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600 rounded-lg transition-all duration-200 ease-out backface-hidden`}
                                 >
                                     <span className="sr-only">
                                         Open main menu
@@ -459,7 +458,7 @@ export default function Navbar() {
                     <Transition
                         show={open}
                         as="div"
-                        className="lg:hidden absolute top-full left-0 right-0 z-50"
+                        className="absolute left-0 right-0 z-50 lg:hidden top-full"
                         enter="transition-all ease-out duration-300 transform"
                         enterFrom="opacity-0 scale-95 -translate-y-4"
                         enterTo="opacity-100 scale-100 translate-y-0"
@@ -491,7 +490,7 @@ export default function Navbar() {
                                                 ? `${SECONDARY_COLOR_TEXT} animate-pulse bg-orange-200 cursor-default`
                                                 : item.current
                                                   ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow`
-                                                  : `${TITLE_COLOR_TEXT} hover:bg-orange-50 hover:text-orange-600`
+                                                  : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`
                                         } px-2 py-2 rounded-lg text-base transition-all duration-200 ease-out backface-hidden block`}
                                     >
                                         {item.isLoading ? (
@@ -526,7 +525,7 @@ export default function Navbar() {
                                                 className={`${
                                                     item.current
                                                         ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow`
-                                                        : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 hover:text-orange-600`
+                                                        : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`
                                                 } px-2 py-2 rounded-lg text-base transition-all duration-200 ease-out backface-hidden block`}
                                             >
                                                 {item.name}
@@ -538,7 +537,7 @@ export default function Navbar() {
 
                             {/* Profile links (mobile) */}
                             {(user || isLoading) && token && (
-                                <div className="pt-4 border-t border-orange-200">
+                                <div className="pt-4 border-t border-orange-200 dark:border-orange-400/20">
                                     <div className="px-2 py-2">
                                         <h3
                                             className={`${TITLE_COLOR_TEXT} uppercase tracking-wider`}
@@ -556,7 +555,7 @@ export default function Navbar() {
                                                 className={`${
                                                     item.current
                                                         ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow`
-                                                        : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 hover:text-orange-600`
+                                                        : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`
                                                 } px-2 py-2 rounded-lg text-base transition-all duration-200 ease-out backface-hidden block`}
                                             >
                                                 {item.name}

@@ -13,15 +13,16 @@ import { useCallback, useState } from "react";
 
 const VARIANTS = {
     default:
-        "border border-grey-200 rounded-xl overflow-hidden divide-y divide-grey-200",
-    flush: "divide-y divide-grey-200",
+        "border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden divide-y divide-grey-200 dark:divide-grey-700",
+    flush: "divide-y divide-grey-200 dark:divide-grey-700",
     separated: "space-y-2",
 };
 
 const ITEM_VARIANTS = {
     default: "",
     flush: "",
-    separated: "border border-grey-200 rounded-xl overflow-hidden",
+    separated:
+        "border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden",
 };
 
 const SIZES = {

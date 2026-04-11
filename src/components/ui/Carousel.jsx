@@ -84,15 +84,15 @@ export function Carousel({
                 <>
                     <button
                         onClick={() => go(current - 1)}
-                        className="absolute z-20 flex items-center justify-center w-8 h-8 transition-colors -translate-y-1/2 rounded-full shadow left-2 top-1/2 bg-white/80 dark:bg-black/50 hover:bg-white"
+                        className="absolute z-20 flex items-center justify-center w-8 h-8 transition-colors -translate-y-1/2 rounded-full shadow left-2 top-1/2 bg-white/80 dark:bg-black/50 hover:bg-white dark:hover:bg-black/80"
                     >
-                        <ChevronLeftIcon className="w-4 h-4 text-grey-700" />
+                        <ChevronLeftIcon className="w-4 h-4 text-grey-700 dark:text-grey-300" />
                     </button>
                     <button
                         onClick={() => go(current + 1)}
-                        className="absolute z-20 flex items-center justify-center w-8 h-8 transition-colors -translate-y-1/2 rounded-full shadow right-2 top-1/2 bg-white/80 dark:bg-black/50 hover:bg-white"
+                        className="absolute z-20 flex items-center justify-center w-8 h-8 transition-colors -translate-y-1/2 rounded-full shadow right-2 top-1/2 bg-white/80 dark:bg-black/50 hover:bg-white dark:hover:bg-black/80"
                     >
-                        <ChevronRightIcon className="w-4 h-4 text-grey-700" />
+                        <ChevronRightIcon className="w-4 h-4 text-grey-700 dark:text-grey-300" />
                     </button>
                 </>
             )}
@@ -105,7 +105,7 @@ export function Carousel({
                             key={i}
                             onClick={() => go(i)}
                             className={`rounded-full transition-all duration-300
-                ${i === current ? "w-5 h-2 bg-orange-400" : "w-2 h-2 bg-white/60 hover:bg-white"}`}
+                ${i === current ? "w-5 h-2 bg-orange-400" : "w-2 h-2 bg-white/60 dark:bg-white/30 hover:bg-white dark:hover:bg-white/60"}`}
                         />
                     ))}
                 </div>
