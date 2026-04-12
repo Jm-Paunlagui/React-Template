@@ -15,6 +15,10 @@
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Button from "../../components/ui/Button";
+import Divider from "../../components/ui/typography/Divider";
+import { H2 } from "../../components/ui/typography/Heading";
+import Paragraph from "../../components/ui/typography/Paragraph";
+import Text from "../../components/ui/typography/Text";
 import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
 import CsrfMiddleware from "../../middleware/security/CsrfMiddleware";
 
@@ -111,42 +115,37 @@ function ErrorLayout({ code, title, subtitle, linkTo, linkLabel, accentClass, bg
                         {illustration}
                     </div>
 
-                    {/* Error code */}
-                    <p
-                        className={`font-aumovio-bold tracking-tight leading-none select-none text-right ${accentClass}`}
-                        style={{
-                            fontSize: "clamp(5rem,12vw,9rem)",
-                            animation: "err-slide-up .5s .1s ease both",
-                            opacity: 0,
-                        }}
-                    >
-                        {code}
-                    </p>
+                    {/* Error code — cinematic oversized display */}
+                    <div style={{ animation: "err-slide-up .5s .1s ease both", opacity: 0 }}>
+                        <Text variant="small" className="block mb-1 tracking-widest text-right uppercase opacity-50 lg:pr-1">
+                            Error
+                        </Text>
+                        <h1 className={`font-aumovio-bold tracking-tight leading-none select-none text-right ${accentClass}`} style={{ fontSize: "clamp(5rem,12vw,9rem)" }}>
+                            {code}
+                        </h1>
+                    </div>
                 </div>
 
                 {/* ── RIGHT CELL — title, subtitle, children, cta ── */}
                 <div className="flex flex-col items-center justify-center gap-4 lg:items-start lg:pl-12 lg:max-w-10/12">
-                    {/* Title */}
-                    <h1
-                        className="text-2xl text-center md:text-3xl font-aumovio-bold text-black/85 dark:text-white/90 lg:text-left"
-                        style={{
-                            animation: "err-slide-up .5s .2s ease both",
-                            opacity: 0,
-                        }}
-                    >
-                        {title}
-                    </h1>
+                    {/* Title — gradient shimmer for that magical touch */}
+                    <div style={{ animation: "err-slide-up .5s .2s ease both", opacity: 0 }}>
+                        <H2 size="h3" gradient align="center" className="lg:text-left">
+                            {title}
+                        </H2>
+                    </div>
 
-                    {/* Subtitle */}
-                    <p
-                        className="max-w-sm text-base text-center text-grey-500 dark:text-grey-400 lg:text-left"
-                        style={{
-                            animation: "err-slide-up .5s .3s ease both",
-                            opacity: 0,
-                        }}
-                    >
-                        {subtitle}
-                    </p>
+                    {/* Subtitle — cinematic lead paragraph */}
+                    <div style={{ animation: "err-slide-up .5s .3s ease both", opacity: 0 }}>
+                        <Paragraph lead className="max-w-sm text-center lg:text-left">
+                            {subtitle}
+                        </Paragraph>
+                    </div>
+
+                    {/* Gradient divider — visual breathing room */}
+                    <div className="w-full max-w-sm" style={{ animation: "err-slide-up .5s .33s ease both", opacity: 0 }}>
+                        <Divider variant="gradient" spacing="sm" />
+                    </div>
 
                     {children && (
                         <div
