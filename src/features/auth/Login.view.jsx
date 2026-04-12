@@ -59,11 +59,7 @@ export default function LoginView() {
         <div className="fixed flex items-center w-full h-full min-h-screen font-aumovio">
             {/* Background image */}
             <div className="absolute inset-0 -z-10">
-                <img
-                    alt=""
-                    className="object-cover w-full h-full"
-                    src={aumovio}
-                />
+                <img alt="" className="object-cover w-full h-full" src={aumovio} />
             </div>
 
             {/* Top-left logo — always on dark background image */}
@@ -82,16 +78,7 @@ export default function LoginView() {
                     <div className="flex items-center justify-center h-full min-h-screen py-8">
                         <div className="w-11/12 md:w-7/12 lg:w-6/12 xl:w-5/12">
                             {/* Login Card */}
-                            <Card
-                                variant="glass"
-                                padding="none"
-                                className={`transition-smooth backface-hidden ${
-                                    errorEffect
-                                        ? "animate-shake ring-2 ring-danger-400"
-                                        : ""
-                                }`}
-                                onAnimationEnd={() => setErrorEffect(false)}
-                            >
+                            <Card variant="glass" padding="none" className={`transition-smooth backface-hidden ${errorEffect ? "animate-shake ring-2 ring-danger-400" : ""}`} onAnimationEnd={() => setErrorEffect(false)}>
                                 <div className="px-6 py-8 lg:px-16">
                                     {/* Card Logo — theme-aware */}
                                     <div className="flex items-center justify-center mb-2 animate-fade-in-up">
@@ -101,110 +88,38 @@ export default function LoginView() {
                                     <Divider variant="gradient" spacing="sm" />
 
                                     {/* Title */}
-                                    <H4
-                                        align="center"
-                                        className="animate-fade-in-up"
-                                    >
+                                    <H4 align="center" className="animate-fade-in-up">
                                         Sign in to {APP_NAME}
                                     </H4>
 
                                     {/* Subtitle */}
-                                    <Paragraph
-                                        size="sm"
-                                        color="muted"
-                                        className="mt-2 text-center opacity-80 animate-fade-in-up"
-                                    >
-                                        Welcome back! Please sign in to your
-                                        account
+                                    <Paragraph size="sm" color="muted" className="mt-2 text-center opacity-80 animate-fade-in-up">
+                                        Welcome back! Please sign in to your account
                                     </Paragraph>
 
                                     {/* Form */}
-                                    <form
-                                        className="mt-8 space-y-5 animate-fade-in-up"
-                                        style={{ animationDelay: "0.2s" }}
-                                        onSubmit={handleSubmit}
-                                    >
-                                        <Input
-                                            label="Username"
-                                            name="username"
-                                            type="text"
-                                            placeholder="Username or User ID"
-                                            value={form.username}
-                                            onChange={handleChange}
-                                            autoComplete="username"
-                                            leftIcon={UserIcon}
-                                            error={
-                                                errorEffect &&
-                                                localError ===
-                                                    "Username is required"
-                                                    ? localError
-                                                    : undefined
-                                            }
-                                        />
+                                    <form className="mt-8 space-y-5 animate-fade-in-up" style={{ animationDelay: "0.2s" }} onSubmit={handleSubmit}>
+                                        <Input label="Username" name="username" type="text" placeholder="Username or User ID" value={form.username} onChange={handleChange} autoComplete="username" leftIcon={UserIcon} error={errorEffect && localError === "Username is required" ? localError : undefined} />
 
-                                        <Input
-                                            label="Password"
-                                            name="password"
-                                            type="password"
-                                            placeholder="Password"
-                                            value={form.password}
-                                            onChange={handleChange}
-                                            autoComplete="current-password"
-                                            leftIcon={LockClosedIcon}
-                                            error={
-                                                errorEffect &&
-                                                localError ===
-                                                    "Password is required"
-                                                    ? localError
-                                                    : undefined
-                                            }
-                                        />
+                                        <Input label="Password" name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} autoComplete="current-password" leftIcon={LockClosedIcon} error={errorEffect && localError === "Password is required" ? localError : undefined} />
 
                                         {/* Server error */}
-                                        {displayError &&
-                                            localError !== displayError && (
-                                                <Alert
-                                                    variant="danger"
-                                                    size="sm"
-                                                    dismissible
-                                                >
-                                                    {displayError}
-                                                </Alert>
-                                            )}
+                                        {displayError && localError !== displayError && (
+                                            <Alert variant="danger" size="sm" dismissible>
+                                                {displayError}
+                                            </Alert>
+                                        )}
 
                                         {/* Actions */}
-                                        <div
-                                            className="flex flex-col gap-3 pt-2 animate-fade-in-up"
-                                            style={{ animationDelay: "0.4s" }}
-                                        >
-                                            <Button
-                                                type="submit"
-                                                variant="gradient"
-                                                size="lg"
-                                                fullWidth
-                                                loading={loading}
-                                            >
-                                                {loading
-                                                    ? "Signing In…"
-                                                    : "Sign In"}
+                                        <div className="flex flex-col gap-3 pt-2 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+                                            <Button type="submit" variant="gradient" size="lg" fullWidth loading={loading}>
+                                                {loading ? "Signing In…" : "Sign In"}
                                             </Button>
 
-                                            <Divider
-                                                label="or"
-                                                variant="gradient"
-                                                spacing="sm"
-                                            />
+                                            <Divider label="or" variant="gradient" spacing="sm" />
 
-                                            <Button
-                                                variant="accent"
-                                                size="lg"
-                                                fullWidth
-                                                onClick={() =>
-                                                    navigate("/sign-up")
-                                                }
-                                            >
-                                                Don&apos;t have an account? Sign
-                                                up
+                                            <Button variant="accent" size="lg" fullWidth onClick={() => navigate("/sign-up")}>
+                                                Don&apos;t have an account? Sign up
                                             </Button>
                                         </div>
                                     </form>

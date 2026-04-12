@@ -13,8 +13,7 @@
  * Backend manages the HTTP-only secret cookie automatically (csrf-csrf).
  */
 
-const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1/";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1/";
 
 class CsrfMiddleware {
     constructor() {
@@ -162,19 +161,13 @@ class CsrfMiddleware {
      * Debug snapshot — useful for CsrfContext and debug UIs.
      */
     getDebugInfo() {
-        const timeUntilExpiry = this._tokenExpiresAt
-            ? new Date(this._tokenExpiresAt).getTime() - Date.now()
-            : null;
+        const timeUntilExpiry = this._tokenExpiresAt ? new Date(this._tokenExpiresAt).getTime() - Date.now() : null;
         return {
             hasToken: !!this._token,
-            tokenPreview: this._token
-                ? `${this._token.substring(0, 8)}...`
-                : null,
+            tokenPreview: this._token ? `${this._token.substring(0, 8)}...` : null,
             isInitialized: this._isInitialized,
             tokenExpiresAt: this._tokenExpiresAt,
-            timeUntilExpirySeconds: timeUntilExpiry
-                ? Math.floor(timeUntilExpiry / 1000)
-                : null,
+            timeUntilExpirySeconds: timeUntilExpiry ? Math.floor(timeUntilExpiry / 1000) : null,
             hasRefreshTimer: !!this._refreshTimer,
             retryCount: this._retryCount,
         };
@@ -220,9 +213,7 @@ class CsrfMiddleware {
                 });
 
                 if (!response.ok) {
-                    throw new Error(
-                        `HTTP ${response.status}: ${response.statusText}`,
-                    );
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
 
                 const data = await response.json();
@@ -234,25 +225,20 @@ class CsrfMiddleware {
                 this._lastFetchTime = Date.now();
                 this._retryCount = 0;
 
-                if (data.expiresIn)
-                    this._tokenExpiry = Date.now() + data.expiresIn;
+                if (data.expiresIn) this._tokenExpiry = Date.now() + data.expiresIn;
                 if (data.expiresAt) this._tokenExpiresAt = data.expiresAt;
 
                 if (data.refreshIn && data.refreshIn > 0) {
                     this._scheduleRefresh(data.refreshIn);
                 } else if (data.expiresIn) {
-                    this._scheduleRefresh(
-                        Math.max(0, data.expiresIn - this._refreshBeforeExpiry),
-                    );
+                    this._scheduleRefresh(Math.max(0, data.expiresIn - this._refreshBeforeExpiry));
                 }
 
                 return data.token;
             } catch (err) {
                 this._retryCount = attempt + 1;
                 if (attempt === this._maxRetries) {
-                    throw new Error(
-                        `CSRF fetch failed after ${this._maxRetries + 1} attempts: ${err.message}`,
-                    );
+                    throw new Error(`CSRF fetch failed after ${this._maxRetries + 1} attempts: ${err.message}`);
                 }
                 await this._sleep(this._retryDelay * Math.pow(2, attempt));
             }
@@ -274,31 +260,24 @@ class CsrfMiddleware {
                 });
 
                 if (!response.ok) {
-                    throw new Error(
-                        `HTTP ${response.status}: ${response.statusText}`,
-                    );
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
 
                 const data = await response.json();
                 if (!data.success || !data.token) {
-                    throw new Error(
-                        data.message || "Refresh returned no token",
-                    );
+                    throw new Error(data.message || "Refresh returned no token");
                 }
 
                 this._token = data.token;
                 this._lastFetchTime = Date.now();
 
-                if (data.expiresIn)
-                    this._tokenExpiry = Date.now() + data.expiresIn;
+                if (data.expiresIn) this._tokenExpiry = Date.now() + data.expiresIn;
                 if (data.expiresAt) this._tokenExpiresAt = data.expiresAt;
 
                 if (data.refreshIn && data.refreshIn > 0) {
                     this._scheduleRefresh(data.refreshIn);
                 } else if (data.expiresIn) {
-                    this._scheduleRefresh(
-                        Math.max(0, data.expiresIn - this._refreshBeforeExpiry),
-                    );
+                    this._scheduleRefresh(Math.max(0, data.expiresIn - this._refreshBeforeExpiry));
                 }
 
                 this._notifyListeners();

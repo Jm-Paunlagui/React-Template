@@ -52,15 +52,7 @@ const HEIGHTS = {
     full: "h-full",
 };
 
-export function Drawer({
-    open,
-    onClose,
-    side = "right",
-    size = "md",
-    title,
-    backdrop = true,
-    children,
-}) {
+export function Drawer({ open, onClose, side = "right", size = "md", title, backdrop = true, children }) {
     useEffect(() => {
         if (!open) return;
         const h = (e) => {
@@ -98,9 +90,7 @@ export function Drawer({
             >
                 {/* Header */}
                 <div className="flex items-center justify-between px-5 py-4 border-b border-grey-200 dark:border-grey-700 shrink-0">
-                    <h2 className="text-base font-aumovio-bold text-black/85 dark:text-white/90">
-                        {title}
-                    </h2>
+                    <h2 className="text-base font-aumovio-bold text-black/85 dark:text-white/90">{title}</h2>
                     <button
                         onClick={onClose}
                         aria-label="Close drawer"

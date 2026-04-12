@@ -2,13 +2,7 @@ import ReactApexChart from "react-apexcharts";
 import { useTheme } from "../../contexts/theme/ThemeContext";
 import { chartBase } from "../../utils/chartDefaults";
 
-export function DonutChart({
-    series = [],
-    labels = [],
-    height = 300,
-    title,
-    donut = true,
-}) {
+export function DonutChart({ series = [], labels = [], height = 300, title, donut = true }) {
     const { isDark } = useTheme();
 
     const options = {
@@ -33,17 +27,8 @@ export function DonutChart({
                   },
               }
             : {},
-        title: title
-            ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } }
-            : undefined,
+        title: title ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } } : undefined,
     };
 
-    return (
-        <ReactApexChart
-            type={donut ? "donut" : "pie"}
-            options={options}
-            series={series}
-            height={height}
-        />
-    );
+    return <ReactApexChart type={donut ? "donut" : "pie"} options={options} series={series} height={height} />;
 }

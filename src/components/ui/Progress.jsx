@@ -22,16 +22,7 @@ const COLORS = {
 
 const HEIGHTS = { xs: "h-1", sm: "h-1.5", md: "h-2.5", lg: "h-4" };
 
-export function Progress({
-    value = 0,
-    max = 100,
-    variant = "primary",
-    size = "md",
-    label = false,
-    animated = false,
-    circular = false,
-    radius = 36,
-}) {
+export function Progress({ value = 0, max = 100, variant = "primary", size = "md", label = false, animated = false, circular = false, radius = 36 }) {
     const pct = Math.min(100, Math.max(0, (value / max) * 100));
 
     if (circular) {
@@ -41,30 +32,10 @@ export function Progress({
         return (
             <div className="relative inline-flex items-center justify-center font-aumovio">
                 <svg width={sz} height={sz} className="-rotate-90">
-                    <circle
-                        cx={sz / 2}
-                        cy={sz / 2}
-                        r={radius}
-                        fill="none"
-                        stroke="var(--ring-track)"
-                        strokeWidth="8"
-                    />
-                    <circle
-                        cx={sz / 2}
-                        cy={sz / 2}
-                        r={radius}
-                        fill="none"
-                        stroke="#FF4208"
-                        strokeWidth="8"
-                        strokeDasharray={circ}
-                        strokeDashoffset={dash}
-                        strokeLinecap="round"
-                        style={{ transition: "stroke-dashoffset 0.6s ease" }}
-                    />
+                    <circle cx={sz / 2} cy={sz / 2} r={radius} fill="none" stroke="var(--ring-track)" strokeWidth="8" />
+                    <circle cx={sz / 2} cy={sz / 2} r={radius} fill="none" stroke="#FF4208" strokeWidth="8" strokeDasharray={circ} strokeDashoffset={dash} strokeLinecap="round" style={{ transition: "stroke-dashoffset 0.6s ease" }} />
                 </svg>
-                <span className="absolute text-sm font-aumovio-bold text-black/85 dark:text-white/90">
-                    {Math.round(pct)}%
-                </span>
+                <span className="absolute text-sm font-aumovio-bold text-black/85 dark:text-white/90">{Math.round(pct)}%</span>
             </div>
         );
     }
@@ -73,17 +44,11 @@ export function Progress({
         <div className="w-full font-aumovio">
             {label && (
                 <div className="flex justify-between mb-1">
-                    <span className="text-xs text-grey-500 dark:text-grey-400">
-                        Progress
-                    </span>
-                    <span className="text-xs font-aumovio-bold text-black/70 dark:text-white/70">
-                        {Math.round(pct)}%
-                    </span>
+                    <span className="text-xs text-grey-500 dark:text-grey-400">Progress</span>
+                    <span className="text-xs font-aumovio-bold text-black/70 dark:text-white/70">{Math.round(pct)}%</span>
                 </div>
             )}
-            <div
-                className={`w-full bg-grey-200 dark:bg-grey-700 rounded-full overflow-hidden ${HEIGHTS[size] ?? HEIGHTS.md}`}
-            >
+            <div className={`w-full bg-grey-200 dark:bg-grey-700 rounded-full overflow-hidden ${HEIGHTS[size] ?? HEIGHTS.md}`}>
                 <div
                     className={`h-full rounded-full ${COLORS[variant] ?? COLORS.primary}
             transition-all duration-700 ease-out

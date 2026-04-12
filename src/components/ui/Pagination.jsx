@@ -38,15 +38,7 @@ const SZ = {
     lg: "w-10 h-10 text-base",
 };
 
-export function Pagination({
-    page,
-    totalPages,
-    onChange,
-    siblingCount = 1,
-    showEnds = true,
-    size = "md",
-    variant = "default",
-}) {
+export function Pagination({ page, totalPages, onChange, siblingCount = 1, showEnds = true, size = "md", variant = "default" }) {
     if (totalPages <= 1) return null;
     const pages = getPages(page, totalPages, siblingCount);
     const sz = SZ[size] ?? SZ.md;
@@ -62,45 +54,17 @@ export function Pagination({
             className={`flex items-center justify-center font-aumovio-bold shrink-0
         border transition-all duration-200 ${sz} ${radius}
         ${disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
-        ${
-            label === page
-                ? "bg-orange-400 text-white border-orange-400 shadow-lg shadow-orange-400/30"
-                : label === "..."
-                  ? "bg-transparent border-transparent text-grey-400 cursor-default hover:bg-transparent"
-                  : "bg-white dark:bg-[#1a1030] border-grey-200 dark:border-grey-700 text-black/70 dark:text-white/70 hover:border-orange-400 hover:text-orange-400 dark:hover:border-orange-400"
-        }`}
+        ${label === page ? "bg-orange-400 text-white border-orange-400 shadow-lg shadow-orange-400/30" : label === "..." ? "bg-transparent border-transparent text-grey-400 cursor-default hover:bg-transparent" : "bg-white dark:bg-[#1a1030] border-grey-200 dark:border-grey-700 text-black/70 dark:text-white/70 hover:border-orange-400 hover:text-orange-400 dark:hover:border-orange-400"}`}
         >
             {icon ?? label}
         </button>
     );
 
     return (
-        <nav
-            aria-label="Pagination"
-            className="flex flex-wrap items-center gap-1 font-aumovio"
-        >
-            {btn(
-                "Prev",
-                page - 1,
-                page <= 1,
-                <ChevronLeftIcon className="w-4 h-4" />,
-            )}
-            {!showEnds
-                ? null
-                : pages.map((p, i) =>
-                      btn(
-                          p,
-                          typeof p === "number" ? p : page,
-                          p === "...",
-                          null,
-                      ),
-                  )}
-            {btn(
-                "Next",
-                page + 1,
-                page >= totalPages,
-                <ChevronRightIcon className="w-4 h-4" />,
-            )}
+        <nav aria-label="Pagination" className="flex flex-wrap items-center gap-1 font-aumovio">
+            {btn("Prev", page - 1, page <= 1, <ChevronLeftIcon className="w-4 h-4" />)}
+            {!showEnds ? null : pages.map((p, i) => btn(p, typeof p === "number" ? p : page, p === "...", null))}
+            {btn("Next", page + 1, page >= totalPages, <ChevronRightIcon className="w-4 h-4" />)}
         </nav>
     );
 }

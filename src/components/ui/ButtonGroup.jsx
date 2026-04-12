@@ -15,14 +15,7 @@ const SZ = {
     lg: "px-5 py-2.5 text-sm",
 };
 
-export function ButtonGroup({
-    items = [],
-    active,
-    onChange,
-    variant = "primary",
-    size = "md",
-    orientation = "horizontal",
-}) {
+export function ButtonGroup({ items = [], active, onChange, variant = "primary", size = "md", orientation = "horizontal" }) {
     const isH = orientation === "horizontal";
 
     return (
@@ -46,15 +39,9 @@ export function ButtonGroup({
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50
               disabled:opacity-50 disabled:cursor-not-allowed
               ${SZ[size] ?? SZ.md}
-              ${
-                  isActive
-                      ? "bg-orange-400 text-white"
-                      : "bg-white dark:bg-[#1a1030] text-grey-600 dark:text-grey-300 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-400"
-              }`}
+              ${isActive ? "bg-orange-400 text-white" : "bg-white dark:bg-[#1a1030] text-grey-600 dark:text-grey-300 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-400"}`}
                     >
-                        {item.icon && (
-                            <item.icon className="w-4 h-4 shrink-0" />
-                        )}
+                        {item.icon && <item.icon className="w-4 h-4 shrink-0" />}
                         {item.label}
                     </button>
                 );

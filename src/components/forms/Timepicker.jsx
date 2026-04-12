@@ -11,22 +11,12 @@
 import { ClockIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 
-export function Timepicker({
-    value = "",
-    onChange,
-    label,
-    error,
-    disabled = false,
-    size = "md",
-    use12Hour = false,
-    minuteStep = 5,
-}) {
+export function Timepicker({ value = "", onChange, label, error, disabled = false, size = "md", use12Hour = false, minuteStep = 5 }) {
     const [open, setOpen] = useState(false);
     const [h, m, ampm] = (() => {
         const [hh = "12", mm = "00"] = (value || "").split(":");
         const hn = parseInt(hh);
-        if (use12Hour)
-            return [hn > 12 ? hn - 12 : hn || 12, mm, hn >= 12 ? "PM" : "AM"];
+        if (use12Hour) return [hn > 12 ? hn - 12 : hn || 12, mm, hn >= 12 ? "PM" : "AM"];
         return [hn, mm, null];
     })();
     const ref = useRef(null);
@@ -48,21 +38,12 @@ export function Timepicker({
         onChange?.(`${String(hour).padStart(2, "0")}:${newM}`);
     };
 
-    const hours = Array.from({ length: use12Hour ? 12 : 24 }, (_, i) =>
-        use12Hour ? i + 1 : i,
-    );
-    const minutes = Array.from(
-        { length: Math.floor(60 / minuteStep) },
-        (_, i) => String(i * minuteStep).padStart(2, "0"),
-    );
+    const hours = Array.from({ length: use12Hour ? 12 : 24 }, (_, i) => (use12Hour ? i + 1 : i));
+    const minutes = Array.from({ length: Math.floor(60 / minuteStep) }, (_, i) => String(i * minuteStep).padStart(2, "0"));
 
     return (
         <div ref={ref} className="relative w-full font-aumovio">
-            {label && (
-                <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">
-                    {label}
-                </label>
-            )}
+            {label && <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">{label}</label>}
             <button
                 type="button"
                 disabled={disabled}
@@ -73,9 +54,7 @@ export function Timepicker({
           ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
             >
                 <ClockIcon className="w-4 h-4 text-grey-400" />
-                <span className={value ? "" : "text-grey-400"}>
-                    {value || "Select time"}
-                </span>
+                <span className={value ? "" : "text-grey-400"}>{value || "Select time"}</span>
             </button>
             {open && (
                 <div
@@ -130,11 +109,7 @@ export function Timepicker({
                     </div>
                 </div>
             )}
-            {error && (
-                <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">
-                    {error}
-                </p>
-            )}
+            {error && <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">{error}</p>}
         </div>
     );
 }

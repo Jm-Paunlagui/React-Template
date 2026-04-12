@@ -18,21 +18,13 @@ const POSITIONS = {
     "top-left": "fixed top-6 left-6  z-50",
 };
 
-export function SpeedDial({
-    icon: Icon = PlusIcon,
-    actions = [],
-    direction = "up",
-    position = "bottom-right",
-    tooltip = true,
-}) {
+export function SpeedDial({ icon: Icon = PlusIcon, actions = [], direction = "up", position = "bottom-right", tooltip = true }) {
     const [open, setOpen] = useState(false);
     const isV = direction === "up" || direction === "down";
     const isReverse = direction === "up" || direction === "left";
 
     const actionList = (
-        <div
-            className={`flex ${isV ? "flex-col" : "flex-row"} ${isReverse ? "flex-col-reverse" : ""} gap-3 mb-3`}
-        >
+        <div className={`flex ${isV ? "flex-col" : "flex-row"} ${isReverse ? "flex-col-reverse" : ""} gap-3 mb-3`}>
             {actions.map((a, i) => (
                 <div
                     key={a.id}
@@ -40,11 +32,7 @@ export function SpeedDial({
           ${open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
                     style={{ transitionDelay: open ? `${i * 50}ms` : "0ms" }}
                 >
-                    {tooltip && isReverse && (
-                        <span className="px-2 py-1 text-xs bg-white border rounded-lg shadow font-aumovio-bold dark:bg-grey-800 text-black/80 dark:text-white/80 border-grey-200 dark:border-grey-700 whitespace-nowrap">
-                            {a.label}
-                        </span>
-                    )}
+                    {tooltip && isReverse && <span className="px-2 py-1 text-xs bg-white border rounded-lg shadow font-aumovio-bold dark:bg-grey-800 text-black/80 dark:text-white/80 border-grey-200 dark:border-grey-700 whitespace-nowrap">{a.label}</span>}
                     <button
                         onClick={() => {
                             a.onClick?.();

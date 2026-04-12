@@ -42,13 +42,8 @@ export class ErrorBoundary extends Component {
                 >
                     !
                 </div>
-                <h2 className="text-base font-aumovio-bold text-black/85 dark:text-white/85 mb-1">
-                    Something went wrong
-                </h2>
-                <p className="text-sm font-aumovio text-grey-500 dark:text-grey-400 mb-4 max-w-xs">
-                    An unexpected error occurred. Refresh the page or contact
-                    support if it persists.
-                </p>
+                <h2 className="text-base font-aumovio-bold text-black/85 dark:text-white/85 mb-1">Something went wrong</h2>
+                <p className="text-sm font-aumovio text-grey-500 dark:text-grey-400 mb-4 max-w-xs">An unexpected error occurred. Refresh the page or contact support if it persists.</p>
                 <button
                     onClick={this.handleReset}
                     className="px-4 py-2 text-sm font-aumovio-bold text-orange-400

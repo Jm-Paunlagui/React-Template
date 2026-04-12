@@ -27,11 +27,7 @@ import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
 
-export default function ProtectedRoute({
-    role = null,
-    check = null,
-    redirectTo = "/unauthorized",
-}) {
+export default function ProtectedRoute({ role = null, check = null, redirectTo = "/unauthorized" }) {
     const [status, setStatus] = useState("checking"); // 'checking' | 'allowed' | 'denied'
 
     useEffect(() => {

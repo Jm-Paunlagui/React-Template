@@ -23,17 +23,8 @@ export function HeatmapChart({ series = [], height = 300, title }) {
                 },
             },
         },
-        title: title
-            ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } }
-            : undefined,
+        title: title ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } } : undefined,
     };
 
-    return (
-        <ReactApexChart
-            type="heatmap"
-            options={options}
-            series={series}
-            height={height}
-        />
-    );
+    return <ReactApexChart type="heatmap" options={options} series={series} height={height} />;
 }

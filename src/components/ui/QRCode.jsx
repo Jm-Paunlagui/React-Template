@@ -17,17 +17,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useRef } from "react";
 import Button from "./Button";
 
-export function QRCode({
-    value = "",
-    size = 160,
-    level = "M",
-    bgColor = "#FFFFFF",
-    fgColor = "#000000",
-    logo,
-    logoSize = 32,
-    downloadable = false,
-    title,
-}) {
+export function QRCode({ value = "", size = 160, level = "M", bgColor = "#FFFFFF", fgColor = "#000000", logo, logoSize = 32, downloadable = false, title }) {
     const ref = useRef(null);
 
     const download = () => {
@@ -44,15 +34,8 @@ export function QRCode({
 
     return (
         <div className="inline-flex flex-col items-center gap-3 font-aumovio">
-            {title && (
-                <p className="text-sm font-aumovio-bold text-black/70 dark:text-white/70">
-                    {title}
-                </p>
-            )}
-            <div
-                ref={ref}
-                className="p-3 bg-white border shadow-lg rounded-xl border-grey-200 dark:border-grey-700"
-            >
+            {title && <p className="text-sm font-aumovio-bold text-black/70 dark:text-white/70">{title}</p>}
+            <div ref={ref} className="p-3 bg-white border shadow-lg rounded-xl border-grey-200 dark:border-grey-700">
                 <QRCodeSVG
                     value={value || "https://aumovio.com"}
                     size={size}
@@ -74,12 +57,7 @@ export function QRCode({
                 />
             </div>
             {downloadable && (
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    leftIcon={ArrowDownTrayIcon}
-                    onClick={download}
-                >
+                <Button variant="ghost" size="sm" leftIcon={ArrowDownTrayIcon} onClick={download}>
                     Download SVG
                 </Button>
             )}

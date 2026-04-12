@@ -2,18 +2,7 @@
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export function SearchInput({
-    value = "",
-    onChange,
-    onSubmit,
-    placeholder = "Search…",
-    disabled = false,
-    loading = false,
-    suggestions = [],
-    onSuggestionSelect,
-    debounce = 0,
-    size = "md",
-}) {
+export function SearchInput({ value = "", onChange, onSubmit, placeholder = "Search…", disabled = false, loading = false, suggestions = [], onSuggestionSelect, debounce = 0, size = "md" }) {
     const [local, setLocal] = useState(value);
     const [showSug, setShowSug] = useState(false);
     const timer = useRef(null);
@@ -31,8 +20,7 @@ export function SearchInput({
     const emit = useCallback(
         (v) => {
             clearTimeout(timer.current);
-            if (debounce > 0)
-                timer.current = setTimeout(() => onChange?.(v), debounce);
+            if (debounce > 0) timer.current = setTimeout(() => onChange?.(v), debounce);
             else onChange?.(v);
         },
         [onChange, debounce],
@@ -42,9 +30,7 @@ export function SearchInput({
 
     return (
         <div className="relative w-full font-aumovio">
-            <MagnifyingGlassIcon
-                className={`absolute top-1/2 -translate-y-1/2 ${ICON[size]} text-grey-400 pointer-events-none`}
-            />
+            <MagnifyingGlassIcon className={`absolute top-1/2 -translate-y-1/2 ${ICON[size]} text-grey-400 pointer-events-none`} />
             <input
                 type="search"
                 value={local}

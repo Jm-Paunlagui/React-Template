@@ -17,18 +17,14 @@ import { createContext, useCallback, useContext, useState } from "react";
 
 const LayoutContext = createContext(null);
 
-const DEFAULT_LAYOUT =
-    import.meta.env.VITE_LAYOUT_MODE === "sidebar" ? "sidebar" : "top";
+const DEFAULT_LAYOUT = import.meta.env.VITE_LAYOUT_MODE === "sidebar" ? "sidebar" : "top";
 
 export function LayoutProvider({ children }) {
     const [layout, setLayout] = useState(DEFAULT_LAYOUT);
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const toggleSidebar = useCallback(() => setSidebarOpen((o) => !o), []);
-    const toggleLayout = useCallback(
-        () => setLayout((l) => (l === "top" ? "sidebar" : "top")),
-        [],
-    );
+    const toggleLayout = useCallback(() => setLayout((l) => (l === "top" ? "sidebar" : "top")), []);
 
     return (
         <LayoutContext.Provider

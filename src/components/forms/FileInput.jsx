@@ -12,18 +12,7 @@
 import { CloudArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
 
-export function FileInput({
-    label,
-    name,
-    accept,
-    multiple = false,
-    disabled = false,
-    onChange,
-    maxSize,
-    error,
-    preview = false,
-    dropzone = true,
-}) {
+export function FileInput({ label, name, accept, multiple = false, disabled = false, onChange, maxSize, error, preview = false, dropzone = true }) {
     const ref = useRef(null);
     const [files, setFiles] = useState([]);
     const [dragging, setDragging] = useState(false);
@@ -42,11 +31,7 @@ export function FileInput({
     if (!dropzone)
         return (
             <div className="font-aumovio">
-                {label && (
-                    <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">
-                        {label}
-                    </label>
-                )}
+                {label && <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">{label}</label>}
                 <input
                     type="file"
                     name={name}
@@ -61,11 +46,7 @@ export function FileInput({
 
     return (
         <div className="font-aumovio">
-            {label && (
-                <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">
-                    {label}
-                </label>
-            )}
+            {label && <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">{label}</label>}
             <div
                 onClick={() => !disabled && ref.current?.click()}
                 onDragOver={(e) => {
@@ -82,59 +63,23 @@ export function FileInput({
           transition-all duration-200
           ${disabled ? "opacity-50 cursor-not-allowed" : ""}
           ${error ? "border-danger-400 bg-danger-100/10" : ""}
-          ${
-              dragging
-                  ? "border-orange-400 bg-orange-50 dark:bg-orange-400/5 scale-[1.01]"
-                  : error
-                    ? ""
-                    : "border-grey-300 dark:border-grey-700 hover:border-orange-400 bg-white dark:bg-[#1a1030]"
-          }`}
+          ${dragging ? "border-orange-400 bg-orange-50 dark:bg-orange-400/5 scale-[1.01]" : error ? "" : "border-grey-300 dark:border-grey-700 hover:border-orange-400 bg-white dark:bg-[#1a1030]"}`}
             >
-                <input
-                    ref={ref}
-                    type="file"
-                    name={name}
-                    accept={accept}
-                    multiple={multiple}
-                    className="sr-only"
-                    onChange={(e) => handle(e.target.files)}
-                />
+                <input ref={ref} type="file" name={name} accept={accept} multiple={multiple} className="sr-only" onChange={(e) => handle(e.target.files)} />
                 <CloudArrowUpIcon className="w-10 h-10 mx-auto mb-3 text-grey-300 dark:text-grey-600" />
                 <p className="text-sm font-aumovio-bold text-black/60 dark:text-white/60">
-                    Drop files here or{" "}
-                    <span className="text-orange-400">browse</span>
+                    Drop files here or <span className="text-orange-400">browse</span>
                 </p>
-                {accept && (
-                    <p className="mt-1 text-xs text-grey-400">
-                        Accepted: {accept}
-                    </p>
-                )}
-                {maxSize && (
-                    <p className="text-xs text-grey-400">
-                        Max size: {(maxSize / 1024 / 1024).toFixed(1)} MB
-                    </p>
-                )}
+                {accept && <p className="mt-1 text-xs text-grey-400">Accepted: {accept}</p>}
+                {maxSize && <p className="text-xs text-grey-400">Max size: {(maxSize / 1024 / 1024).toFixed(1)} MB</p>}
             </div>
             {files.length > 0 && (
                 <ul className="mt-3 space-y-2">
                     {files.map((f, i) => (
-                        <li
-                            key={i}
-                            className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg bg-grey-50 dark:bg-grey-800 border-grey-200 dark:border-grey-700"
-                        >
-                            {preview && f.type.startsWith("image/") && (
-                                <img
-                                    src={URL.createObjectURL(f)}
-                                    className="object-cover w-8 h-8 rounded"
-                                    alt=""
-                                />
-                            )}
-                            <span className="flex-1 truncate text-black/70 dark:text-white/70">
-                                {f.name}
-                            </span>
-                            <span className="text-xs text-grey-400 shrink-0">
-                                {(f.size / 1024).toFixed(0)} KB
-                            </span>
+                        <li key={i} className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg bg-grey-50 dark:bg-grey-800 border-grey-200 dark:border-grey-700">
+                            {preview && f.type.startsWith("image/") && <img src={URL.createObjectURL(f)} className="object-cover w-8 h-8 rounded" alt="" />}
+                            <span className="flex-1 truncate text-black/70 dark:text-white/70">{f.name}</span>
+                            <span className="text-xs text-grey-400 shrink-0">{(f.size / 1024).toFixed(0)} KB</span>
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -148,11 +93,7 @@ export function FileInput({
                     ))}
                 </ul>
             )}
-            {error && (
-                <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">
-                    {error}
-                </p>
-            )}
+            {error && <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">{error}</p>}
         </div>
     );
 }

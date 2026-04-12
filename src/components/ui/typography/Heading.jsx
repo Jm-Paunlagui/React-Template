@@ -23,14 +23,7 @@ const ALIGNS = {
     right: "text-right",
 };
 
-export function Heading({
-    as: Tag = "h2",
-    size,
-    gradient = false,
-    align = "left",
-    className = "",
-    children,
-}) {
+export function Heading({ as: Tag = "h2", size, gradient = false, align = "left", className = "", children }) {
     const sz = SCALE[size ?? Tag] ?? SCALE.h2;
     return (
         <Tag

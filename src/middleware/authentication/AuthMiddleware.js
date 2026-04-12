@@ -13,8 +13,8 @@
  *   AuthMiddleware.signout();
  */
 
-import cookie from 'js-cookie';
-import httpClient from '../HttpClient';
+import cookie from "js-cookie";
+import httpClient from "../HttpClient";
 
 // Cache config — avoid redundant /verify calls
 let _authCache = null;
@@ -26,45 +26,49 @@ class AuthMiddleware {
     // ─── Cookie helpers ───────────────────────────────────────────────────────
 
     static setCookie(key, value, options = {}) {
-        if (typeof window === 'undefined') return;
+        if (typeof window === "undefined") return;
         cookie.set(key, value, {
             domain: window.location.hostname,
-            sameSite: 'Strict',
-            path: '/',
+            sameSite: "Strict",
+            path: "/",
             ...options,
         });
     }
 
     static getCookie(key) {
-        if (typeof window === 'undefined') return null;
+        if (typeof window === "undefined") return null;
         return cookie.get(key) ?? null;
     }
 
     static removeCookie(key) {
-        if (typeof window === 'undefined') return;
+        if (typeof window === "undefined") return;
         cookie.remove(key, {
             domain: window.location.hostname,
-            path: '/',
-            sameSite: 'strict',
+            path: "/",
+            sameSite: "strict",
         });
     }
 
     // ─── LocalStorage helpers ─────────────────────────────────────────────────
 
     static setLocalStorage(key, value) {
-        if (typeof window === 'undefined') return;
+        if (typeof window === "undefined") return;
         localStorage.setItem(key, JSON.stringify(value));
     }
 
     static getLocalStorage(key) {
-        if (typeof window === 'undefined') return null;
+        if (typeof window === "undefined") return null;
         const raw = localStorage.getItem(key);
         if (!raw) return null;
-        try { return JSON.parse(raw); } catch { return null; }
+        try {
+            return JSON.parse(raw);
+        } catch {
+            return null;
+        }
     }
 
     static removeLocalStorage(key) {
-        if (typeof window === 'undefined') return;
+        if (typeof window === "undefined") return;
         localStorage.removeItem(key);
     }
 
@@ -74,7 +78,7 @@ class AuthMiddleware {
      * Set token cookie and call next() — call after successful login.
      */
     static authenticate(token, next) {
-        AuthMiddleware.setCookie('token', token);
+        AuthMiddleware.setCookie("token", token);
         next();
     }
 
@@ -84,8 +88,8 @@ class AuthMiddleware {
      */
     static signout() {
         AuthMiddleware.clearAuthCache();
-        AuthMiddleware.removeCookie('token');
-        AuthMiddleware.removeLocalStorage('user');
+        AuthMiddleware.removeCookie("token");
+        AuthMiddleware.removeLocalStorage("user");
     }
 
     /**
@@ -108,15 +112,15 @@ class AuthMiddleware {
      * @returns {Object|false} user object or false
      */
     static async isAuth() {
-        if (typeof window === 'undefined') return false;
+        if (typeof window === "undefined") return false;
 
-        const token = AuthMiddleware.getCookie('token');
+        const token = AuthMiddleware.getCookie("token");
         if (!token) {
             AuthMiddleware.clearAuthCache();
             return false;
         }
 
-        const userStr = localStorage.getItem('user');
+        const userStr = localStorage.getItem("user");
         if (!userStr) {
             AuthMiddleware.clearAuthCache();
             return false;
@@ -138,12 +142,14 @@ class AuthMiddleware {
                 _authCacheTimestamp = Date.now();
                 return user;
             }
-        } catch { /* fall through to verify */ }
+        } catch {
+            /* fall through to verify */
+        }
 
         // Verify with backend
         _pendingAuthRequest = (async () => {
             try {
-                const response = await httpClient.post('user-auth/verify', { TOKEN: token });
+                const response = await httpClient.post("user-auth/verify", { TOKEN: token });
                 const user = response.data?.data?.user || response.data?.user;
 
                 if (user) {
@@ -151,7 +157,7 @@ class AuthMiddleware {
                     _authCache = userWithTimestamp;
                     _authCacheTimestamp = Date.now();
                     _pendingAuthRequest = null;
-                    localStorage.setItem('user', JSON.stringify(userWithTimestamp));
+                    localStorage.setItem("user", JSON.stringify(userWithTimestamp));
                     return userWithTimestamp;
                 }
 

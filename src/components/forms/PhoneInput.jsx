@@ -18,16 +18,7 @@ const CODES = [
     { flag: "🇸🇬", code: "+65", country: "SG" },
 ];
 
-export function PhoneInput({
-    value = "",
-    onChange,
-    label,
-    error,
-    disabled = false,
-    size = "md",
-    placeholder = "912 345 6789",
-    countryCode = "+63",
-}) {
+export function PhoneInput({ value = "", onChange, label, error, disabled = false, size = "md", placeholder = "912 345 6789", countryCode = "+63" }) {
     const [cc, setCc] = useState(countryCode);
     const num = value.startsWith(cc) ? value.slice(cc.length).trim() : value;
 
@@ -41,11 +32,7 @@ export function PhoneInput({
 
     return (
         <div className="font-aumovio">
-            {label && (
-                <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">
-                    {label}
-                </label>
-            )}
+            {label && <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">{label}</label>}
             <div
                 className={`flex rounded-xl border overflow-hidden bg-white dark:bg-[#1a1030]
         ${error ? "border-danger-400" : "border-grey-300 dark:border-grey-700 focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-400/30"}`}
@@ -77,11 +64,7 @@ export function PhoneInput({
             placeholder-grey-400 focus:outline-none ${SZ[size] ?? SZ.md}`}
                 />
             </div>
-            {error && (
-                <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">
-                    {error}
-                </p>
-            )}
+            {error && <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">{error}</p>}
         </div>
     );
 }

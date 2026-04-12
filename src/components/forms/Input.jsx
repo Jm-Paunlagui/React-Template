@@ -17,36 +17,15 @@ const SZ = {
     lg: "px-4 py-3 text-base rounded-xl",
 };
 
-export function Input({
-    label,
-    name,
-    type = "text",
-    value,
-    onChange,
-    placeholder,
-    error,
-    helper,
-    leftIcon: LeftIcon,
-    rightElement,
-    disabled = false,
-    required = false,
-    autoComplete,
-    size = "md",
-    id,
-}) {
+export function Input({ label, name, type = "text", value, onChange, placeholder, error, helper, leftIcon: LeftIcon, rightElement, disabled = false, required = false, autoComplete, size = "md", id }) {
     const inputId = id ?? name;
 
     return (
         <div className="w-full font-aumovio">
             {label && (
-                <label
-                    htmlFor={inputId}
-                    className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5"
-                >
+                <label htmlFor={inputId} className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">
                     {label}
-                    {required && (
-                        <span className="text-danger-400 ml-0.5">*</span>
-                    )}
+                    {required && <span className="text-danger-400 ml-0.5">*</span>}
                 </label>
             )}
             <div className="relative">
@@ -73,26 +52,12 @@ export function Input({
             disabled:opacity-50 disabled:cursor-not-allowed
             ${LeftIcon ? "pl-9" : ""} ${rightElement ? "pr-10" : ""}
             ${SZ[size] ?? SZ.md}
-            ${
-                error
-                    ? "border-danger-400 focus:ring-danger-400/30 focus:border-danger-400 bg-danger-100/10"
-                    : "border-grey-300 dark:border-grey-700 focus:ring-orange-400/30 focus:border-orange-400"
-            }`}
+            ${error ? "border-danger-400 focus:ring-danger-400/30 focus:border-danger-400 bg-danger-100/10" : "border-grey-300 dark:border-grey-700 focus:ring-orange-400/30 focus:border-orange-400"}`}
                 />
-                {rightElement && (
-                    <span className="absolute -translate-y-1/2 right-3 top-1/2">
-                        {rightElement}
-                    </span>
-                )}
+                {rightElement && <span className="absolute -translate-y-1/2 right-3 top-1/2">{rightElement}</span>}
             </div>
-            {error && (
-                <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">
-                    {error}
-                </p>
-            )}
-            {!error && helper && (
-                <p className="mt-1.5 text-xs text-grey-400">{helper}</p>
-            )}
+            {error && <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">{error}</p>}
+            {!error && helper && <p className="mt-1.5 text-xs text-grey-400">{helper}</p>}
         </div>
     );
 }

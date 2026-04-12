@@ -1,7 +1,7 @@
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
-import babel from '@rolldown/plugin-babel'
+import babel from "@rolldown/plugin-babel";
 
 // https://vite.dev/config/
 // export default defineConfig({
@@ -35,12 +35,7 @@ export default defineConfig({
                         if (id.includes("react-router-dom")) {
                             return "vendor-router";
                         }
-                        if (
-                            id.includes("react-toastify") ||
-                            id.includes("@headlessui") ||
-                            id.includes("@heroicons") ||
-                            id.includes("@fortawesome")
-                        ) {
+                        if (id.includes("react-toastify") || id.includes("@headlessui") || id.includes("@heroicons") || id.includes("@fortawesome")) {
                             return "vendor-ui";
                         }
                         return "vendor";

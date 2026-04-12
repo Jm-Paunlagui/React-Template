@@ -20,12 +20,10 @@ const local = {
               })
             : null,
     set: (k, v) => {
-        if (typeof window !== "undefined")
-            safe(() => localStorage.setItem(k, JSON.stringify(v)));
+        if (typeof window !== "undefined") safe(() => localStorage.setItem(k, JSON.stringify(v)));
     },
     remove: (k) => {
-        if (typeof window !== "undefined")
-            safe(() => localStorage.removeItem(k));
+        if (typeof window !== "undefined") safe(() => localStorage.removeItem(k));
     },
     clear: () => {
         if (typeof window !== "undefined") safe(() => localStorage.clear());
@@ -41,12 +39,10 @@ const session = {
               })
             : null,
     set: (k, v) => {
-        if (typeof window !== "undefined")
-            safe(() => sessionStorage.setItem(k, JSON.stringify(v)));
+        if (typeof window !== "undefined") safe(() => sessionStorage.setItem(k, JSON.stringify(v)));
     },
     remove: (k) => {
-        if (typeof window !== "undefined")
-            safe(() => sessionStorage.removeItem(k));
+        if (typeof window !== "undefined") safe(() => sessionStorage.removeItem(k));
     },
     clear: () => {
         if (typeof window !== "undefined") safe(() => sessionStorage.clear());

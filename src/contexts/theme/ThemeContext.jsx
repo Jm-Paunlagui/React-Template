@@ -1,34 +1,22 @@
-import {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 const ThemeContext = createContext(null);
 const STORAGE_KEY = "aumovio-theme"; // stores "light" | "dark" | "system"
 
 function getSystemTheme() {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export function ThemeProvider({ children }) {
     // "mode" is the user's *preference*: "light" | "dark" | "system"
     const [mode, setMode] = useState(() => {
         const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored === "light" || stored === "dark" || stored === "system")
-            return stored;
+        if (stored === "light" || stored === "dark" || stored === "system") return stored;
         return import.meta.env.VITE_THEME || "system";
     });
 
     // resolved is always "light" or "dark" — the actual applied theme
-    const [resolved, setResolved] = useState(() =>
-        mode === "system" ? getSystemTheme() : mode,
-    );
+    const [resolved, setResolved] = useState(() => (mode === "system" ? getSystemTheme() : mode));
 
     // Listen for OS-level preference changes when mode is "system"
     useEffect(() => {
@@ -51,13 +39,7 @@ export function ThemeProvider({ children }) {
     }, [mode, resolved]);
 
     // Cycle: system → light → dark → system
-    const toggle = useCallback(
-        () =>
-            setMode((m) =>
-                m === "system" ? "light" : m === "light" ? "dark" : "system",
-            ),
-        [],
-    );
+    const toggle = useCallback(() => setMode((m) => (m === "system" ? "light" : m === "light" ? "dark" : "system")), []);
 
     const value = useMemo(
         () => ({
@@ -70,9 +52,7 @@ export function ThemeProvider({ children }) {
         [mode, resolved, toggle],
     );
 
-    return (
-        <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-    );
+    return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

@@ -10,38 +10,13 @@
  *   disabled   — boolean
  *   range      — boolean (returns [startDate, endDate])
  */
-import {
-    CalendarIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
-} from "@heroicons/react/24/outline";
-import {
-    addMonths,
-    eachDayOfInterval,
-    endOfMonth,
-    endOfWeek,
-    format,
-    isAfter,
-    isBefore,
-    isSameDay,
-    isSameMonth,
-    isToday,
-    startOfMonth,
-    startOfWeek,
-    subMonths,
-} from "date-fns";
+import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { addMonths, eachDayOfInterval, endOfMonth, endOfWeek, format, isAfter, isBefore, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek, subMonths } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
-export function Datepicker({
-    value = null,
-    onChange,
-    placeholder = "Select date",
-    minDate,
-    maxDate,
-    disabled = false,
-}) {
+export function Datepicker({ value = null, onChange, placeholder = "Select date", minDate, maxDate, disabled = false }) {
     const [open, setOpen] = useState(false);
     const [viewDate, setViewDate] = useState(value ?? new Date());
     const ref = useRef(null);
@@ -59,8 +34,7 @@ export function Datepicker({
         end: endOfWeek(endOfMonth(viewDate)),
     });
 
-    const isDisabled = (d) =>
-        (minDate && isBefore(d, minDate)) || (maxDate && isAfter(d, maxDate));
+    const isDisabled = (d) => (minDate && isBefore(d, minDate)) || (maxDate && isAfter(d, maxDate));
 
     return (
         <div ref={ref} className="relative inline-block w-full font-aumovio">
@@ -75,13 +49,7 @@ export function Datepicker({
           ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
             >
                 <CalendarIcon className="w-4 h-4 text-grey-400 shrink-0" />
-                <span
-                    className={
-                        value ? "text-black dark:text-white" : "text-grey-400"
-                    }
-                >
-                    {value ? format(value, "MMM dd, yyyy") : placeholder}
-                </span>
+                <span className={value ? "text-black dark:text-white" : "text-grey-400"}>{value ? format(value, "MMM dd, yyyy") : placeholder}</span>
             </button>
 
             {open && (
@@ -91,29 +59,18 @@ export function Datepicker({
                 >
                     {/* Header */}
                     <div className="flex items-center justify-between mb-4">
-                        <button
-                            onClick={() => setViewDate(subMonths(viewDate, 1))}
-                            className="p-1.5 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-400/10 text-grey-500 hover:text-orange-400 transition-colors"
-                        >
+                        <button onClick={() => setViewDate(subMonths(viewDate, 1))} className="p-1.5 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-400/10 text-grey-500 hover:text-orange-400 transition-colors">
                             <ChevronLeftIcon className="w-4 h-4" />
                         </button>
-                        <span className="text-sm font-aumovio-bold text-black/85 dark:text-white/90">
-                            {format(viewDate, "MMMM yyyy")}
-                        </span>
-                        <button
-                            onClick={() => setViewDate(addMonths(viewDate, 1))}
-                            className="p-1.5 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-400/10 text-grey-500 hover:text-orange-400 transition-colors"
-                        >
+                        <span className="text-sm font-aumovio-bold text-black/85 dark:text-white/90">{format(viewDate, "MMMM yyyy")}</span>
+                        <button onClick={() => setViewDate(addMonths(viewDate, 1))} className="p-1.5 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-400/10 text-grey-500 hover:text-orange-400 transition-colors">
                             <ChevronRightIcon className="w-4 h-4" />
                         </button>
                     </div>
                     {/* Day names */}
                     <div className="grid grid-cols-7 mb-2">
                         {DAYS.map((d) => (
-                            <span
-                                key={d}
-                                className="py-1 text-xs text-center font-aumovio-bold text-grey-400"
-                            >
+                            <span key={d} className="py-1 text-xs text-center font-aumovio-bold text-grey-400">
                                 {d}
                             </span>
                         ))}

@@ -36,19 +36,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export function useDebounce(value, delay = 300, options = {}) {
     const { leading = false, maxWait } = options;
 
-    const [debounced, setDebounced]   = useState(value);
-    const [isPending, setIsPending]   = useState(false);
+    const [debounced, setDebounced] = useState(value);
+    const [isPending, setIsPending] = useState(false);
 
     // Refs keep the latest values accessible inside timeouts without stale closures
-    const pendingValue  = useRef(value);
-    const timer         = useRef(null);
-    const maxWaitTimer  = useRef(null);
-    const leadingFired  = useRef(false);
-    const isMounted     = useRef(true);
+    const pendingValue = useRef(value);
+    const timer = useRef(null);
+    const maxWaitTimer = useRef(null);
+    const leadingFired = useRef(false);
+    const isMounted = useRef(true);
 
     useEffect(() => {
         isMounted.current = true;
-        return () => { isMounted.current = false; };
+        return () => {
+            isMounted.current = false;
+        };
     }, []);
 
     const applyValue = useCallback((v) => {
@@ -61,7 +63,7 @@ export function useDebounce(value, delay = 300, options = {}) {
     const cancel = useCallback(() => {
         clearTimeout(timer.current);
         clearTimeout(maxWaitTimer.current);
-        timer.current        = null;
+        timer.current = null;
         maxWaitTimer.current = null;
         if (isMounted.current) setIsPending(false);
         leadingFired.current = false;
@@ -71,7 +73,7 @@ export function useDebounce(value, delay = 300, options = {}) {
         if (timer.current) {
             clearTimeout(timer.current);
             clearTimeout(maxWaitTimer.current);
-            timer.current        = null;
+            timer.current = null;
             maxWaitTimer.current = null;
             applyValue(pendingValue.current);
         }
@@ -95,7 +97,7 @@ export function useDebounce(value, delay = 300, options = {}) {
         timer.current = setTimeout(() => {
             clearTimeout(maxWaitTimer.current);
             maxWaitTimer.current = null;
-            timer.current        = null;
+            timer.current = null;
             applyValue(pendingValue.current);
         }, delay);
 
@@ -103,7 +105,7 @@ export function useDebounce(value, delay = 300, options = {}) {
         if (maxWait && !maxWaitTimer.current) {
             maxWaitTimer.current = setTimeout(() => {
                 clearTimeout(timer.current);
-                timer.current        = null;
+                timer.current = null;
                 maxWaitTimer.current = null;
                 applyValue(pendingValue.current);
             }, maxWait);
@@ -114,7 +116,7 @@ export function useDebounce(value, delay = 300, options = {}) {
             clearTimeout(timer.current);
             clearTimeout(maxWaitTimer.current);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, delay, leading, maxWait]);
 
     return { value: debounced, cancel, flush, isPending };

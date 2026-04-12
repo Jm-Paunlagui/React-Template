@@ -20,24 +20,8 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import Skeleton from "./Skeleton";
 
-export function Table({
-    columns = [],
-    data = [],
-    loading = false,
-    selectable = false,
-    selectedIds = new Set(),
-    onSelect,
-    onSelectAll,
-    sortKey,
-    sortDir = "asc",
-    onSort,
-    emptyText = "No records found.",
-    stickyHeader = false,
-    striped = false,
-    compact = false,
-}) {
-    const allSelected =
-        data.length > 0 && data.every((r) => selectedIds.has(r.id));
+export function Table({ columns = [], data = [], loading = false, selectable = false, selectedIds = new Set(), onSelect, onSelectAll, sortKey, sortDir = "asc", onSort, emptyText = "No records found.", stickyHeader = false, striped = false, compact = false }) {
+    const allSelected = data.length > 0 && data.every((r) => selectedIds.has(r.id));
     const someSelected = data.some((r) => selectedIds.has(r.id));
     const cellPad = compact ? "px-4 py-2" : "px-5 py-3.5";
 
@@ -55,13 +39,9 @@ export function Table({
                                     type="checkbox"
                                     checked={allSelected}
                                     ref={(el) => {
-                                        if (el)
-                                            el.indeterminate =
-                                                someSelected && !allSelected;
+                                        if (el) el.indeterminate = someSelected && !allSelected;
                                     }}
-                                    onChange={(e) =>
-                                        onSelectAll?.(e.target.checked)
-                                    }
+                                    onChange={(e) => onSelectAll?.(e.target.checked)}
                                     className="w-4 h-4 rounded cursor-pointer accent-orange-400"
                                 />
                             </th>
@@ -73,20 +53,14 @@ export function Table({
                   uppercase tracking-wider text-xs whitespace-nowrap
                   ${col.sortable ? "cursor-pointer hover:text-orange-400 select-none" : ""}
                   ${col.width ?? ""}`}
-                                onClick={() =>
-                                    col.sortable && onSort?.(col.key)
-                                }
+                                onClick={() => col.sortable && onSort?.(col.key)}
                             >
                                 <span className="flex items-center gap-1">
                                     {col.label}
                                     {col.sortable && (
                                         <span className="flex flex-col -space-y-0.5">
-                                            <ChevronUpIcon
-                                                className={`w-2.5 h-2.5 ${sortKey === col.key && sortDir === "asc" ? "text-orange-400" : "text-grey-300"}`}
-                                            />
-                                            <ChevronDownIcon
-                                                className={`w-2.5 h-2.5 ${sortKey === col.key && sortDir === "desc" ? "text-orange-400" : "text-grey-300"}`}
-                                            />
+                                            <ChevronUpIcon className={`w-2.5 h-2.5 ${sortKey === col.key && sortDir === "asc" ? "text-orange-400" : "text-grey-300"}`} />
+                                            <ChevronDownIcon className={`w-2.5 h-2.5 ${sortKey === col.key && sortDir === "desc" ? "text-orange-400" : "text-grey-300"}`} />
                                         </span>
                                     )}
                                 </span>
@@ -100,29 +74,19 @@ export function Table({
                             <tr key={i} className="bg-white dark:bg-[#1a1030]">
                                 {selectable && (
                                     <td className={cellPad}>
-                                        <Skeleton
-                                            variant="rect"
-                                            width="1rem"
-                                            height="1rem"
-                                        />
+                                        <Skeleton variant="rect" width="1rem" height="1rem" />
                                     </td>
                                 )}
                                 {columns.map((col) => (
                                     <td key={col.key} className={cellPad}>
-                                        <Skeleton
-                                            variant="rect"
-                                            height="0.875rem"
-                                        />
+                                        <Skeleton variant="rect" height="0.875rem" />
                                     </td>
                                 ))}
                             </tr>
                         ))
                     ) : data.length === 0 ? (
                         <tr>
-                            <td
-                                colSpan={columns.length + (selectable ? 1 : 0)}
-                                className="py-16 text-center text-grey-400 dark:text-grey-500"
-                            >
+                            <td colSpan={columns.length + (selectable ? 1 : 0)} className="py-16 text-center text-grey-400 dark:text-grey-500">
                                 {emptyText}
                             </td>
                         </tr>
@@ -139,27 +103,12 @@ export function Table({
                                 >
                                     {selectable && (
                                         <td className={cellPad}>
-                                            <input
-                                                type="checkbox"
-                                                checked={isSelected}
-                                                onChange={(e) =>
-                                                    onSelect?.(
-                                                        row.id,
-                                                        e.target.checked,
-                                                    )
-                                                }
-                                                className="w-4 h-4 cursor-pointer accent-orange-400"
-                                            />
+                                            <input type="checkbox" checked={isSelected} onChange={(e) => onSelect?.(row.id, e.target.checked)} className="w-4 h-4 cursor-pointer accent-orange-400" />
                                         </td>
                                     )}
                                     {columns.map((col) => (
-                                        <td
-                                            key={col.key}
-                                            className={`${cellPad} text-black/75 dark:text-white/75`}
-                                        >
-                                            {col.render
-                                                ? col.render(row)
-                                                : (row[col.key] ?? "—")}
+                                        <td key={col.key} className={`${cellPad} text-black/75 dark:text-white/75`}>
+                                            {col.render ? col.render(row) : (row[col.key] ?? "—")}
                                         </td>
                                     ))}
                                 </tr>

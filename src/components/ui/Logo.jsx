@@ -18,18 +18,9 @@ import logoWhite from "../../assets/aumovio/Aumovio_Logo_white_white_RGB.png";
 
 const VARIANTS = { light: logoLight, dark: logoDark, white: logoWhite };
 
-export default function Logo({
-    variant = "auto",
-    className = "h-8 w-auto",
-    alt = "Aumovio",
-}) {
+export default function Logo({ variant = "auto", className = "h-8 w-auto", alt = "Aumovio" }) {
     const { isDark } = useTheme();
-    const src =
-        variant === "auto"
-            ? isDark
-                ? logoDark
-                : logoLight
-            : (VARIANTS[variant] ?? logoLight);
+    const src = variant === "auto" ? (isDark ? logoDark : logoLight) : (VARIANTS[variant] ?? logoLight);
 
     return <img src={src} alt={alt} className={className} />;
 }

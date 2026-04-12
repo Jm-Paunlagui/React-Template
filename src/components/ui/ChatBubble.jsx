@@ -20,49 +20,19 @@ const STATUS_ICONS = {
     read: <span className="text-blue-400">✓✓</span>,
 };
 
-export function ChatBubble({
-    message,
-    sender,
-    timestamp,
-    position = "left",
-    status,
-    type = "text",
-    imageUrl,
-    fileName,
-    reactions = [],
-}) {
+export function ChatBubble({ message, sender, timestamp, position = "left", status, type = "text", imageUrl, fileName, reactions = [] }) {
     const isRight = position === "right";
 
     return (
-        <div
-            className={`flex items-end gap-2 font-aumovio ${isRight ? "flex-row-reverse" : "flex-row"}`}
-        >
-            {!isRight && (
-                <Avatar name={sender?.name} src={sender?.avatar} size="sm" />
-            )}
-            <div
-                className={`max-w-xs md:max-w-sm lg:max-w-md ${isRight ? "items-end" : "items-start"} flex flex-col gap-1`}
-            >
-                {!isRight && sender?.name && (
-                    <span className="px-1 text-xs text-grey-500 font-aumovio-bold">
-                        {sender.name}
-                    </span>
-                )}
+        <div className={`flex items-end gap-2 font-aumovio ${isRight ? "flex-row-reverse" : "flex-row"}`}>
+            {!isRight && <Avatar name={sender?.name} src={sender?.avatar} size="sm" />}
+            <div className={`max-w-xs md:max-w-sm lg:max-w-md ${isRight ? "items-end" : "items-start"} flex flex-col gap-1`}>
+                {!isRight && sender?.name && <span className="px-1 text-xs text-grey-500 font-aumovio-bold">{sender.name}</span>}
                 <div
                     className={`relative rounded-2xl px-4 py-2.5 text-sm leading-relaxed
-          ${
-              isRight
-                  ? "bg-orange-400 text-white rounded-br-sm"
-                  : "bg-grey-100 dark:bg-grey-800 text-black/85 dark:text-white/85 rounded-bl-sm"
-          }`}
+          ${isRight ? "bg-orange-400 text-white rounded-br-sm" : "bg-grey-100 dark:bg-grey-800 text-black/85 dark:text-white/85 rounded-bl-sm"}`}
                 >
-                    {type === "image" && imageUrl && (
-                        <img
-                            src={imageUrl}
-                            alt="Shared"
-                            className="max-w-full mb-1 rounded-lg"
-                        />
-                    )}
+                    {type === "image" && imageUrl && <img src={imageUrl} alt="Shared" className="max-w-full mb-1 rounded-lg" />}
                     {type === "file" && (
                         <div className="flex items-center gap-2 text-xs">
                             <span className="text-2xl">📎</span>
@@ -72,9 +42,7 @@ export function ChatBubble({
                     {message && <p>{message}</p>}
                 </div>
                 {reactions.length > 0 && (
-                    <div
-                        className={`flex gap-1 flex-wrap ${isRight ? "justify-end" : ""}`}
-                    >
+                    <div className={`flex gap-1 flex-wrap ${isRight ? "justify-end" : ""}`}>
                         {reactions.map((r, i) => (
                             <span
                                 key={i}
@@ -86,13 +54,9 @@ export function ChatBubble({
                         ))}
                     </div>
                 )}
-                <div
-                    className={`flex items-center gap-1 text-xs text-grey-400 ${isRight ? "flex-row-reverse" : ""}`}
-                >
+                <div className={`flex items-center gap-1 text-xs text-grey-400 ${isRight ? "flex-row-reverse" : ""}`}>
                     <span>{timestamp}</span>
-                    {isRight && status && (
-                        <span>{STATUS_ICONS[status] ?? STATUS_ICONS.sent}</span>
-                    )}
+                    {isRight && status && <span>{STATUS_ICONS[status] ?? STATUS_ICONS.sent}</span>}
                 </div>
             </div>
         </div>

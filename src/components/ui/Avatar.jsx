@@ -27,22 +27,12 @@ const STATUS_DOT = {
 };
 
 // Deterministic color from name string
-const PALETTE = [
-    "bg-orange-400 text-white",
-    "bg-purple-400 text-white",
-    "bg-blue-400 text-white",
-    "bg-turquoise-400 text-white",
-    "bg-danger-400 text-white",
-    "bg-success-500 text-white",
-    "bg-yellow-500 text-black",
-];
+const PALETTE = ["bg-orange-400 text-white", "bg-purple-400 text-white", "bg-blue-400 text-white", "bg-turquoise-400 text-white", "bg-danger-400 text-white", "bg-success-500 text-white", "bg-yellow-500 text-black"];
 
 function getInitials(name = "") {
     const parts = name.trim().split(" ").filter(Boolean);
     if (!parts.length) return "?";
-    return parts.length === 1
-        ? parts[0].slice(0, 2).toUpperCase()
-        : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return parts.length === 1 ? parts[0].slice(0, 2).toUpperCase() : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
 function getColor(name = "") {
@@ -50,24 +40,14 @@ function getColor(name = "") {
     return PALETTE[sum % PALETTE.length];
 }
 
-export function Avatar({
-    src,
-    name = "",
-    size = "md",
-    shape = "circle",
-    status,
-    bordered = false,
-    stacked = false,
-}) {
+export function Avatar({ src, name = "", size = "md", shape = "circle", status, bordered = false, stacked = false }) {
     const sz = SIZES[size] ?? SIZES.md;
     const initials = getInitials(name);
     const color = getColor(name);
     const radius = shape === "circle" ? "rounded-full" : "rounded-lg";
 
     return (
-        <div
-            className={`relative inline-flex shrink-0 ${sz.wrap} ${stacked ? "-ml-3 first:ml-0" : ""}`}
-        >
+        <div className={`relative inline-flex shrink-0 ${sz.wrap} ${stacked ? "-ml-3 first:ml-0" : ""}`}>
             {src ? (
                 <img
                     src={src}
@@ -84,11 +64,7 @@ export function Avatar({
                     {initials}
                 </span>
             )}
-            {status && (
-                <span
-                    className={`absolute bottom-0 right-0 ${sz.dot} rounded-full ${STATUS_DOT[status]}`}
-                />
-            )}
+            {status && <span className={`absolute bottom-0 right-0 ${sz.dot} rounded-full ${STATUS_DOT[status]}`} />}
         </div>
     );
 }
@@ -97,12 +73,7 @@ export function Avatar({
  * AvatarGroup — Stacked row of avatars with overflow count.
  * Props: avatars[], max, size, shape
  */
-export function AvatarGroup({
-    avatars = [],
-    max = 4,
-    size = "md",
-    shape = "circle",
-}) {
+export function AvatarGroup({ avatars = [], max = 4, size = "md", shape = "circle" }) {
     const visible = avatars.slice(0, max);
     const overflow = avatars.length - max;
     const sz = SIZES[size] ?? SIZES.md;
@@ -110,14 +81,7 @@ export function AvatarGroup({
     return (
         <div className="flex items-center">
             {visible.map((a, i) => (
-                <Avatar
-                    key={i}
-                    {...a}
-                    size={size}
-                    shape={shape}
-                    stacked
-                    bordered
-                />
+                <Avatar key={i} {...a} size={size} shape={shape} stacked bordered />
             ))}
             {overflow > 0 && (
                 <span

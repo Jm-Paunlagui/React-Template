@@ -32,10 +32,7 @@ function CsrfGate({ children }) {
         return () => clearTimeout(timer);
     }, []);
 
-    if (
-        window.location.pathname.startsWith("/service-is-currently-unavailable")
-    )
-        return children;
+    if (window.location.pathname.startsWith("/service-is-currently-unavailable")) return children;
     if (error && !isInitialized) {
         window.location.replace("/service-is-currently-unavailable");
         return null;

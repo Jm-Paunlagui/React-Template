@@ -8,19 +8,10 @@
  *   lightbox   — boolean
  *   masonry    — boolean
  */
-import {
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-export function Gallery({
-    images = [],
-    columns = 3,
-    gap = "md",
-    lightbox = true,
-}) {
+export function Gallery({ images = [], columns = 3, gap = "md", lightbox = true }) {
     const [selected, setSelected] = useState(null);
     const COLS = {
         2: "grid-cols-2",
@@ -32,9 +23,7 @@ export function Gallery({
 
     return (
         <>
-            <div
-                className={`grid ${COLS[columns] ?? COLS[3]} ${GAPS[gap] ?? GAPS.md}`}
-            >
+            <div className={`grid ${COLS[columns] ?? COLS[3]} ${GAPS[gap] ?? GAPS.md}`}>
                 {images.map((img, i) => (
                     <div
                         key={i}
@@ -42,25 +31,15 @@ export function Gallery({
                         className={`overflow-hidden rounded-xl bg-grey-100 dark:bg-grey-800
               ${lightbox ? "cursor-zoom-in" : ""} group`}
                     >
-                        <img
-                            src={img.src}
-                            alt={img.alt ?? ""}
-                            className="object-cover w-full h-48 transition-transform duration-500 group-hover:scale-110"
-                        />
+                        <img src={img.src} alt={img.alt ?? ""} className="object-cover w-full h-48 transition-transform duration-500 group-hover:scale-110" />
                     </div>
                 ))}
             </div>
 
             {/* Lightbox */}
             {lightbox && selected !== null && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90"
-                    onClick={() => setSelected(null)}
-                >
-                    <button
-                        onClick={() => setSelected(null)}
-                        className="absolute top-4 right-4 text-white/70 hover:text-white"
-                    >
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90" onClick={() => setSelected(null)}>
+                    <button onClick={() => setSelected(null)} className="absolute top-4 right-4 text-white/70 hover:text-white">
                         <XMarkIcon className="w-8 h-8" />
                     </button>
                     {selected > 0 && (
@@ -74,12 +53,7 @@ export function Gallery({
                             <ChevronLeftIcon className="w-8 h-8" />
                         </button>
                     )}
-                    <img
-                        src={images[selected]?.src}
-                        alt={images[selected]?.alt}
-                        className="max-h-[90vh] max-w-full rounded-xl shadow-2xl"
-                        onClick={(e) => e.stopPropagation()}
-                    />
+                    <img src={images[selected]?.src} alt={images[selected]?.alt} className="max-h-[90vh] max-w-full rounded-xl shadow-2xl" onClick={(e) => e.stopPropagation()} />
                     {selected < images.length - 1 && (
                         <button
                             onClick={(e) => {
@@ -91,11 +65,7 @@ export function Gallery({
                             <ChevronRightIcon className="w-8 h-8" />
                         </button>
                     )}
-                    {images[selected]?.caption && (
-                        <p className="absolute text-sm -translate-x-1/2 bottom-6 left-1/2 text-white/80">
-                            {images[selected].caption}
-                        </p>
-                    )}
+                    {images[selected]?.caption && <p className="absolute text-sm -translate-x-1/2 bottom-6 left-1/2 text-white/80">{images[selected].caption}</p>}
                 </div>
             )}
         </>

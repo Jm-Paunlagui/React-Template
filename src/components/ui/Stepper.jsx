@@ -9,31 +9,19 @@
  */
 import { CheckIcon } from "@heroicons/react/24/outline";
 
-export function Stepper({
-    steps = [],
-    current = 0,
-    variant = "numbered",
-    orientation = "horizontal",
-}) {
+export function Stepper({ steps = [], current = 0, variant = "numbered", orientation = "horizontal" }) {
     const isV = orientation === "vertical";
 
     return (
-        <div
-            className={`font-aumovio flex ${isV ? "flex-col gap-0" : "flex-row items-center gap-0"}`}
-        >
+        <div className={`font-aumovio flex ${isV ? "flex-col gap-0" : "flex-row items-center gap-0"}`}>
             {steps.map((step, i) => {
                 const done = i < current;
                 const active = i === current;
                 const pending = i > current;
 
                 return (
-                    <div
-                        key={step.id ?? i}
-                        className={`flex ${isV ? "flex-row gap-4" : "flex-col items-center"} flex-1 last:flex-none`}
-                    >
-                        <div
-                            className={`flex ${isV ? "flex-col items-center" : "flex-row items-center w-full"}`}
-                        >
+                    <div key={step.id ?? i} className={`flex ${isV ? "flex-row gap-4" : "flex-col items-center"} flex-1 last:flex-none`}>
+                        <div className={`flex ${isV ? "flex-col items-center" : "flex-row items-center w-full"}`}>
                             {/* Circle */}
                             <div
                                 className={`flex items-center justify-center rounded-full font-aumovio-bold shrink-0
@@ -42,13 +30,7 @@ export function Stepper({
                 ${active ? "w-8 h-8 bg-orange-400 text-white ring-4 ring-orange-400/30 shadow-lg shadow-orange-400/30" : ""}
                 ${pending ? "w-8 h-8 bg-grey-100 dark:bg-grey-800 text-grey-400 border-2 border-grey-300 dark:border-grey-600" : ""}`}
                             >
-                                {done ? (
-                                    <CheckIcon className="w-4 h-4" />
-                                ) : step.icon && variant === "icon" ? (
-                                    <step.icon className="w-4 h-4" />
-                                ) : (
-                                    <span className="text-xs">{i + 1}</span>
-                                )}
+                                {done ? <CheckIcon className="w-4 h-4" /> : step.icon && variant === "icon" ? <step.icon className="w-4 h-4" /> : <span className="text-xs">{i + 1}</span>}
                             </div>
 
                             {/* Connector */}
@@ -62,20 +44,14 @@ export function Stepper({
                         </div>
 
                         {/* Label */}
-                        <div
-                            className={`${isV ? "pb-6 flex-1" : "mt-2 text-center"} min-w-0`}
-                        >
+                        <div className={`${isV ? "pb-6 flex-1" : "mt-2 text-center"} min-w-0`}>
                             <p
                                 className={`text-xs font-aumovio-bold truncate
                 ${active ? "text-orange-400" : done ? "text-black/70 dark:text-white/70" : "text-grey-400"}`}
                             >
                                 {step.label}
                             </p>
-                            {step.description && (
-                                <p className="text-xs text-grey-400 mt-0.5 line-clamp-2">
-                                    {step.description}
-                                </p>
-                            )}
+                            {step.description && <p className="text-xs text-grey-400 mt-0.5 line-clamp-2">{step.description}</p>}
                         </div>
                     </div>
                 );

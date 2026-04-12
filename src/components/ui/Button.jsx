@@ -22,18 +22,14 @@ const BASE = [
 ].join(" ");
 
 const VARIANTS = {
-    primary:
-        "text-orange-400 bg-orange-400/10 dark:bg-orange-400/20 border-orange-400/25 dark:border-orange-400/40 hover:bg-orange-400 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-orange-400/30 dark:hover:shadow-orange-400/50 focus-visible:ring-orange-400",
+    primary: "text-orange-400 bg-orange-400/10 dark:bg-orange-400/20 border-orange-400/25 dark:border-orange-400/40 hover:bg-orange-400 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-orange-400/30 dark:hover:shadow-orange-400/50 focus-visible:ring-orange-400",
     accent: "text-purple-400 bg-purple-400/10 dark:bg-purple-400/20 border-purple-400/20 dark:border-purple-400/35 hover:bg-purple-400 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-purple-400/30 dark:hover:shadow-purple-400/50 focus-visible:ring-purple-400",
     danger: "text-danger-400 bg-danger-100 dark:bg-danger-400/15 border-danger-400/20 dark:border-danger-400/35 hover:bg-danger-400 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-danger-400/30 dark:hover:shadow-danger-400/50 focus-visible:ring-danger-400",
-    warning:
-        "text-warn-600 dark:text-warn-400 bg-warn-100/30 dark:bg-warn-400/15 border-warn-400/30 hover:bg-warn-400 hover:text-black hover:border-transparent hover:shadow-xl hover:shadow-warn-400/30 dark:hover:shadow-warn-400/50 focus-visible:ring-warn-400",
+    warning: "text-warn-600 dark:text-warn-400 bg-warn-100/30 dark:bg-warn-400/15 border-warn-400/30 hover:bg-warn-400 hover:text-black hover:border-transparent hover:shadow-xl hover:shadow-warn-400/30 dark:hover:shadow-warn-400/50 focus-visible:ring-warn-400",
     ghost: "text-grey-600 dark:text-grey-300 bg-transparent border-grey-200 dark:border-grey-700 hover:bg-grey-100 dark:hover:bg-grey-800 hover:text-black dark:hover:text-white focus-visible:ring-grey-400",
-    outline:
-        "text-orange-400 bg-transparent border-orange-400 hover:bg-orange-400 hover:text-white hover:shadow-lg hover:shadow-orange-400/30 dark:hover:shadow-orange-400/50 focus-visible:ring-orange-400",
+    outline: "text-orange-400 bg-transparent border-orange-400 hover:bg-orange-400 hover:text-white hover:shadow-lg hover:shadow-orange-400/30 dark:hover:shadow-orange-400/50 focus-visible:ring-orange-400",
     link: "text-orange-400 bg-transparent border-transparent hover:underline underline-offset-2 hover:translate-y-0 hover:scale-100 focus-visible:ring-orange-400",
-    gradient:
-        "text-white bg-linear-to-r from-orange-400 via-[#ff850a] to-purple-400 border-0 hover:shadow-xl hover:shadow-orange-400/40 dark:hover:shadow-orange-400/60 hover:brightness-110 dark:hover:brightness-125 focus-visible:ring-orange-400",
+    gradient: "text-white bg-linear-to-r from-orange-400 via-[#ff850a] to-purple-400 border-0 hover:shadow-xl hover:shadow-orange-400/40 dark:hover:shadow-orange-400/60 hover:brightness-110 dark:hover:brightness-125 focus-visible:ring-orange-400",
 };
 
 const SIZES = {
@@ -44,20 +40,7 @@ const SIZES = {
     xl: "px-7   py-3.5  text-base rounded-xl",
 };
 
-export default function Button({
-    variant = "primary",
-    size = "md",
-    loading = false,
-    disabled = false,
-    fullWidth = false,
-    leftIcon: LeftIcon,
-    rightIcon: RightIcon,
-    rounded = false,
-    onClick,
-    type = "button",
-    className = "",
-    children,
-}) {
+export default function Button({ variant = "primary", size = "md", loading = false, disabled = false, fullWidth = false, leftIcon: LeftIcon, rightIcon: RightIcon, rounded = false, onClick, type = "button", className = "", children }) {
     return (
         <button
             type={type}
@@ -69,15 +52,9 @@ export default function Button({
         ${rounded ? "rounded-full!" : ""}
         ${className}`}
         >
-            {loading ? (
-                <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
-            ) : (
-                LeftIcon && <LeftIcon className="w-4 h-4 shrink-0" />
-            )}
+            {loading ? <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" /> : LeftIcon && <LeftIcon className="w-4 h-4 shrink-0" />}
             {children}
-            {!loading && RightIcon && (
-                <RightIcon className="w-4 h-4 shrink-0" />
-            )}
+            {!loading && RightIcon && <RightIcon className="w-4 h-4 shrink-0" />}
         </button>
     );
 }

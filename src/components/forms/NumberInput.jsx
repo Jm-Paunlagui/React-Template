@@ -6,17 +6,7 @@
  */
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
-export function NumberInput({
-    value = 0,
-    onChange,
-    min = -Infinity,
-    max = Infinity,
-    step = 1,
-    label,
-    error,
-    disabled = false,
-    size = "md",
-}) {
+export function NumberInput({ value = 0, onChange, min = -Infinity, max = Infinity, step = 1, label, error, disabled = false, size = "md" }) {
     const dec = () => {
         const n = Number(value) - step;
         if (n >= min) onChange?.(n);
@@ -35,11 +25,7 @@ export function NumberInput({
 
     return (
         <div className="font-aumovio">
-            {label && (
-                <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">
-                    {label}
-                </label>
-            )}
+            {label && <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">{label}</label>}
             <div
                 className={`inline-flex items-center border rounded-xl overflow-hidden
         ${error ? "border-danger-400" : "border-grey-300 dark:border-grey-700"}
@@ -79,11 +65,7 @@ export function NumberInput({
                     <PlusIcon className="w-3.5 h-3.5" />
                 </button>
             </div>
-            {error && (
-                <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">
-                    {error}
-                </p>
-            )}
+            {error && <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">{error}</p>}
         </div>
     );
 }

@@ -25,13 +25,7 @@ export const chartBase = {
         fontWeight: 700,
     },
     stroke: { curve: "smooth", width: 2.5 },
-    colors: [
-        TOKENS.primary,
-        TOKENS.secondary,
-        TOKENS.blue,
-        TOKENS.turquoise,
-        TOKENS.success,
-    ],
+    colors: [TOKENS.primary, TOKENS.secondary, TOKENS.blue, TOKENS.turquoise, TOKENS.success],
 };
 
 export const darkChartBase = {

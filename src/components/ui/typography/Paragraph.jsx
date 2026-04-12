@@ -19,13 +19,7 @@ const COL = {
     inverse: "text-white",
 };
 
-export function Paragraph({
-    size = "base",
-    color = "default",
-    lead = false,
-    className = "",
-    children,
-}) {
+export function Paragraph({ size = "base", color = "default", lead = false, className = "", children }) {
     return (
         <p
             className={`font-aumovio leading-relaxed ${SZ[size] ?? SZ.base} ${COL[color] ?? COL.default}

@@ -13,18 +13,7 @@ const COLORS = {
     success: "#32CB70",
 };
 
-export function Range({
-    value = 0,
-    onChange,
-    min = 0,
-    max = 100,
-    step = 1,
-    label,
-    disabled = false,
-    showValue = true,
-    showTicks = false,
-    color = "orange",
-}) {
+export function Range({ value = 0, onChange, min = 0, max = 100, step = 1, label, disabled = false, showValue = true, showTicks = false, color = "orange" }) {
     const pct = ((value - min) / (max - min)) * 100;
     const col = COLORS[color] ?? COLORS.orange;
 
@@ -32,16 +21,8 @@ export function Range({
         <div className="font-aumovio">
             {(label || showValue) && (
                 <div className="flex justify-between mb-1.5">
-                    {label && (
-                        <span className="text-xs font-aumovio-bold text-black/70 dark:text-white/70">
-                            {label}
-                        </span>
-                    )}
-                    {showValue && (
-                        <span className="text-xs text-orange-400 font-aumovio-bold">
-                            {value}
-                        </span>
-                    )}
+                    {label && <span className="text-xs font-aumovio-bold text-black/70 dark:text-white/70">{label}</span>}
+                    {showValue && <span className="text-xs text-orange-400 font-aumovio-bold">{value}</span>}
                 </div>
             )}
             <div className="relative">

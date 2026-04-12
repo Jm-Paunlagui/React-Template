@@ -2,13 +2,7 @@ import ReactApexChart from "react-apexcharts";
 import { useTheme } from "../../contexts/theme/ThemeContext";
 import { chartBase } from "../../utils/chartDefaults";
 
-export function ScatterChart({
-    series = [],
-    height = 300,
-    title,
-    xLabel = "",
-    yLabel = "",
-}) {
+export function ScatterChart({ series = [], height = 300, title, xLabel = "", yLabel = "" }) {
     const { isDark } = useTheme();
 
     const options = {
@@ -28,17 +22,8 @@ export function ScatterChart({
             },
         },
         markers: { size: 6, hover: { sizeOffset: 3 } },
-        title: title
-            ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } }
-            : undefined,
+        title: title ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } } : undefined,
     };
 
-    return (
-        <ReactApexChart
-            type="scatter"
-            options={options}
-            series={series}
-            height={height}
-        />
-    );
+    return <ReactApexChart type="scatter" options={options} series={series} height={height} />;
 }

@@ -2,13 +2,7 @@ import ReactApexChart from "react-apexcharts";
 import { useTheme } from "../../contexts/theme/ThemeContext";
 import { chartBase } from "../../utils/chartDefaults";
 
-export function AreaChart({
-    series = [],
-    categories = [],
-    height = 300,
-    title,
-    gradient = true,
-}) {
+export function AreaChart({ series = [], categories = [], height = 300, title, gradient = true }) {
     const { isDark } = useTheme();
 
     const options = {
@@ -27,18 +21,9 @@ export function AreaChart({
             : { type: "solid", opacity: 0.2 },
         xaxis: { categories, labels: { style: { fontFamily: "Aumovio" } } },
         yaxis: { labels: { style: { fontFamily: "Aumovio" } } },
-        title: title
-            ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } }
-            : undefined,
+        title: title ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } } : undefined,
         markers: { size: 0, hover: { size: 6 } },
     };
 
-    return (
-        <ReactApexChart
-            type="area"
-            options={options}
-            series={series}
-            height={height}
-        />
-    );
+    return <ReactApexChart type="area" options={options} series={series} height={height} />;
 }

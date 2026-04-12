@@ -17,47 +17,25 @@ export function Divider({ label, variant = "solid", spacing = "md" }) {
 
     if (label)
         return (
-            <div
-                className={`flex items-center gap-4 font-aumovio ${SP[spacing] ?? SP.md}`}
-            >
-                <div
-                    className={`flex-1 ${variant !== "gradient" ? `border-t ${line[variant]}` : "h-px bg-linear-to-r from-transparent to-grey-200 dark:to-grey-700"}`}
-                />
-                <span className="text-xs tracking-wider uppercase font-aumovio-bold text-grey-400 whitespace-nowrap">
-                    {label}
-                </span>
-                <div
-                    className={`flex-1 ${variant !== "gradient" ? `border-t ${line[variant]}` : "h-px bg-linear-to-l from-transparent to-grey-200 dark:to-grey-700"}`}
-                />
+            <div className={`flex items-center gap-4 font-aumovio ${SP[spacing] ?? SP.md}`}>
+                <div className={`flex-1 ${variant !== "gradient" ? `border-t ${line[variant]}` : "h-px bg-linear-to-r from-transparent to-grey-200 dark:to-grey-700"}`} />
+                <span className="text-xs tracking-wider uppercase font-aumovio-bold text-grey-400 whitespace-nowrap">{label}</span>
+                <div className={`flex-1 ${variant !== "gradient" ? `border-t ${line[variant]}` : "h-px bg-linear-to-l from-transparent to-grey-200 dark:to-grey-700"}`} />
             </div>
         );
 
-    if (variant === "gradient")
-        return (
-            <div
-                className={`${SP[spacing] ?? SP.md} h-px bg-linear-to-r from-transparent via-grey-300 dark:via-grey-600 to-transparent`}
-            />
-        );
+    if (variant === "gradient") return <div className={`${SP[spacing] ?? SP.md} h-px bg-linear-to-r from-transparent via-grey-300 dark:via-grey-600 to-transparent`} />;
 
     if (variant === "dot")
         return (
-            <div
-                className={`${SP[spacing] ?? SP.md} flex items-center justify-center gap-1.5`}
-            >
+            <div className={`${SP[spacing] ?? SP.md} flex items-center justify-center gap-1.5`}>
                 {[0, 1, 2].map((i) => (
-                    <span
-                        key={i}
-                        className="w-1 h-1 rounded-full bg-grey-300 dark:bg-grey-600"
-                    />
+                    <span key={i} className="w-1 h-1 rounded-full bg-grey-300 dark:bg-grey-600" />
                 ))}
             </div>
         );
 
-    return (
-        <hr
-            className={`${SP[spacing] ?? SP.md} ${line[variant] ?? line.solid} border-t`}
-        />
-    );
+    return <hr className={`${SP[spacing] ?? SP.md} ${line[variant] ?? line.solid} border-t`} />;
 }
 
 export default Divider;

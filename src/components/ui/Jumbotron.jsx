@@ -22,17 +22,7 @@ const SIZES = {
     full: "min-h-screen flex items-center",
 };
 
-export function Jumbotron({
-    title,
-    subtitle,
-    description,
-    primaryAction,
-    secondaryAction,
-    backgroundImage,
-    gradient = true,
-    align = "center",
-    size = "lg",
-}) {
+export function Jumbotron({ title, subtitle, description, primaryAction, secondaryAction, backgroundImage, gradient = true, align = "center", size = "lg" }) {
     return (
         <section
             className={`relative w-full overflow-hidden font-aumovio ${SIZES[size]}`}
@@ -47,15 +37,7 @@ export function Jumbotron({
             }
         >
             {/* Overlay */}
-            {(backgroundImage || gradient) && (
-                <div
-                    className={`absolute inset-0 ${
-                        gradient && !backgroundImage
-                            ? "bg-linear-to-br from-[#ff850a] via-orange-400 to-purple-400"
-                            : "bg-black/50 backdrop-blur-sm"
-                    }`}
-                />
-            )}
+            {(backgroundImage || gradient) && <div className={`absolute inset-0 ${gradient && !backgroundImage ? "bg-linear-to-br from-[#ff850a] via-orange-400 to-purple-400" : "bg-black/50 backdrop-blur-sm"}`} />}
 
             <div
                 className={`relative z-10 max-w-5xl mx-auto px-6
@@ -65,11 +47,7 @@ export function Jumbotron({
                     <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-aumovio-bold
             uppercase tracking-widest
-            ${
-                backgroundImage || gradient
-                    ? "bg-white/20 text-white border border-white/30"
-                    : "bg-orange-400/10 text-orange-400 border border-orange-400/20"
-            }`}
+            ${backgroundImage || gradient ? "bg-white/20 text-white border border-white/30" : "bg-orange-400/10 text-orange-400 border border-orange-400/20"}`}
                     >
                         {subtitle}
                     </span>
@@ -89,9 +67,7 @@ export function Jumbotron({
                     </p>
                 )}
                 {(primaryAction || secondaryAction) && (
-                    <div
-                        className={`flex gap-4 flex-wrap ${align === "center" ? "justify-center" : ""}`}
-                    >
+                    <div className={`flex gap-4 flex-wrap ${align === "center" ? "justify-center" : ""}`}>
                         {primaryAction && (
                             <a
                                 href={primaryAction.href ?? "#"}

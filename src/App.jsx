@@ -19,14 +19,7 @@ import Navbar from "./components/layout/Navbar";
 import Sidebar from "./components/layout/Sidebar";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 import { useLayout } from "./contexts/layout/LayoutContext";
-import {
-    BadRequest,
-    InvalidToken,
-    LoginTimeOut,
-    PageNotFound,
-    ServiceUnavailable,
-    Unauthorized,
-} from "./views/errors/ClientErrorResponses";
+import { BadRequest, InvalidToken, LoginTimeOut, PageNotFound, ServiceUnavailable, Unauthorized } from "./views/errors/ClientErrorResponses";
 
 const LoginView = lazy(() => import("./features/auth/Login.view"));
 const LogoutView = lazy(() => import("./features/auth/Logout.view"));
@@ -36,23 +29,10 @@ const DashboardView = lazy(() => import("./features/dashboard/Dashboard.view"));
 // Permission strings (AREAS) are NOT here — they are inline at each route
 const ROLES = { SADMIN: 3, ADMIN: 2, USER: 1 };
 
-const BARE_ROUTES = [
-    "/auth",
-    "/sign-up",
-    "/",
-    "/user/logout",
-    "/unauthorized",
-    "/login-timeout",
-    "/invalid-token",
-    "/bad-request",
-    "/page-not-found",
-    "/service-is-currently-unavailable",
-];
+const BARE_ROUTES = ["/auth", "/sign-up", "/", "/user/logout", "/unauthorized", "/login-timeout", "/invalid-token", "/bad-request", "/page-not-found", "/service-is-currently-unavailable"];
 
 function isBareRoute(pathname) {
-    return BARE_ROUTES.some(
-        (r) => pathname === r || pathname.startsWith(r + "/"),
-    );
+    return BARE_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/"));
 }
 
 function ConditionalNavbar() {
@@ -96,11 +76,7 @@ function AppContent() {
     return (
         <div className="flex min-h-screen bg-white dark:bg-[#0D0D14] transition-colors duration-300">
             <ConditionalSidebar />
-            <div
-                className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ${
-                    useSidebar ? (sidebarOpen ? "ml-64" : "ml-16") : ""
-                }`}
-            >
+            <div className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ${useSidebar ? (sidebarOpen ? "ml-64" : "ml-16") : ""}`}>
                 <ConditionalNavbar />
                 <main className="grow">
                     <Suspense fallback={<PageLoader />}>
@@ -122,13 +98,7 @@ function AppRoutes() {
             <Route path="user/logout" element={<LogoutView />} />
 
             {/* Protected — role only */}
-            <Route
-                element={
-                    <ProtectedRoute
-                        role={[ROLES.USER, ROLES.ADMIN, ROLES.SADMIN]}
-                    />
-                }
-            >
+            <Route element={<ProtectedRoute role={[ROLES.USER, ROLES.ADMIN, ROLES.SADMIN]} />}>
                 <Route path="dashboard" element={<DashboardView />} />
             </Route>
 
@@ -147,14 +117,8 @@ function AppRoutes() {
             <Route path="login-timeout" element={<LoginTimeOut />} />
             <Route path="invalid-token" element={<InvalidToken />} />
             <Route path="page-not-found" element={<PageNotFound />} />
-            <Route
-                element={<ServiceUnavailable />}
-                path="service-is-currently-unavailable"
-            />
-            <Route
-                path="*"
-                element={<Navigate to="/page-not-found" replace />}
-            />
+            <Route element={<ServiceUnavailable />} path="service-is-currently-unavailable" />
+            <Route path="*" element={<Navigate to="/page-not-found" replace />} />
         </Routes>
     );
 }
@@ -162,16 +126,7 @@ function AppRoutes() {
 export default function App() {
     return (
         <>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                closeOnClick
-                pauseOnHover
-                draggable
-                theme="colored"
-                className="z-50"
-            />
+            <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} closeOnClick pauseOnHover draggable theme="colored" className="z-50" />
             <AppContent />
         </>
     );

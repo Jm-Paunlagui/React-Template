@@ -12,8 +12,7 @@ const SZ = {
     lg: "text-sm px-2.5 py-1.5",
 };
 const V = {
-    default:
-        "bg-white dark:bg-grey-800 border border-grey-300 dark:border-grey-600 text-grey-700 dark:text-grey-200 shadow-sm",
+    default: "bg-white dark:bg-grey-800 border border-grey-300 dark:border-grey-600 text-grey-700 dark:text-grey-200 shadow-sm",
     dark: "bg-grey-800 dark:bg-grey-900 border border-grey-700 text-grey-200 shadow-sm",
 };
 
@@ -23,10 +22,7 @@ export function KBD({ keys = [], size = "md", variant = "default" }) {
             {keys.map((key, i) => (
                 <>
                     {i > 0 && (
-                        <span
-                            key={`plus-${i}`}
-                            className="text-xs text-grey-400"
-                        >
+                        <span key={`plus-${i}`} className="text-xs text-grey-400">
                             +
                         </span>
                     )}

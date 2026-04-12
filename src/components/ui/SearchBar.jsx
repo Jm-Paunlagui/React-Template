@@ -16,15 +16,7 @@
  *   <SearchBar value={input} onChange={setInput} isDebouncing={input !== debounced} />
  */
 
-export function SearchBar({
-    value = "",
-    onChange,
-    placeholder = "Search…",
-    disabled = false,
-    isDebouncing = false,
-    onClear,
-    className = "",
-}) {
+export function SearchBar({ value = "", onChange, placeholder = "Search…", disabled = false, isDebouncing = false, onClear, className = "" }) {
     return (
         <div
             className={`relative flex items-center bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700 rounded-lg
@@ -35,19 +27,8 @@ export function SearchBar({
             {/* Search icon */}
             <span className="absolute left-3 text-grey-400 pointer-events-none shrink-0">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-                    <circle
-                        cx="6.5"
-                        cy="6.5"
-                        r="5"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                    />
-                    <path
-                        d="M10.5 10.5L14 14"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                    />
+                    <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5" />
+                    <path d="M10.5 10.5L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
             </span>
 
@@ -70,24 +51,9 @@ export function SearchBar({
                             border-t-transparent rounded-full animate-spin"
                     />
                 ) : value ? (
-                    <button
-                        type="button"
-                        onClick={() => (onClear ? onClear() : onChange?.(""))}
-                        aria-label="Clear search"
-                        className="text-grey-400 hover:text-orange-400 transition-colors"
-                    >
-                        <svg
-                            width="13"
-                            height="13"
-                            viewBox="0 0 14 14"
-                            fill="none"
-                        >
-                            <path
-                                d="M13 1L1 13M1 1l12 12"
-                                stroke="currentColor"
-                                strokeWidth="1.8"
-                                strokeLinecap="round"
-                            />
+                    <button type="button" onClick={() => (onClear ? onClear() : onChange?.(""))} aria-label="Clear search" className="text-grey-400 hover:text-orange-400 transition-colors">
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                            <path d="M13 1L1 13M1 1l12 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                         </svg>
                     </button>
                 ) : null}

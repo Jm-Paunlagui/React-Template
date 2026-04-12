@@ -18,21 +18,9 @@ const ROUND = {
     full: "rounded-full",
 };
 
-export function Image({
-    src,
-    alt = "",
-    caption,
-    aspect = "auto",
-    rounded = "md",
-    shadow = true,
-    hover = false,
-    fullWidth = false,
-    className = "",
-}) {
+export function Image({ src, alt = "", caption, aspect = "auto", rounded = "md", shadow = true, hover = false, fullWidth = false, className = "" }) {
     return (
-        <figure
-            className={`font-aumovio ${fullWidth ? "w-full" : "inline-block"}`}
-        >
+        <figure className={`font-aumovio ${fullWidth ? "w-full" : "inline-block"}`}>
             <div
                 className={`overflow-hidden ${ROUND[rounded] ?? ROUND.md}
         ${shadow ? "shadow-xl" : ""} ${ASPECT[aspect] ?? ASPECT.auto}`}
@@ -47,11 +35,7 @@ export function Image({
             ${className}`}
                 />
             </div>
-            {caption && (
-                <figcaption className="mt-2 text-xs text-center text-grey-400">
-                    {caption}
-                </figcaption>
-            )}
+            {caption && <figcaption className="mt-2 text-xs text-center text-grey-400">{caption}</figcaption>}
         </figure>
     );
 }

@@ -22,30 +22,16 @@ const UL = {
     none: "no-underline",
 };
 
-export function Link({
-    href = "#",
-    external = false,
-    variant = "default",
-    underline = "hover",
-    icon = false,
-    children,
-}) {
+export function Link({ href = "#", external = false, variant = "default", underline = "hover", icon = false, children }) {
     const cls = `inline-flex items-center gap-1 font-aumovio transition-colors duration-150
     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50 rounded
     ${V[variant] ?? V.default} ${UL[underline] ?? UL.hover}`;
 
     if (external)
         return (
-            <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cls}
-            >
+            <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
                 {children}
-                {icon && (
-                    <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 shrink-0 opacity-70" />
-                )}
+                {icon && <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 shrink-0 opacity-70" />}
             </a>
         );
 

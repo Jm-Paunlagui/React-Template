@@ -49,8 +49,7 @@ const V = {
     },
     grey: {
         solid: "text-grey-500 dark:text-grey-400 bg-grey-100 dark:bg-grey-800 border-grey-400/30 dark:border-grey-600/30",
-        outline:
-            "text-grey-500 dark:text-grey-400 border-grey-400 dark:border-grey-600 bg-transparent",
+        outline: "text-grey-500 dark:text-grey-400 border-grey-400 dark:border-grey-600 bg-transparent",
         dot: "bg-grey-400",
     },
     orange: {
@@ -66,16 +65,7 @@ const SZ = {
     md: "px-2.5 py-1   text-xs gap-1.5",
 };
 
-export function Badge({
-    variant = "grey",
-    size = "md",
-    dot = false,
-    outline = false,
-    removable = false,
-    onRemove,
-    pill = false,
-    children,
-}) {
+export function Badge({ variant = "grey", size = "md", dot = false, outline = false, removable = false, onRemove, pill = false, children }) {
     const cfg = V[variant] ?? V.grey;
     const style = outline ? cfg.outline : cfg.solid;
 
@@ -85,25 +75,12 @@ export function Badge({
       border shadow-sm ${pill ? "rounded-full" : "rounded-lg"}
       ${style} ${SZ[size] ?? SZ.md}`}
         >
-            {dot && (
-                <span
-                    className={`w-1.5 h-1.5 rounded-full shrink-0 animate-pulse ${cfg.dot}`}
-                />
-            )}
+            {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 animate-pulse ${cfg.dot}`} />}
             {children}
             {removable && (
-                <button
-                    onClick={onRemove}
-                    aria-label="Remove"
-                    className="ml-0.5 hover:opacity-70"
-                >
+                <button onClick={onRemove} aria-label="Remove" className="ml-0.5 hover:opacity-70">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path
-                            d="M8 2L2 8M2 2l6 6"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                        />
+                        <path d="M8 2L2 8M2 2l6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     </svg>
                 </button>
             )}

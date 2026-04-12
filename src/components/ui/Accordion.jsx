@@ -12,8 +12,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useCallback, useState } from "react";
 
 const VARIANTS = {
-    default:
-        "border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden divide-y divide-grey-200 dark:divide-grey-700",
+    default: "border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden divide-y divide-grey-200 dark:divide-grey-700",
     flush: "divide-y divide-grey-200 dark:divide-grey-700",
     separated: "space-y-2",
 };
@@ -21,8 +20,7 @@ const VARIANTS = {
 const ITEM_VARIANTS = {
     default: "",
     flush: "",
-    separated:
-        "border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden",
+    separated: "border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden",
 };
 
 const SIZES = {
@@ -31,25 +29,14 @@ const SIZES = {
     lg: { header: "px-6 py-5 text-base", body: "px-6 pb-5 text-sm" },
 };
 
-export function Accordion({
-    items = [],
-    defaultOpen = null,
-    multiple = false,
-    variant = "default",
-    size = "md",
-}) {
-    const [openIds, setOpenIds] = useState(() =>
-        defaultOpen ? [defaultOpen] : [],
-    );
+export function Accordion({ items = [], defaultOpen = null, multiple = false, variant = "default", size = "md" }) {
+    const [openIds, setOpenIds] = useState(() => (defaultOpen ? [defaultOpen] : []));
 
     const toggle = useCallback(
         (id) => {
             setOpenIds((prev) => {
                 const isOpen = prev.includes(id);
-                if (multiple)
-                    return isOpen
-                        ? prev.filter((x) => x !== id)
-                        : [...prev, id];
+                if (multiple) return isOpen ? prev.filter((x) => x !== id) : [...prev, id];
                 return isOpen ? [] : [id];
             });
         },
@@ -59,16 +46,11 @@ export function Accordion({
     const sz = SIZES[size] ?? SIZES.md;
 
     return (
-        <div
-            className={`font-aumovio ${VARIANTS[variant] ?? VARIANTS.default}`}
-        >
+        <div className={`font-aumovio ${VARIANTS[variant] ?? VARIANTS.default}`}>
             {items.map((item) => {
                 const isOpen = openIds.includes(item.id);
                 return (
-                    <div
-                        key={item.id}
-                        className={`bg-white dark:bg-[#1a1030] ${ITEM_VARIANTS[variant]}`}
-                    >
+                    <div key={item.id} className={`bg-white dark:bg-[#1a1030] ${ITEM_VARIANTS[variant]}`}>
                         <button
                             onClick={() => toggle(item.id)}
                             aria-expanded={isOpen}
@@ -79,9 +61,7 @@ export function Accordion({
                 transition-colors duration-200 ${sz.header}`}
                         >
                             <span className="flex items-center gap-2">
-                                {item.icon && (
-                                    <item.icon className="w-4 h-4 text-orange-400 shrink-0" />
-                                )}
+                                {item.icon && <item.icon className="w-4 h-4 text-orange-400 shrink-0" />}
                                 {item.title}
                             </span>
                             <ChevronDownIcon
@@ -93,11 +73,7 @@ export function Accordion({
                             className={`overflow-hidden transition-all duration-300 ease-in-out
                 ${isOpen ? "max-h-500 opacity-100" : "max-h-0 opacity-0"}`}
                         >
-                            <div
-                                className={`text-black/70 dark:text-white/60 leading-relaxed ${sz.body}`}
-                            >
-                                {item.content}
-                            </div>
+                            <div className={`text-black/70 dark:text-white/60 leading-relaxed ${sz.body}`}>{item.content}</div>
                         </div>
                     </div>
                 );

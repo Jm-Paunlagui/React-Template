@@ -20,8 +20,7 @@ import axios from "axios";
 import AuthMiddleware from "./authentication/AuthMiddleware";
 import CsrfMiddleware from "./security/CsrfMiddleware";
 
-const BASE_URL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1/";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1/";
 
 // CSRF is not required for these endpoints (they ARE the CSRF endpoints)
 const CSRF_EXEMPT = ["csrf/token", "csrf/refresh", "csrf/status"];
@@ -55,15 +54,9 @@ class HttpClient {
     _setupRequestInterceptor() {
         this._client.interceptors.request.use(
             async (config) => {
-                const isExemptAuth = AUTH_EXEMPT.some((p) =>
-                    config.url?.includes(p),
-                );
-                const isExemptCsrf = CSRF_EXEMPT.some((p) =>
-                    config.url?.includes(p),
-                );
-                const isMutating = ["POST", "PUT", "DELETE", "PATCH"].includes(
-                    config.method?.toUpperCase(),
-                );
+                const isExemptAuth = AUTH_EXEMPT.some((p) => config.url?.includes(p));
+                const isExemptCsrf = CSRF_EXEMPT.some((p) => config.url?.includes(p));
+                const isMutating = ["POST", "PUT", "DELETE", "PATCH"].includes(config.method?.toUpperCase());
 
                 // JWT header
                 if (!isExemptAuth) {
@@ -74,23 +67,17 @@ class HttpClient {
 
                     // Client identity for server traceability
                     const user = AuthMiddleware.getLocalStorage("user");
-                    config.headers["X-Client-Username"] = user?.user_data
-                        ? `${user.user_data.username}@${user.user_data.userId}`
-                        : "anonymous@unknown";
+                    config.headers["X-Client-Username"] = user?.user_data ? `${user.user_data.username}@${user.user_data.userId}` : "anonymous@unknown";
                 }
 
                 // CSRF header
                 if (isMutating && !isExemptCsrf) {
                     try {
-                        const csrfToken =
-                            await CsrfMiddleware.ensureTokenReady();
-                        if (!csrfToken)
-                            throw new Error("No CSRF token available");
+                        const csrfToken = await CsrfMiddleware.ensureTokenReady();
+                        if (!csrfToken) throw new Error("No CSRF token available");
                         config.headers["x-csrf-token"] = csrfToken;
                     } catch {
-                        return Promise.reject(
-                            new Error("CSRF token required but unavailable"),
-                        );
+                        return Promise.reject(new Error("CSRF token required but unavailable"));
                     }
                 }
 
@@ -108,26 +95,12 @@ class HttpClient {
                 const errorCode = error.response?.data?.code;
                 const requiresRefresh = error.response?.data?.requiresRefresh;
 
-                const isCsrfError =
-                    error.response?.status === 403 &&
-                    errorCode &&
-                    [
-                        "CSRF_SECRET_MISSING",
-                        "CSRF_TOKEN_MISSING",
-                        "CSRF_TOKEN_INVALID",
-                        "CSRF_TOKEN_EXPIRED",
-                    ].includes(errorCode);
+                const isCsrfError = error.response?.status === 403 && errorCode && ["CSRF_SECRET_MISSING", "CSRF_TOKEN_MISSING", "CSRF_TOKEN_INVALID", "CSRF_TOKEN_EXPIRED"].includes(errorCode);
 
-                const isMutating = ["post", "put", "delete", "patch"].includes(
-                    originalRequest?.method?.toLowerCase(),
-                );
+                const isMutating = ["post", "put", "delete", "patch"].includes(originalRequest?.method?.toLowerCase());
 
                 // Retry once on CSRF errors
-                if (
-                    (isCsrfError || requiresRefresh) &&
-                    isMutating &&
-                    !originalRequest._retry
-                ) {
+                if ((isCsrfError || requiresRefresh) && isMutating && !originalRequest._retry) {
                     originalRequest._retry = true;
                     try {
                         const newToken = await CsrfMiddleware.forceRefresh();

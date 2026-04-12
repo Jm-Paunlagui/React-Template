@@ -20,14 +20,7 @@ const PLACEMENT = {
 
 const WIDTHS = { sm: "w-48", md: "w-64", lg: "w-80" };
 
-export function Popover({
-    trigger,
-    content,
-    title,
-    placement = "bottom",
-    width = "md",
-    triggerOn = "click",
-}) {
+export function Popover({ trigger, content, title, placement = "bottom", width = "md", triggerOn = "click" }) {
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
 
@@ -49,11 +42,7 @@ export function Popover({
             : { onClick: () => setOpen((o) => !o) };
 
     return (
-        <div
-            ref={ref}
-            className="relative inline-block font-aumovio"
-            {...handlers}
-        >
+        <div ref={ref} className="relative inline-block font-aumovio" {...handlers}>
             {trigger}
             {open && (
                 <div
@@ -63,14 +52,10 @@ export function Popover({
                 >
                     {title && (
                         <div className="px-4 py-3 border-b border-grey-200 dark:border-grey-700">
-                            <h3 className="text-sm font-aumovio-bold text-black/85 dark:text-white/90">
-                                {title}
-                            </h3>
+                            <h3 className="text-sm font-aumovio-bold text-black/85 dark:text-white/90">{title}</h3>
                         </div>
                     )}
-                    <div className="p-4 text-sm text-black/70 dark:text-white/70">
-                        {content}
-                    </div>
+                    <div className="p-4 text-sm text-black/70 dark:text-white/70">{content}</div>
                 </div>
             )}
         </div>

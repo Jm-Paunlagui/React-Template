@@ -19,48 +19,30 @@ const COLORS = {
 export function Timeline({ items = [], variant = "left", connect = true }) {
     return (
         <ol className="relative font-aumovio">
-            {connect && (
-                <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-grey-200 dark:bg-grey-700" />
-            )}
+            {connect && <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-grey-200 dark:bg-grey-700" />}
             <div className="space-y-8">
                 {items.map((item, i) => {
-                    const colCls =
-                        COLORS[item.color ?? "orange"] ?? COLORS.orange;
+                    const colCls = COLORS[item.color ?? "orange"] ?? COLORS.orange;
                     return (
-                        <li
-                            key={item.id ?? i}
-                            className="relative flex gap-5 pl-2"
-                        >
+                        <li key={item.id ?? i} className="relative flex gap-5 pl-2">
                             {/* Dot */}
                             <div
                                 className={`relative z-10 w-8 h-8 rounded-full shrink-0
                 flex items-center justify-center ring-4 text-white shadow
                 ${colCls}`}
                             >
-                                {item.icon ? (
-                                    <item.icon className="w-4 h-4" />
-                                ) : (
-                                    <span className="w-2 h-2 bg-white rounded-full" />
-                                )}
+                                {item.icon ? <item.icon className="w-4 h-4" /> : <span className="w-2 h-2 bg-white rounded-full" />}
                             </div>
                             {/* Content */}
                             <div className="flex-1 pb-2">
                                 <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
-                                    <h3 className="text-sm font-aumovio-bold text-black/85 dark:text-white/90">
-                                        {item.title}
-                                    </h3>
+                                    <h3 className="text-sm font-aumovio-bold text-black/85 dark:text-white/90">{item.title}</h3>
                                     <div className="flex items-center gap-2">
                                         {item.badge && item.badge}
-                                        <time className="text-xs text-grey-400">
-                                            {item.date}
-                                        </time>
+                                        <time className="text-xs text-grey-400">{item.date}</time>
                                     </div>
                                 </div>
-                                {item.description && (
-                                    <p className="text-sm leading-relaxed text-grey-500 dark:text-grey-400">
-                                        {item.description}
-                                    </p>
-                                )}
+                                {item.description && <p className="text-sm leading-relaxed text-grey-500 dark:text-grey-400">{item.description}</p>}
                             </div>
                         </li>
                     );

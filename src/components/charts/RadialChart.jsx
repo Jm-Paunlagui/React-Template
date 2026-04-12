@@ -28,17 +28,8 @@ export function RadialChart({ series = [], labels = [], height = 300, title }) {
                 hollow: { size: "30%" },
             },
         },
-        title: title
-            ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } }
-            : undefined,
+        title: title ? { text: title, style: { fontFamily: "Aumovio", fontWeight: 700 } } : undefined,
     };
 
-    return (
-        <ReactApexChart
-            type="radialBar"
-            options={options}
-            series={series}
-            height={height}
-        />
-    );
+    return <ReactApexChart type="radialBar" options={options} series={series} height={height} />;
 }

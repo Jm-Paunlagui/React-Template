@@ -10,11 +10,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-export function usePagination({
-    items = [],
-    defaultPage = 1,
-    defaultPageSize = 25,
-} = {}) {
+export function usePagination({ items = [], defaultPage = 1, defaultPageSize = 25 } = {}) {
     const [page, setPage] = useState(defaultPage);
     const [pageSize, setPageSizeState] = useState(defaultPageSize);
 
@@ -27,19 +23,10 @@ export function usePagination({
         return items.slice(start, start + pageSize);
     }, [items, safePage, pageSize]);
 
-    const goToPage = useCallback(
-        (n) => setPage(Math.min(Math.max(1, n), totalPages)),
-        [totalPages],
-    );
+    const goToPage = useCallback((n) => setPage(Math.min(Math.max(1, n), totalPages)), [totalPages]);
 
-    const goNext = useCallback(
-        () => goToPage(safePage + 1),
-        [goToPage, safePage],
-    );
-    const goPrev = useCallback(
-        () => goToPage(safePage - 1),
-        [goToPage, safePage],
-    );
+    const goNext = useCallback(() => goToPage(safePage + 1), [goToPage, safePage]);
+    const goPrev = useCallback(() => goToPage(safePage - 1), [goToPage, safePage]);
 
     const setPageSize = useCallback((size) => {
         setPageSizeState(size);

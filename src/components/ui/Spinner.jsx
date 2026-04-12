@@ -21,70 +21,33 @@ const COL = {
     grey: "border-grey-400 border-t-transparent",
 };
 
-export function Spinner({
-    size = "md",
-    variant = "ring",
-    color = "primary",
-    label,
-    fullPage = false,
-}) {
+export function Spinner({ size = "md", variant = "ring", color = "primary", label, fullPage = false }) {
     let element;
 
     if (variant === "ring") {
         element = (
             <div className="flex flex-col items-center gap-3">
-                <div
-                    className={`${SZ[size] ?? SZ.md} ${COL[color] ?? COL.primary} rounded-full animate-spin`}
-                />
-                {label && (
-                    <p className="text-sm font-aumovio text-grey-400 animate-pulse">
-                        {label}
-                    </p>
-                )}
+                <div className={`${SZ[size] ?? SZ.md} ${COL[color] ?? COL.primary} rounded-full animate-spin`} />
+                {label && <p className="text-sm font-aumovio text-grey-400 animate-pulse">{label}</p>}
             </div>
         );
     } else if (variant === "dots") {
-        const dotCol =
-            color === "primary"
-                ? "bg-orange-400"
-                : color === "white"
-                  ? "bg-white"
-                  : "bg-grey-400";
+        const dotCol = color === "primary" ? "bg-orange-400" : color === "white" ? "bg-white" : "bg-grey-400";
         element = (
             <div className="flex gap-1.5 items-center">
                 {[0, 1, 2].map((i) => (
-                    <div
-                        key={i}
-                        className={`w-2 h-2 rounded-full ${dotCol} animate-bounce`}
-                        style={{ animationDelay: `${i * 0.15}s` }}
-                    />
+                    <div key={i} className={`w-2 h-2 rounded-full ${dotCol} animate-bounce`} style={{ animationDelay: `${i * 0.15}s` }} />
                 ))}
             </div>
         );
     } else if (variant === "pulse") {
-        const pulseCol =
-            color === "primary"
-                ? "bg-orange-400"
-                : color === "white"
-                  ? "bg-white"
-                  : "bg-grey-400";
-        element = (
-            <div
-                className={`${SZ[size] ?? SZ.md} ${pulseCol} rounded-full animate-ping opacity-75`}
-            />
-        );
+        const pulseCol = color === "primary" ? "bg-orange-400" : color === "white" ? "bg-white" : "bg-grey-400";
+        element = <div className={`${SZ[size] ?? SZ.md} ${pulseCol} rounded-full animate-ping opacity-75`} />;
     }
 
-    if (fullPage)
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14]">
-                {element}
-            </div>
-        );
+    if (fullPage) return <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14]">{element}</div>;
 
-    return (
-        <div className="flex items-center justify-center py-8">{element}</div>
-    );
+    return <div className="flex items-center justify-center py-8">{element}</div>;
 }
 
 export default Spinner;

@@ -1,8 +1,4 @@
-import {
-    ComputerDesktopIcon,
-    MoonIcon,
-    SunIcon,
-} from "@heroicons/react/24/outline";
+import { ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { useTheme } from "../../contexts/theme/ThemeContext";
 
 const ICONS = {
@@ -25,12 +21,7 @@ export function ThemeToggle({ size = "md", variant = "cycle" }) {
     if (variant === "cycle") {
         const Icon = ICONS[mode];
         return (
-            <button
-                onClick={toggle}
-                aria-label={LABELS[mode]}
-                title={LABELS[mode]}
-                className="p-2 transition-all duration-200 border border-transparent rounded-lg text-grey-500 dark:text-grey-400 hover:text-orange-400 hover:bg-orange-400/10 hover:border-orange-400/20"
-            >
+            <button onClick={toggle} aria-label={LABELS[mode]} title={LABELS[mode]} className="p-2 transition-all duration-200 border border-transparent rounded-lg text-grey-500 dark:text-grey-400 hover:text-orange-400 hover:bg-orange-400/10 hover:border-orange-400/20">
                 <Icon className={sz} />
             </button>
         );
@@ -43,17 +34,7 @@ export function ThemeToggle({ size = "md", variant = "cycle" }) {
                 const Icon = ICONS[m];
                 const active = mode === m;
                 return (
-                    <button
-                        key={m}
-                        onClick={() => setMode(m)}
-                        aria-label={LABELS[m]}
-                        title={LABELS[m]}
-                        className={`p-1.5 rounded-lg transition-all duration-200 ${
-                            active
-                                ? "bg-white dark:bg-grey-700 text-orange-400 shadow-sm"
-                                : "text-grey-500 dark:text-grey-400 hover:text-orange-400"
-                        }`}
-                    >
+                    <button key={m} onClick={() => setMode(m)} aria-label={LABELS[m]} title={LABELS[m]} className={`p-1.5 rounded-lg transition-all duration-200 ${active ? "bg-white dark:bg-grey-700 text-orange-400 shadow-sm" : "text-grey-500 dark:text-grey-400 hover:text-orange-400"}`}>
                         <Icon className={sz} />
                     </button>
                 );

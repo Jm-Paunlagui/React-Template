@@ -12,13 +12,7 @@
  *   bordered  — boolean
  *   size      — 'sm' | 'md'
  */
-import {
-    CheckCircleIcon,
-    ExclamationTriangleIcon,
-    InformationCircleIcon,
-    XCircleIcon,
-    XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { CheckCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 const CONFIG = {
@@ -48,17 +42,7 @@ const CONFIG = {
     },
 };
 
-export function Alert({
-    variant = "info",
-    title,
-    children,
-    icon: CustomIcon,
-    dismissible = false,
-    onDismiss,
-    actions = [],
-    bordered = true,
-    size = "md",
-}) {
+export function Alert({ variant = "info", title, children, icon: CustomIcon, dismissible = false, onDismiss, actions = [], bordered = true, size = "md" }) {
     const [visible, setVisible] = useState(true);
     const cfg = CONFIG[variant] ?? CONFIG.info;
     const Icon = CustomIcon ?? cfg.icon;
@@ -81,24 +65,12 @@ export function Alert({
         >
             <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${cfg.text}`} />
             <div className="flex-1 min-w-0">
-                {title && (
-                    <p className={`font-aumovio-bold mb-0.5 ${cfg.text}`}>
-                        {title}
-                    </p>
-                )}
-                <div
-                    className={`text-black/75 dark:text-white/70 leading-relaxed`}
-                >
-                    {children}
-                </div>
+                {title && <p className={`font-aumovio-bold mb-0.5 ${cfg.text}`}>{title}</p>}
+                <div className={`text-black/75 dark:text-white/70 leading-relaxed`}>{children}</div>
                 {actions.length > 0 && (
                     <div className="flex gap-2 mt-3">
                         {actions.map((a, i) => (
-                            <button
-                                key={i}
-                                onClick={a.onClick}
-                                className={`text-xs font-aumovio-bold ${cfg.text} hover:underline`}
-                            >
+                            <button key={i} onClick={a.onClick} className={`text-xs font-aumovio-bold ${cfg.text} hover:underline`}>
                                 {a.label}
                             </button>
                         ))}
@@ -106,11 +78,7 @@ export function Alert({
                 )}
             </div>
             {dismissible && (
-                <button
-                    onClick={dismiss}
-                    aria-label="Dismiss"
-                    className="transition-colors shrink-0 text-grey-400 hover:text-grey-600 dark:hover:text-grey-300"
-                >
+                <button onClick={dismiss} aria-label="Dismiss" className="transition-colors shrink-0 text-grey-400 hover:text-grey-600 dark:hover:text-grey-300">
                     <XMarkIcon className="w-4 h-4" />
                 </button>
             )}

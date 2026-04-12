@@ -20,16 +20,7 @@ const COLORS = {
     danger: "bg-danger-400",
 };
 
-export function Toggle({
-    checked = false,
-    onChange,
-    label,
-    description,
-    disabled = false,
-    size = "md",
-    color = "orange",
-    labelPosition = "right",
-}) {
+export function Toggle({ checked = false, onChange, label, description, disabled = false, size = "md", color = "orange", labelPosition = "right" }) {
     const sz = SIZES[size] ?? SIZES.md;
     const col = COLORS[color] ?? COLORS.orange;
 
@@ -64,23 +55,15 @@ export function Toggle({
         >
             {labelPosition === "left" && (
                 <div>
-                    <span className="text-sm text-black/80 dark:text-white/80 font-aumovio">
-                        {label}
-                    </span>
-                    {description && (
-                        <p className="text-xs text-grey-400">{description}</p>
-                    )}
+                    <span className="text-sm text-black/80 dark:text-white/80 font-aumovio">{label}</span>
+                    {description && <p className="text-xs text-grey-400">{description}</p>}
                 </div>
             )}
             {track}
             {labelPosition === "right" && (
                 <div>
-                    <span className="text-sm text-black/80 dark:text-white/80 font-aumovio">
-                        {label}
-                    </span>
-                    {description && (
-                        <p className="text-xs text-grey-400">{description}</p>
-                    )}
+                    <span className="text-sm text-black/80 dark:text-white/80 font-aumovio">{label}</span>
+                    {description && <p className="text-xs text-grey-400">{description}</p>}
                 </div>
             )}
         </label>

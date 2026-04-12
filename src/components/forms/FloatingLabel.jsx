@@ -4,17 +4,7 @@
  * Props:
  *   label, name, type, value, onChange, error, disabled, required, size
  */
-export function FloatingLabel({
-    label,
-    name,
-    type = "text",
-    value = "",
-    onChange,
-    error,
-    disabled = false,
-    required = false,
-    id,
-}) {
+export function FloatingLabel({ label, name, type = "text", value = "", onChange, error, disabled = false, required = false, id }) {
     const inputId = id ?? name;
     const filled = value !== "" && value !== null && value !== undefined;
 
@@ -33,11 +23,7 @@ export function FloatingLabel({
           bg-white dark:bg-[#1a1030] text-black/85 dark:text-white/85
           focus:outline-none focus:ring-2 focus:shadow-md transition-all duration-200
           disabled:opacity-50 disabled:cursor-not-allowed placeholder-transparent
-          ${
-              error
-                  ? "border-danger-400 focus:ring-danger-400/30"
-                  : "border-grey-300 dark:border-grey-700 focus:ring-orange-400/30 focus:border-orange-400"
-          }`}
+          ${error ? "border-danger-400 focus:ring-danger-400/30" : "border-grey-300 dark:border-grey-700 focus:ring-orange-400/30 focus:border-orange-400"}`}
             />
             <label
                 htmlFor={inputId}
@@ -49,11 +35,7 @@ export function FloatingLabel({
                 {label}
                 {required && <span className="text-danger-400 ml-0.5">*</span>}
             </label>
-            {error && (
-                <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">
-                    {error}
-                </p>
-            )}
+            {error && <p className="mt-1.5 text-xs text-danger-400 font-aumovio-bold">{error}</p>}
         </div>
     );
 }

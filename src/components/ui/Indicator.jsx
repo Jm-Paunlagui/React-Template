@@ -27,19 +27,9 @@ const POS = {
     "bottom-left": "-bottom-1 -left-1",
 };
 
-export function Indicator({
-    children,
-    content,
-    color = "danger",
-    position = "top-right",
-    pulse = false,
-    max = 99,
-    hidden = false,
-}) {
-    const display =
-        typeof content === "number" && content > max ? `${max}+` : content;
-    const hasContent =
-        display !== undefined && display !== null && display !== "";
+export function Indicator({ children, content, color = "danger", position = "top-right", pulse = false, max = 99, hidden = false }) {
+    const display = typeof content === "number" && content > max ? `${max}+` : content;
+    const hasContent = display !== undefined && display !== null && display !== "";
 
     return (
         <div className="relative inline-flex">

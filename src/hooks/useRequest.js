@@ -115,13 +115,7 @@ export function seedCache(key, data) {
  * }}
  */
 export function useRequest(key, fetcher, options = {}) {
-    const {
-        staleTime      = 30_000,
-        refetchOnFocus = false,
-        enabled        = true,
-        onError,
-        onSuccess,
-    } = options;
+    const { staleTime = 30_000, refetchOnFocus = false, enabled = true, onError, onSuccess } = options;
 
     const [state, setState] = useState(() => {
         // Hydrate from cache synchronously on first render
@@ -134,68 +128,73 @@ export function useRequest(key, fetcher, options = {}) {
     });
 
     // Stable refs so callbacks never go stale inside the async function
-    const fetcherRef  = useRef(fetcher);
-    const onErrorRef  = useRef(onError);
+    const fetcherRef = useRef(fetcher);
+    const onErrorRef = useRef(onError);
     const onSuccessRef = useRef(onSuccess);
-    fetcherRef.current   = fetcher;
-    onErrorRef.current   = onError;
+    fetcherRef.current = fetcher;
+    onErrorRef.current = onError;
     onSuccessRef.current = onSuccess;
 
     const isMounted = useRef(true);
     useEffect(() => {
         isMounted.current = true;
-        return () => { isMounted.current = false; };
+        return () => {
+            isMounted.current = false;
+        };
     }, []);
 
-    const execute = useCallback(async (force = false) => {
-        if (!key || !enabled) return;
+    const execute = useCallback(
+        async (force = false) => {
+            if (!key || !enabled) return;
 
-        // Check cache (unless forced)
-        if (!force && CACHE.has(key)) {
-            const cached = CACHE.get(key);
-            if (Date.now() - cached.timestamp <= staleTime) {
-                if (isMounted.current) {
-                    setState({ data: cached.data, loading: false, error: null, isStale: false });
+            // Check cache (unless forced)
+            if (!force && CACHE.has(key)) {
+                const cached = CACHE.get(key);
+                if (Date.now() - cached.timestamp <= staleTime) {
+                    if (isMounted.current) {
+                        setState({ data: cached.data, loading: false, error: null, isStale: false });
+                    }
+                    return;
                 }
-                return;
             }
-        }
 
-        // Deduplicate: reuse the existing in-flight promise for this key
-        let promise = IN_FLIGHT.get(key);
-        if (!promise) {
-            promise = fetcherRef.current();
-            IN_FLIGHT.set(key, promise);
+            // Deduplicate: reuse the existing in-flight promise for this key
+            let promise = IN_FLIGHT.get(key);
+            if (!promise) {
+                promise = fetcherRef.current();
+                IN_FLIGHT.set(key, promise);
 
-            // When it settles, remove it from the in-flight map and seed cache
-            promise
-                .then((data) => {
-                    CACHE.set(key, { data, timestamp: Date.now() });
-                    IN_FLIGHT.delete(key);
-                })
-                .catch(() => {
-                    IN_FLIGHT.delete(key);
-                });
-        }
+                // When it settles, remove it from the in-flight map and seed cache
+                promise
+                    .then((data) => {
+                        CACHE.set(key, { data, timestamp: Date.now() });
+                        IN_FLIGHT.delete(key);
+                    })
+                    .catch(() => {
+                        IN_FLIGHT.delete(key);
+                    });
+            }
 
-        if (isMounted.current) {
-            setState((s) => ({ ...s, loading: true, error: null }));
-        }
-
-        try {
-            const data = await promise;
             if (isMounted.current) {
-                setState({ data, loading: false, error: null, isStale: false });
-                onSuccessRef.current?.(data);
+                setState((s) => ({ ...s, loading: true, error: null }));
             }
-        } catch (err) {
-            if (isMounted.current) {
-                const error = err instanceof Error ? err : new Error(String(err));
-                setState((s) => ({ ...s, loading: false, error }));
-                onErrorRef.current?.(error);
+
+            try {
+                const data = await promise;
+                if (isMounted.current) {
+                    setState({ data, loading: false, error: null, isStale: false });
+                    onSuccessRef.current?.(data);
+                }
+            } catch (err) {
+                if (isMounted.current) {
+                    const error = err instanceof Error ? err : new Error(String(err));
+                    setState((s) => ({ ...s, loading: false, error }));
+                    onErrorRef.current?.(error);
+                }
             }
-        }
-    }, [key, enabled, staleTime]);
+        },
+        [key, enabled, staleTime],
+    );
 
     // Run on mount and whenever key / enabled changes
     useEffect(() => {

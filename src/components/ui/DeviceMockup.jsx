@@ -18,14 +18,9 @@ export function DeviceMockup({ device = "phone", color = "dark", children }) {
         ${color === "dark" ? "border-grey-700 bg-grey-800" : "border-grey-200 bg-grey-50"}`}
                 >
                     <div className="flex gap-1.5">
-                        {["bg-danger-400", "bg-warn-400", "bg-success-400"].map(
-                            (c, i) => (
-                                <span
-                                    key={i}
-                                    className={`w-3 h-3 rounded-full ${c}`}
-                                />
-                            ),
-                        )}
+                        {["bg-danger-400", "bg-warn-400", "bg-success-400"].map((c, i) => (
+                            <span key={i} className={`w-3 h-3 rounded-full ${c}`} />
+                        ))}
                     </div>
                     <div
                         className={`flex-1 mx-4 rounded-md px-3 py-1 text-xs truncate
@@ -59,9 +54,7 @@ export function DeviceMockup({ device = "phone", color = "dark", children }) {
             </div>
         );
 
-    return (
-        <div className="overflow-hidden shadow-2xl rounded-xl">{children}</div>
-    );
+    return <div className="overflow-hidden shadow-2xl rounded-xl">{children}</div>;
 }
 
 export default DeviceMockup;

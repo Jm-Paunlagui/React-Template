@@ -7,23 +7,7 @@
  */
 import { useEffect, useRef } from "react";
 
-export function Textarea({
-    label,
-    name,
-    value = "",
-    onChange,
-    placeholder,
-    rows = 4,
-    maxLength,
-    error,
-    helper,
-    disabled = false,
-    required = false,
-    resize = "vertical",
-    showCount = false,
-    size = "md",
-    id,
-}) {
+export function Textarea({ label, name, value = "", onChange, placeholder, rows = 4, maxLength, error, helper, disabled = false, required = false, resize = "vertical", showCount = false, size = "md", id }) {
     const inputId = id ?? name;
     const ref = useRef(null);
     const SZ = {
@@ -48,14 +32,9 @@ export function Textarea({
     return (
         <div className="font-aumovio">
             {label && (
-                <label
-                    htmlFor={inputId}
-                    className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5"
-                >
+                <label htmlFor={inputId} className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">
                     {label}
-                    {required && (
-                        <span className="text-danger-400 ml-0.5">*</span>
-                    )}
+                    {required && <span className="text-danger-400 ml-0.5">*</span>}
                 </label>
             )}
             <textarea
@@ -76,24 +55,12 @@ export function Textarea({
           disabled:opacity-50 disabled:cursor-not-allowed
           ${RESIZE[resize] ?? RESIZE.vertical}
           ${SZ[size] ?? SZ.md}
-          ${
-              error
-                  ? "border-danger-400 focus:ring-danger-400/30"
-                  : "border-grey-300 dark:border-grey-700 focus:ring-orange-400/30 focus:border-orange-400"
-          }`}
+          ${error ? "border-danger-400 focus:ring-danger-400/30" : "border-grey-300 dark:border-grey-700 focus:ring-orange-400/30 focus:border-orange-400"}`}
             />
             <div className="flex justify-between mt-1.5">
-                {error ? (
-                    <p className="text-xs text-danger-400 font-aumovio-bold">
-                        {error}
-                    </p>
-                ) : (
-                    <p className="text-xs text-grey-400">{helper}</p>
-                )}
+                {error ? <p className="text-xs text-danger-400 font-aumovio-bold">{error}</p> : <p className="text-xs text-grey-400">{helper}</p>}
                 {showCount && maxLength && (
-                    <span
-                        className={`text-xs font-aumovio-bold ${value.length >= maxLength ? "text-danger-400" : "text-grey-400"}`}
-                    >
+                    <span className={`text-xs font-aumovio-bold ${value.length >= maxLength ? "text-danger-400" : "text-grey-400"}`}>
                         {value.length}/{maxLength}
                     </span>
                 )}

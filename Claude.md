@@ -7,82 +7,82 @@
 
 ## 1. Quick Reference: Component Map
 
-| Need | Component | Import path |
-|------|-----------|-------------|
-| Alert / feedback message | `Alert` | `components/ui/Alert` |
-| Avatar / initials | `Avatar`, `AvatarGroup` | `components/ui/Avatar` |
-| Badge / status pill | `Badge` | `components/ui/Badge` |
-| Top announcement bar | `Banner` | `components/ui/Banner` |
-| Mobile bottom nav | `BottomNav` | `components/layout/BottomNav` |
-| Page breadcrumbs | `Breadcrumb` | `components/ui/Breadcrumb` |
-| Primary action | `Button` | `components/ui/Button` |
-| Attached button set | `ButtonGroup` | `components/ui/ButtonGroup` |
-| Content container | `Card` | `components/ui/Card` |
-| Image slider | `Carousel` | `components/ui/Carousel` |
-| Chat message | `ChatBubble` | `components/ui/ChatBubble` |
-| Copy-to-clipboard | `Clipboard` | `components/ui/Clipboard` |
-| Date picker | `Datepicker` | `components/ui/Datepicker` |
-| Device frame | `DeviceMockup` | `components/ui/DeviceMockup` |
-| Side panel | `Drawer` | `components/ui/Drawer` |
-| Contextual menu | `Dropdown` | `components/ui/Dropdown` |
-| Image grid + lightbox | `Gallery` | `components/ui/Gallery` |
-| Notification overlay | `Indicator` | `components/ui/Indicator` |
-| Hero / CTA section | `Jumbotron` | `components/ui/Jumbotron` |
-| Keyboard shortcut | `KBD` | `components/ui/KBD` |
-| Bordered list | `ListGroup` | `components/ui/ListGroup` |
-| Dialog overlay | `Modal` | `components/ui/Modal` |
-| Page number nav | `Pagination` | `components/ui/Pagination` |
-| Floating info panel | `Popover` | `components/ui/Popover` |
-| Progress bar / ring | `Progress` | `components/ui/Progress` |
-| QR code | `QRCode` | `components/ui/QRCode` |
-| Star rating | `Rating` | `components/ui/Rating` |
-| Loading skeleton | `Skeleton` | `components/ui/Skeleton` |
-| FAB with sub-actions | `SpeedDial` | `components/ui/SpeedDial` |
-| Loading spinner | `Spinner` | `components/ui/Spinner` |
-| Multi-step progress | `Stepper` | `components/ui/Stepper` |
-| Data table | `Table` | `components/ui/Table` |
-| Tab navigation | `Tabs` | `components/ui/Tabs` |
-| Theme toggle button | `ThemeToggle` | `components/ui/ThemeToggle` |
-| Chronological events | `Timeline` | `components/ui/Timeline` |
-| Hover label | `Tooltip` | `components/ui/Tooltip` |
-| **Forms** | | |
-| Checkbox | `Checkbox` | `components/forms/Checkbox` |
-| File upload | `FileInput` | `components/forms/FileInput` |
-| Floating-label input | `FloatingLabel` | `components/forms/FloatingLabel` |
-| Number stepper | `NumberInput` | `components/forms/NumberInput` |
-| Phone + country code | `PhoneInput` | `components/forms/PhoneInput` |
-| Radio group | `Radio` | `components/forms/Radio` |
-| Slider | `Range` | `components/forms/Range` |
-| Dropdown select | `Select` | `components/forms/Select` |
-| **Text / search** | | |
-| Text input | `Input` | `components/forms/Input` |
-| Debounced search | `SearchInput` | `components/forms/SearchInput` |
-| Search bar (UI only) | `SearchBar` | `components/ui/SearchBar` |
-| Multi-line input | `Textarea` | `components/forms/Textarea` |
-| Time picker | `Timepicker` | `components/forms/Timepicker` |
-| Toggle switch | `Toggle` | `components/forms/Toggle` |
-| **Typography** | | |
-| Headings H1-H6 | `Heading`, `H1`…`H6` | `components/ui/typography/Heading` |
-| Body text | `Paragraph` | `components/ui/typography/Paragraph` |
-| Pull quote | `Blockquote` | `components/ui/typography/Blockquote` |
-| Responsive image | `Image` | `components/ui/typography/Image` |
-| Bullet / ordered list | `List` | `components/ui/typography/List` |
-| Styled anchor | `Link` | `components/ui/typography/Link` |
-| Inline text variants | `Text` | `components/ui/typography/Text` |
-| Horizontal rule | `Divider` | `components/ui/typography/Divider` |
-| **Charts (ApexCharts)** | | |
-| Line | `LineChart` | `components/charts/LineChart` |
-| Bar | `BarChart` | `components/charts/BarChart` |
-| Area | `AreaChart` | `components/charts/AreaChart` |
-| Donut / Pie | `DonutChart` | `components/charts/DonutChart` |
-| Radial bar | `RadialChart` | `components/charts/RadialChart` |
-| Heatmap | `HeatmapChart` | `components/charts/HeatmapChart` |
-| Scatter | `ScatterChart` | `components/charts/ScatterChart` |
-| **Layout / routing** | | |
-| Auth guard | `ProtectedRoute` | `components/routing/ProtectedRoute` |
-| Error catch | `ErrorBoundary` | `components/feedback/ErrorBoundary` |
-| Loading indicator | `LoadingSpinner` | `components/feedback/LoadingSpinner` |
-| Toast utilities | `toast` | `components/ui/toast.utils` |
+| Need                     | Component               | Import path                           |
+| ------------------------ | ----------------------- | ------------------------------------- |
+| Alert / feedback message | `Alert`                 | `components/ui/Alert`                 |
+| Avatar / initials        | `Avatar`, `AvatarGroup` | `components/ui/Avatar`                |
+| Badge / status pill      | `Badge`                 | `components/ui/Badge`                 |
+| Top announcement bar     | `Banner`                | `components/ui/Banner`                |
+| Mobile bottom nav        | `BottomNav`             | `components/layout/BottomNav`         |
+| Page breadcrumbs         | `Breadcrumb`            | `components/ui/Breadcrumb`            |
+| Primary action           | `Button`                | `components/ui/Button`                |
+| Attached button set      | `ButtonGroup`           | `components/ui/ButtonGroup`           |
+| Content container        | `Card`                  | `components/ui/Card`                  |
+| Image slider             | `Carousel`              | `components/ui/Carousel`              |
+| Chat message             | `ChatBubble`            | `components/ui/ChatBubble`            |
+| Copy-to-clipboard        | `Clipboard`             | `components/ui/Clipboard`             |
+| Date picker              | `Datepicker`            | `components/ui/Datepicker`            |
+| Device frame             | `DeviceMockup`          | `components/ui/DeviceMockup`          |
+| Side panel               | `Drawer`                | `components/ui/Drawer`                |
+| Contextual menu          | `Dropdown`              | `components/ui/Dropdown`              |
+| Image grid + lightbox    | `Gallery`               | `components/ui/Gallery`               |
+| Notification overlay     | `Indicator`             | `components/ui/Indicator`             |
+| Hero / CTA section       | `Jumbotron`             | `components/ui/Jumbotron`             |
+| Keyboard shortcut        | `KBD`                   | `components/ui/KBD`                   |
+| Bordered list            | `ListGroup`             | `components/ui/ListGroup`             |
+| Dialog overlay           | `Modal`                 | `components/ui/Modal`                 |
+| Page number nav          | `Pagination`            | `components/ui/Pagination`            |
+| Floating info panel      | `Popover`               | `components/ui/Popover`               |
+| Progress bar / ring      | `Progress`              | `components/ui/Progress`              |
+| QR code                  | `QRCode`                | `components/ui/QRCode`                |
+| Star rating              | `Rating`                | `components/ui/Rating`                |
+| Loading skeleton         | `Skeleton`              | `components/ui/Skeleton`              |
+| FAB with sub-actions     | `SpeedDial`             | `components/ui/SpeedDial`             |
+| Loading spinner          | `Spinner`               | `components/ui/Spinner`               |
+| Multi-step progress      | `Stepper`               | `components/ui/Stepper`               |
+| Data table               | `Table`                 | `components/ui/Table`                 |
+| Tab navigation           | `Tabs`                  | `components/ui/Tabs`                  |
+| Theme toggle button      | `ThemeToggle`           | `components/ui/ThemeToggle`           |
+| Chronological events     | `Timeline`              | `components/ui/Timeline`              |
+| Hover label              | `Tooltip`               | `components/ui/Tooltip`               |
+| **Forms**                |                         |                                       |
+| Checkbox                 | `Checkbox`              | `components/forms/Checkbox`           |
+| File upload              | `FileInput`             | `components/forms/FileInput`          |
+| Floating-label input     | `FloatingLabel`         | `components/forms/FloatingLabel`      |
+| Number stepper           | `NumberInput`           | `components/forms/NumberInput`        |
+| Phone + country code     | `PhoneInput`            | `components/forms/PhoneInput`         |
+| Radio group              | `Radio`                 | `components/forms/Radio`              |
+| Slider                   | `Range`                 | `components/forms/Range`              |
+| Dropdown select          | `Select`                | `components/forms/Select`             |
+| **Text / search**        |                         |                                       |
+| Text input               | `Input`                 | `components/forms/Input`              |
+| Debounced search         | `SearchInput`           | `components/forms/SearchInput`        |
+| Search bar (UI only)     | `SearchBar`             | `components/ui/SearchBar`             |
+| Multi-line input         | `Textarea`              | `components/forms/Textarea`           |
+| Time picker              | `Timepicker`            | `components/forms/Timepicker`         |
+| Toggle switch            | `Toggle`                | `components/forms/Toggle`             |
+| **Typography**           |                         |                                       |
+| Headings H1-H6           | `Heading`, `H1`…`H6`    | `components/ui/typography/Heading`    |
+| Body text                | `Paragraph`             | `components/ui/typography/Paragraph`  |
+| Pull quote               | `Blockquote`            | `components/ui/typography/Blockquote` |
+| Responsive image         | `Image`                 | `components/ui/typography/Image`      |
+| Bullet / ordered list    | `List`                  | `components/ui/typography/List`       |
+| Styled anchor            | `Link`                  | `components/ui/typography/Link`       |
+| Inline text variants     | `Text`                  | `components/ui/typography/Text`       |
+| Horizontal rule          | `Divider`               | `components/ui/typography/Divider`    |
+| **Charts (ApexCharts)**  |                         |                                       |
+| Line                     | `LineChart`             | `components/charts/LineChart`         |
+| Bar                      | `BarChart`              | `components/charts/BarChart`          |
+| Area                     | `AreaChart`             | `components/charts/AreaChart`         |
+| Donut / Pie              | `DonutChart`            | `components/charts/DonutChart`        |
+| Radial bar               | `RadialChart`           | `components/charts/RadialChart`       |
+| Heatmap                  | `HeatmapChart`          | `components/charts/HeatmapChart`      |
+| Scatter                  | `ScatterChart`          | `components/charts/ScatterChart`      |
+| **Layout / routing**     |                         |                                       |
+| Auth guard               | `ProtectedRoute`        | `components/routing/ProtectedRoute`   |
+| Error catch              | `ErrorBoundary`         | `components/feedback/ErrorBoundary`   |
+| Loading indicator        | `LoadingSpinner`        | `components/feedback/LoadingSpinner`  |
+| Toast utilities          | `toast`                 | `components/ui/toast.utils`           |
 
 ---
 
@@ -118,53 +118,56 @@ Dark mode is controlled by `data-theme="dark"` on `<html>`. Use the `dark:` pref
 ## 3. Feature Development Workflow
 
 ### Step 1 — API layer (`feature.api.js`)
+
 Only HTTP calls, no state, no React. Returns raw Axios response.
 
 ```js
 export const widgetApi = {
-  list:   () => httpClient.get('widgets'),
-  create: (data) => httpClient.post('widgets', data),
-  update: (id, data) => httpClient.put(`widgets/${id}`, data),
-  delete: (id) => httpClient.delete(`widgets/${id}`),
+    list: () => httpClient.get("widgets"),
+    create: (data) => httpClient.post("widgets", data),
+    update: (id, data) => httpClient.put(`widgets/${id}`, data),
+    delete: (id) => httpClient.delete(`widgets/${id}`),
 };
 ```
 
 ### Step 2 — Hook (`feature.hook.js`)
+
 Business logic, state, toasts, navigation. Imports `feature.api.js`.
 
 ```js
-import { widgetApi } from './widget.api';
-import { toast } from '../../components/ui/toast.utils';
+import { widgetApi } from "./widget.api";
+import { toast } from "../../components/ui/toast.utils";
 
 export const useWidget = () => {
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-  const createWidget = async (data) => {
-    setLoading(true);
-    try {
-      const res = await widgetApi.create(data);
-      toast.success(res.data?.message || 'Widget created');
-      return true;
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed');
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
+    const createWidget = async (data) => {
+        setLoading(true);
+        try {
+            const res = await widgetApi.create(data);
+            toast.success(res.data?.message || "Widget created");
+            return true;
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Failed");
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return { loading, createWidget };
+    return { loading, createWidget };
 };
 ```
 
 ### Step 3 — View (`Feature.view.jsx`)
+
 Presentation only. Imports hook + components. Never imports API directly.
 
 ```jsx
-import { useWidget } from './widget.hook';
-import Button from '../../components/ui/Button';
-import { Table } from '../../components/ui/Table';
-import { Modal } from '../../components/ui/Modal';
+import { useWidget } from "./widget.hook";
+import Button from "../../components/ui/Button";
+import { Table } from "../../components/ui/Table";
+import { Modal } from "../../components/ui/Modal";
 ```
 
 ---
@@ -213,17 +216,17 @@ you are rendering on a dark background where the white `Input` surface would cla
 ```jsx
 // Inline feedback
 <Alert variant="success" title="Saved!" dismissible>
-  Your changes have been applied.
-</Alert>
+    Your changes have been applied.
+</Alert>;
 
 // Toast (side-effect, anywhere)
-import { toast } from '../../components/ui/toast.utils';
-toast.success('Record created');
-toast.error('Something went wrong');
+import { toast } from "../../components/ui/toast.utils";
+toast.success("Record created");
+toast.error("Something went wrong");
 toast.promise(apiCall(), {
-  loading: 'Saving…',
-  success: 'Saved!',
-  error: 'Failed',
+    loading: "Saving…",
+    success: "Saved!",
+    error: "Failed",
 });
 ```
 
@@ -277,11 +280,8 @@ const [open, setOpen] = useState(false);
 ### 4.5 Empty / loading states
 
 ```jsx
-{loading
-  ? <Skeleton variant="list" lines={5} />
-  : data.length === 0
-    ? <div className="text-center py-16 text-grey-400">No records found.</div>
-    : <ListGroup items={data} selectable />
+{
+    loading ? <Skeleton variant="list" lines={5} /> : data.length === 0 ? <div className="text-center py-16 text-grey-400">No records found.</div> : <ListGroup items={data} selectable />;
 }
 ```
 
@@ -339,11 +339,11 @@ These rules apply to **every feature** in this codebase.
 
 ```jsx
 // ❌ Dangerous
-<a href={user.url}>Visit</a>
+<a href={user.url}>Visit</a>;
 
 // ✅ Safe
-const safeHref = /^(https?:\/\/|\/)/.test(user.url) ? user.url : '#';
-<a href={safeHref}>Visit</a>
+const safeHref = /^(https?:\/\/|\/)/.test(user.url) ? user.url : "#";
+<a href={safeHref}>Visit</a>;
 ```
 
 ### 5.4 Sensitive Data Exposure (CWE-200, CWE-312)
@@ -361,12 +361,18 @@ const safeHref = /^(https?:\/\/|\/)/.test(user.url) ? user.url : '#';
 - Use the helpers in `src/utils/validators.js`:
 
 ```js
-import { isValidEmail, isStrongPassword, isNonEmpty, validateRequired } from '../../utils/validators';
+import { isValidEmail, isStrongPassword, isNonEmpty, validateRequired } from "../../utils/validators";
 
-const { valid, missing } = validateRequired(form, ['username', 'email', 'password']);
-if (!valid) { /* … */ }
-if (!isValidEmail(form.email)) { /* … */ }
-if (!isStrongPassword(form.password)) { /* … */ }
+const { valid, missing } = validateRequired(form, ["username", "email", "password"]);
+if (!valid) {
+    /* … */
+}
+if (!isValidEmail(form.email)) {
+    /* … */
+}
+if (!isStrongPassword(form.password)) {
+    /* … */
+}
 ```
 
 ### 5.6 Error Handling — Information Leakage (CWE-209)
@@ -386,7 +392,7 @@ if (!isStrongPassword(form.password)) { /* … */ }
 
 ```jsx
 <ErrorBoundary>
-  <MyFeatureView />
+    <MyFeatureView />
 </ErrorBoundary>
 ```
 
@@ -463,14 +469,14 @@ not in a shared constant — this keeps access control readable and co-located w
 
 ## 7. State Management Guidelines
 
-| Data type | Solution |
-|-----------|----------|
-| Server data with caching | `useRequest` hook |
-| Auth state | `AuthMiddleware.isAuth()` (cached 5 min) |
-| UI / local component state | `useState` / `useReducer` |
-| Cross-component UI state | React context (`LayoutContext`, `ThemeContext`) |
-| Form state | Local `useState` object |
-| Global server mutations | `useCallback` inside feature hook |
+| Data type                  | Solution                                        |
+| -------------------------- | ----------------------------------------------- |
+| Server data with caching   | `useRequest` hook                               |
+| Auth state                 | `AuthMiddleware.isAuth()` (cached 5 min)        |
+| UI / local component state | `useState` / `useReducer`                       |
+| Cross-component UI state   | React context (`LayoutContext`, `ThemeContext`) |
+| Form state                 | Local `useState` object                         |
+| Global server mutations    | `useCallback` inside feature hook               |
 
 Never use external state managers (Redux, Zustand, etc.) unless explicitly required —
 the existing patterns cover all standard cases.
@@ -482,31 +488,29 @@ the existing patterns cover all standard cases.
 ### Code splitting — lazy-load views only
 
 ```jsx
-const FinanceView = lazy(() => import('./features/finance/Finance.view'));
+const FinanceView = lazy(() => import("./features/finance/Finance.view"));
 // ❌ Never lazy-load shared UI components
 ```
 
 ### Data fetching — use `useRequest`
 
 ```js
-const { data: users, loading, refetch } = useRequest(
-  'users/list',
-  () => httpClient.get('users').then(r => r.data),
-  { staleTime: 60_000 }
-);
+const { data: users, loading, refetch } = useRequest("users/list", () => httpClient.get("users").then((r) => r.data), { staleTime: 60_000 });
 ```
 
 ### Memoisation — only where measurable
 
 ```jsx
 // Large pure list components
-export const DataTable = memo(({ rows, columns }) => { /* … */ });
+export const DataTable = memo(({ rows, columns }) => {
+    /* … */
+});
 
 // Handlers passed as props
 const handleDelete = useCallback((id) => widgetApi.delete(id), []);
 
 // Expensive derived data
-const filtered = useMemo(() => rows.filter(r => r.active), [rows]);
+const filtered = useMemo(() => rows.filter((r) => r.active), [rows]);
 ```
 
 ### Images
@@ -556,15 +560,15 @@ src/
 
 ## 10. Naming Conventions
 
-| Artifact | Convention | Example |
-|----------|-----------|---------|
-| Component file | PascalCase + `.jsx` | `UserCard.jsx` |
-| View file | PascalCase + `.view.jsx` | `Dashboard.view.jsx` |
-| Hook file | camelCase + `.hook.js` | `user.hook.js` |
-| API file | camelCase + `.api.js` | `user.api.js` |
-| Utility file | camelCase + `.js` | `formatters.js` |
-| CSS class constant | SCREAMING_SNAKE | `MAIN_BUTTON` |
-| Component export | Named + default | `export function X` + `export default X` |
+| Artifact           | Convention               | Example                                  |
+| ------------------ | ------------------------ | ---------------------------------------- |
+| Component file     | PascalCase + `.jsx`      | `UserCard.jsx`                           |
+| View file          | PascalCase + `.view.jsx` | `Dashboard.view.jsx`                     |
+| Hook file          | camelCase + `.hook.js`   | `user.hook.js`                           |
+| API file           | camelCase + `.api.js`    | `user.api.js`                            |
+| Utility file       | camelCase + `.js`        | `formatters.js`                          |
+| CSS class constant | SCREAMING_SNAKE          | `MAIN_BUTTON`                            |
+| Component export   | Named + default          | `export function X` + `export default X` |
 
 ---
 
@@ -594,4 +598,4 @@ FAQ/settings pages.
 
 ---
 
-*Last updated: Aumovio Design System v3.0 — React 19 + Tailwind v4 + Security Hardening*
+_Last updated: Aumovio Design System v3.0 — React 19 + Tailwind v4 + Security Hardening_

@@ -15,42 +15,23 @@ function SkeletonLine({ w = "100%", h = "0.875rem" }) {
     return <div className={base} style={{ width: w, height: h }} />;
 }
 
-export function Skeleton({
-    variant = "text",
-    width = "100%",
-    height,
-    lines = 3,
-    count = 1,
-    animate = true,
-}) {
+export function Skeleton({ variant = "text", width = "100%", height, lines = 3, count = 1, animate = true }) {
     const pulse = animate ? "" : "!animate-none";
 
-    if (variant === "circle")
-        return (
-            <div
-                className={`${base} ${pulse} rounded-full`}
-                style={{ width: width, height: width }}
-            />
-        );
+    if (variant === "circle") return <div className={`${base} ${pulse} rounded-full`} style={{ width: width, height: width }} />;
 
     if (variant === "text")
         return (
             <div className="space-y-2" style={{ width }}>
                 {Array.from({ length: lines }, (_, i) => (
-                    <SkeletonLine
-                        key={i}
-                        w={i === lines - 1 && lines > 1 ? "70%" : "100%"}
-                    />
+                    <SkeletonLine key={i} w={i === lines - 1 && lines > 1 ? "70%" : "100%"} />
                 ))}
             </div>
         );
 
     if (variant === "card")
         return (
-            <div
-                className="bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden p-5 space-y-4"
-                style={{ width }}
-            >
+            <div className="bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden p-5 space-y-4" style={{ width }}>
                 <div className={`${base} ${pulse} h-36 rounded-lg`} />
                 <SkeletonLine w="60%" h="1.125rem" />
                 <SkeletonLine />
@@ -63,10 +44,7 @@ export function Skeleton({
             <div className="space-y-3" style={{ width }}>
                 {Array.from({ length: lines }, (_, i) => (
                     <div key={i} className="flex items-center gap-3">
-                        <div
-                            className={`${base} ${pulse} rounded-full shrink-0`}
-                            style={{ width: 36, height: 36 }}
-                        />
+                        <div className={`${base} ${pulse} rounded-full shrink-0`} style={{ width: 36, height: 36 }} />
                         <div className="flex-1 space-y-1.5">
                             <SkeletonLine w="50%" />
                             <SkeletonLine w="80%" h="0.75rem" />
@@ -94,12 +72,7 @@ export function Skeleton({
             </div>
         );
 
-    return (
-        <div
-            className={`${base} ${pulse}`}
-            style={{ width, height: height ?? "1rem" }}
-        />
-    );
+    return <div className={`${base} ${pulse}`} style={{ width, height: height ?? "1rem" }} />;
 }
 
 export default Skeleton;

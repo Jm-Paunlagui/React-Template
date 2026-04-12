@@ -10,12 +10,7 @@ export function isValidEmail(email) {
 
 /** Min 8 chars, at least one letter and one digit */
 export function isStrongPassword(password) {
-    return (
-        typeof password === "string" &&
-        password.length >= 8 &&
-        /[a-zA-Z]/.test(password) &&
-        /\d/.test(password)
-    );
+    return typeof password === "string" && password.length >= 8 && /[a-zA-Z]/.test(password) && /\d/.test(password);
 }
 
 export function isNonEmpty(value) {
@@ -32,8 +27,6 @@ export function isPositiveInt(value) {
  * @returns {{ valid: boolean, missing: string[] }}
  */
 export function validateRequired(data, fields) {
-    const missing = fields.filter(
-        (f) => data[f] === undefined || data[f] === null || data[f] === "",
-    );
+    const missing = fields.filter((f) => data[f] === undefined || data[f] === null || data[f] === "");
     return { valid: missing.length === 0, missing };
 }

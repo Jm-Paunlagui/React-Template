@@ -20,25 +20,15 @@ export function LoadingSpinner({ size = "md", fullPage = false, label }) {
                 className={`${SIZES[size] ?? SIZES.md} rounded-full
                     border-orange-400 border-t-transparent animate-spin`}
             />
-            {label && (
-                <p className="text-sm font-aumovio text-grey-400 animate-pulse">
-                    {label}
-                </p>
-            )}
+            {label && <p className="text-sm font-aumovio text-grey-400 animate-pulse">{label}</p>}
         </div>
     );
 
     if (fullPage) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14] transition-colors duration-300">
-                {spinner}
-            </div>
-        );
+        return <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14] transition-colors duration-300">{spinner}</div>;
     }
 
-    return (
-        <div className="flex items-center justify-center py-12">{spinner}</div>
-    );
+    return <div className="flex items-center justify-center py-12">{spinner}</div>;
 }
 
 export default LoadingSpinner;

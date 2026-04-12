@@ -27,15 +27,13 @@ export const useAuth = () => {
             setError(null);
             try {
                 const response = await authApi.login(credentials);
-                const token =
-                    response.data?.data?.token || response.data?.token;
+                const token = response.data?.data?.token || response.data?.token;
 
                 if (!token) throw new Error("No token in response");
 
                 AuthMiddleware.authenticate(token, () => {
                     // Store user data if returned
-                    const user =
-                        response.data?.data?.user || response.data?.user;
+                    const user = response.data?.data?.user || response.data?.user;
                     if (user) {
                         AuthMiddleware.setLocalStorage("user", {
                             ...user,
@@ -48,10 +46,7 @@ export const useAuth = () => {
                 toast.success(response.data?.message || "Welcome!");
                 return true;
             } catch (err) {
-                const message =
-                    err.response?.data?.message ||
-                    err.message ||
-                    "Login failed";
+                const message = err.response?.data?.message || err.message || "Login failed";
                 setError(message);
                 toast.error(message);
                 return false;
@@ -91,8 +86,7 @@ export const useAuth = () => {
                 navigate(redirectPath);
                 return true;
             } catch (err) {
-                const message =
-                    err.response?.data?.message || "Registration failed";
+                const message = err.response?.data?.message || "Registration failed";
                 setError(message);
                 toast.error(message);
                 return false;
@@ -114,8 +108,7 @@ export const useAuth = () => {
             toast.success(response.data?.message || "Password changed");
             return true;
         } catch (err) {
-            const message =
-                err.response?.data?.message || "Failed to change password";
+            const message = err.response?.data?.message || "Failed to change password";
             setError(message);
             toast.error(message);
             return false;

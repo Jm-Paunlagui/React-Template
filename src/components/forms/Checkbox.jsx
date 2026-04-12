@@ -10,18 +10,7 @@
 import { CheckIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef } from "react";
 
-export function Checkbox({
-    id,
-    name,
-    label,
-    checked = false,
-    onChange,
-    disabled = false,
-    indeterminate = false,
-    description,
-    variant = "default",
-    error,
-}) {
+export function Checkbox({ id, name, label, checked = false, onChange, disabled = false, indeterminate = false, description, variant = "default", error }) {
     const ref = useRef(null);
     useEffect(() => {
         if (ref.current) ref.current.indeterminate = indeterminate;
@@ -29,32 +18,15 @@ export function Checkbox({
 
     const inputEl = (
         <div className="relative w-4 h-4 shrink-0">
-            <input
-                ref={ref}
-                type="checkbox"
-                id={id ?? name}
-                name={name}
-                checked={checked}
-                onChange={onChange}
-                disabled={disabled}
-                className="sr-only peer"
-            />
+            <input ref={ref} type="checkbox" id={id ?? name} name={name} checked={checked} onChange={onChange} disabled={disabled} className="sr-only peer" />
             <div
                 className={`w-4 h-4 rounded border-2 transition-all duration-150 flex items-center justify-center
-        ${
-            checked || indeterminate
-                ? "bg-orange-400 border-orange-400"
-                : "bg-white dark:bg-grey-800 border-grey-300 dark:border-grey-600 peer-hover:border-orange-400"
-        }
+        ${checked || indeterminate ? "bg-orange-400 border-orange-400" : "bg-white dark:bg-grey-800 border-grey-300 dark:border-grey-600 peer-hover:border-orange-400"}
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
         ${error ? "border-danger-400" : ""}`}
             >
-                {checked && !indeterminate && (
-                    <CheckIcon className="w-3 h-3 text-white" strokeWidth={3} />
-                )}
-                {indeterminate && (
-                    <MinusIcon className="w-3 h-3 text-white" strokeWidth={3} />
-                )}
+                {checked && !indeterminate && <CheckIcon className="w-3 h-3 text-white" strokeWidth={3} />}
+                {indeterminate && <MinusIcon className="w-3 h-3 text-white" strokeWidth={3} />}
             </div>
         </div>
     );
@@ -69,16 +41,8 @@ export function Checkbox({
             >
                 {inputEl}
                 <div>
-                    <p
-                        className={`text-sm font-aumovio-bold ${checked ? "text-orange-400" : "text-black/85 dark:text-white/85"}`}
-                    >
-                        {label}
-                    </p>
-                    {description && (
-                        <p className="text-xs text-grey-400 mt-0.5">
-                            {description}
-                        </p>
-                    )}
+                    <p className={`text-sm font-aumovio-bold ${checked ? "text-orange-400" : "text-black/85 dark:text-white/85"}`}>{label}</p>
+                    {description && <p className="text-xs text-grey-400 mt-0.5">{description}</p>}
                 </div>
             </label>
         );
@@ -92,22 +56,12 @@ export function Checkbox({
                 {inputEl}
                 {label && (
                     <div>
-                        <span className="text-sm text-black/80 dark:text-white/80 font-aumovio">
-                            {label}
-                        </span>
-                        {description && (
-                            <p className="text-xs text-grey-400 mt-0.5">
-                                {description}
-                            </p>
-                        )}
+                        <span className="text-sm text-black/80 dark:text-white/80 font-aumovio">{label}</span>
+                        {description && <p className="text-xs text-grey-400 mt-0.5">{description}</p>}
                     </div>
                 )}
             </label>
-            {error && (
-                <p className="mt-1 text-xs text-danger-400 font-aumovio-bold">
-                    {error}
-                </p>
-            )}
+            {error && <p className="mt-1 text-xs text-danger-400 font-aumovio-bold">{error}</p>}
         </div>
     );
 }

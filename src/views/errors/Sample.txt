@@ -1,0 +1,1101 @@
+/**
+ * ClientErrorResponses.jsx — Disney · Marvel · Star Wars Edition
+ *
+ * Each error has its own beloved character acting out the error scenario:
+ *   400 — Bad Request       → Stitch (chaotic little gremlin, scrambles everything)
+ *   401 — Unauthorized      → Groot & Rocket (access denied at the door)
+ *   404 — Page Not Found    → Wall-E (lost, searching the void)
+ *   440 — Login Timeout     → Yoda (fell asleep, session drifted away)
+ *   498 — Invalid Token     → Iron Man (HUD glitching, token corrupted)
+ *   523 — Service Unavail.  → Baymax (going into low-power mode)
+ *
+ * Light & dark theme: uses Aumovio design tokens and `data-theme="dark"`.
+ */
+
+import { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import Button from "../../components/ui/Button";
+import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
+import CsrfMiddleware from "../../middleware/security/CsrfMiddleware";
+
+/* ─── Shared keyframe injection ─────────────────────────────────────────────── */
+const KEYFRAMES = `
+  @keyframes err-float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  @keyframes err-float-sm { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes err-spin-slow{ to{transform:rotate(360deg)} }
+  @keyframes err-spin-rev { to{transform:rotate(-360deg)} }
+  @keyframes err-blink    { 0%,100%{opacity:1} 49%{opacity:1} 50%,99%{opacity:0} }
+  @keyframes err-glitch   { 0%,100%{clip-path:inset(0)} 10%{clip-path:inset(20% 0 60% 0)} 20%{clip-path:inset(70% 0 5% 0)} 30%{clip-path:inset(40% 0 40% 0)} 40%{clip-path:inset(0)} }
+  @keyframes err-shake    { 0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(2deg)} }
+  @keyframes err-shake-h  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  @keyframes err-pulse-op { 0%,100%{opacity:.35} 50%{opacity:.9} }
+  @keyframes err-pulse-op2{ 0%,100%{opacity:.6} 50%{opacity:1} }
+  @keyframes err-drift-l  { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-8px)} }
+  @keyframes err-drift-r  { 0%,100%{transform:translateX(0)} 50%{transform:translateX(8px)} }
+  @keyframes err-drift-up { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-10px) rotate(5deg)} }
+  @keyframes err-drop     { 0%{transform:translateY(-20px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+  @keyframes err-slide-up { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+  @keyframes err-zzz      { 0%{opacity:0;transform:translate(0,0) scale(.5)} 20%{opacity:1} 80%{opacity:.8} 100%{opacity:0;transform:translate(14px,-22px) scale(1.1)} }
+  @keyframes err-static   { 0%,100%{opacity:.7} 25%{opacity:.3} 50%{opacity:1} 75%{opacity:.4} }
+  @keyframes err-spark    { 0%,100%{transform:scale(1);opacity:.7} 50%{transform:scale(1.15);opacity:1} }
+  @keyframes err-laser    { 0%,100%{opacity:.4;transform:scaleX(1)} 50%{opacity:1;transform:scaleX(1.05)} }
+  @keyframes err-eye      { 0%,85%,100%{scaleY:1} 90%{scaleY:0.1} }
+  @keyframes err-bounce   { 0%,100%{transform:translateY(0)} 40%{transform:translateY(-16px)} 60%{transform:translateY(-8px)} }
+  @keyframes err-wobble   { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-6deg)} 75%{transform:rotate(6deg)} }
+  @keyframes err-scan     { 0%{transform:translateY(-100%)} 100%{transform:translateY(600%)} }
+  @keyframes err-orbit    { from{transform:rotate(0deg) translateX(54px) rotate(0deg)} to{transform:rotate(360deg) translateX(54px) rotate(-360deg)} }
+  @keyframes err-hud-flicker { 0%,100%{opacity:1} 92%{opacity:1} 94%{opacity:.2} 96%{opacity:1} 98%{opacity:.4} }
+  @keyframes err-heart    { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
+  @keyframes err-swirl    { 0%{transform:rotate(0deg) scale(1)} 50%{transform:rotate(180deg) scale(1.08)} 100%{transform:rotate(360deg) scale(1)} }
+  @keyframes err-antenna  { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+  @keyframes err-ear      { 0%,100%{transform:rotate(-3deg) translateY(0)} 50%{transform:rotate(3deg) translateY(-2px)} }
+  @keyframes err-tail     { 0%,100%{transform:rotate(-15deg)} 50%{transform:rotate(15deg)} }
+  @keyframes err-arm-wave { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-25deg)} }
+  @keyframes err-glow-pulse { 0%,100%{filter:drop-shadow(0 0 6px currentColor)} 50%{filter:drop-shadow(0 0 18px currentColor)} }
+  @keyframes err-particle { 0%{transform:translate(0,0) scale(1);opacity:1} 100%{transform:translate(var(--px),var(--py)) scale(0);opacity:0} }
+  @keyframes err-type     { from{width:0} to{width:100%} }
+  @keyframes err-flicker  { 0%,19%,21%,23%,25%,54%,56%,100%{opacity:1} 20%,24%,55%{opacity:.4} }
+`;
+
+let injected = false;
+function injectKeyframes() {
+    if (injected) return;
+    injected = true;
+    const s = document.createElement("style");
+    s.textContent = KEYFRAMES;
+    document.head.appendChild(s);
+}
+
+/* ─── Shared layout wrapper ──────────────────────────────────────────────────── */
+function ErrorLayout({
+    code,
+    title,
+    subtitle,
+    character,        // string — which character
+    linkTo,
+    linkLabel,
+    accentClass,
+    bgClass,
+    illustration,
+    badge,            // ReactNode — character name badge
+    children,
+}) {
+    useEffect(() => { injectKeyframes(); }, []);
+
+    return (
+        <div className={`relative flex flex-col items-center justify-center min-h-screen overflow-hidden font-aumovio px-6 py-16 ${bgClass}`}>
+
+            {/* Decorative background pattern */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+                <div className="absolute top-0 right-0 rounded-full w-96 h-96 opacity-10 dark:opacity-5"
+                    style={{ background: "radial-gradient(ellipse, var(--grad-color, #FF4208) 0%, transparent 70%)" }} />
+                <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full opacity-10 dark:opacity-5"
+                    style={{ background: "radial-gradient(ellipse, var(--grad-color2, #4827AF) 0%, transparent 70%)" }} />
+            </div>
+
+            {/* Character badge pill */}
+            {badge && (
+                <div className="relative z-10 mb-4" style={{ animation: "err-drop .4s ease both" }}>
+                    {badge}
+                </div>
+            )}
+
+            {/* Illustration */}
+            <div className="relative z-10 mb-6 drop-shadow-2xl"
+                style={{ animation: "err-drop .5s .05s ease both", opacity: 0 }}>
+                {illustration}
+            </div>
+
+            {/* Error code */}
+            <p className={`font-aumovio-bold tracking-tight leading-none mb-2 select-none z-10 ${accentClass}`}
+                style={{ fontSize: "clamp(4.5rem,16vw,8rem)", animation: "err-slide-up .5s .1s ease both", opacity: 0 }}>
+                {code}
+            </p>
+
+            {/* Title */}
+            <h1 className="z-10 mb-3 text-2xl text-center md:text-3xl font-aumovio-bold text-black/85 dark:text-white/90"
+                style={{ animation: "err-slide-up .5s .2s ease both", opacity: 0 }}>
+                {title}
+            </h1>
+
+            {/* Subtitle */}
+            <p className="z-10 max-w-md mb-6 text-base text-center text-grey-500 dark:text-grey-400"
+                style={{ animation: "err-slide-up .5s .3s ease both", opacity: 0 }}>
+                {subtitle}
+            </p>
+
+            {/* Extra content */}
+            {children && (
+                <div className="z-10 w-full max-w-md mb-8 text-center"
+                    style={{ animation: "err-slide-up .5s .35s ease both", opacity: 0 }}>
+                    {children}
+                </div>
+            )}
+
+            {/* CTA */}
+            <div className="z-10" style={{ animation: "err-slide-up .5s .4s ease both", opacity: 0 }}>
+                <NavLink to={linkTo}>
+                    <Button variant="gradient" size="lg" rounded>{linkLabel}</Button>
+                </NavLink>
+            </div>
+        </div>
+    );
+}
+
+/* ─── Character badge component ─────────────────────────────────────────────── */
+function CharacterBadge({ name, emoji, colorClass }) {
+    return (
+        <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs font-aumovio-bold tracking-widest uppercase ${colorClass}`}>
+            <span className="text-base">{emoji}</span>
+            {name}
+        </div>
+    );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   400 — Bad Request  →  STITCH
+   Stitch is causing chaos, breaking everything, scrambling the request
+   ══════════════════════════════════════════════════════════════════════════════ */
+export function BadRequest() {
+    return (
+        <ErrorLayout
+            code="400"
+            title="Stitch got into the requests again."
+            subtitle="Something arrived completely scrambled. Stitch was definitely here — nothing survived his chaos unbroken."
+            linkTo="/"
+            linkLabel="Start fresh, Ohana!"
+            accentClass="text-blue-400 dark:text-blue-300"
+            bgClass="bg-gradient-to-br from-blue-50/30 via-white to-purple-50/20 dark:from-[#060a12] dark:via-[#0D0D14] dark:to-[#0a060f]"
+            badge={<CharacterBadge name="Stitch — Experiment 626" emoji="💙" colorClass="bg-blue-400/10 border-blue-400/30 text-blue-500 dark:text-blue-300" />}
+            illustration={<StitchIllustration />}
+        />
+    );
+}
+
+function StitchIllustration() {
+    return (
+        <div className="relative flex items-center justify-center" style={{ width: 260, height: 220 }}>
+
+            {/* Chaos particles flying around */}
+            {[
+                { char: "¿¿", x: 10, y: 20, rot: -15, delay: "0s" },
+                { char: "NaN", x: 200, y: 30, rot: 10, delay: ".3s" },
+                { char: "??", x: 220, y: 140, rot: 20, delay: ".6s" },
+                { char: "ERR", x: 5, y: 150, rot: -10, delay: ".9s" },
+                { char: "⁉", x: 110, y: 5, rot: 0, delay: ".15s" },
+                { char: "∅", x: 190, y: 170, rot: 25, delay: ".45s" },
+            ].map((p, i) => (
+                <div key={i} className="absolute font-mono text-xs text-blue-400/70 font-aumovio-bold"
+                    style={{ left: p.x, top: p.y, transform: `rotate(${p.rot}deg)`,
+                        animation: `err-${i%2?"drift-r":"drift-l"} ${1.8+i*.25}s ${p.delay} ease-in-out infinite` }}>
+                    {p.char}
+                </div>
+            ))}
+
+            {/* Stitch body — blue alien koala chaos creature */}
+            <div className="relative" style={{ animation: "err-wobble 1.8s ease-in-out infinite" }}>
+
+                {/* Big ears */}
+                <div className="absolute flex -top-8 left-4 gap-14">
+                    {/* Left ear */}
+                    <div className="relative" style={{ animation: "err-ear 1.2s ease-in-out infinite" }}>
+                        <svg width="40" height="50" viewBox="0 0 40 50" fill="none">
+                            <ellipse cx="20" cy="30" rx="14" ry="22" fill="#4A90D9" />
+                            <ellipse cx="20" cy="32" rx="8" ry="15" fill="#6BB4F0" />
+                            <ellipse cx="20" cy="34" rx="4" ry="10" fill="#8ECAF5" opacity=".6" />
+                        </svg>
+                    </div>
+                    {/* Right ear */}
+                    <div className="relative" style={{ animation: "err-ear 1.2s .3s ease-in-out infinite" }}>
+                        <svg width="40" height="50" viewBox="0 0 40 50" fill="none">
+                            <ellipse cx="20" cy="30" rx="14" ry="22" fill="#4A90D9" />
+                            <ellipse cx="20" cy="32" rx="8" ry="15" fill="#6BB4F0" />
+                            <ellipse cx="20" cy="34" rx="4" ry="10" fill="#8ECAF5" opacity=".6" />
+                        </svg>
+                    </div>
+                </div>
+
+                {/* Head */}
+                <div className="relative">
+                    <svg width="130" height="110" viewBox="0 0 130 110" fill="none">
+                        {/* Head shape */}
+                        <ellipse cx="65" cy="60" rx="55" ry="48" fill="#4A90D9" />
+                        {/* Cheek lighter patches */}
+                        <ellipse cx="28" cy="72" rx="18" ry="12" fill="#6BB4F0" opacity=".5" />
+                        <ellipse cx="102" cy="72" rx="18" ry="12" fill="#6BB4F0" opacity=".5" />
+                        {/* Forehead ridge bumps */}
+                        <circle cx="42" cy="28" r="5" fill="#3A7BC8" />
+                        <circle cx="65" cy="22" r="5" fill="#3A7BC8" />
+                        <circle cx="88" cy="28" r="5" fill="#3A7BC8" />
+
+                        {/* Eyes — big, googly, chaotic */}
+                        {/* Left eye */}
+                        <ellipse cx="44" cy="54" rx="16" ry="18" fill="white" />
+                        <ellipse cx="44" cy="55" rx="10" ry="12" fill="#1a1a2e" />
+                        <ellipse cx="40" cy="51" rx="5" ry="6" fill="#2060b0" />
+                        <circle cx="38" cy="49" r="2.5" fill="white" />
+                        <circle cx="50" cy="47" r="2" fill="white" opacity=".6" />
+                        {/* Left eyelid — one droopy, glitching */}
+                        <path d="M28 46 Q44 38 60 46" fill="#4A90D9" opacity=".4"
+                            style={{ animation: "err-blink 2.5s step-end infinite" }} />
+
+                        {/* Right eye — wide open maniacal */}
+                        <ellipse cx="88" cy="52" rx="16" ry="19" fill="white" />
+                        <ellipse cx="90" cy="53" rx="10" ry="12" fill="#1a1a2e" />
+                        <ellipse cx="87" cy="50" rx="5" ry="6" fill="#2060b0" />
+                        <circle cx="85" cy="48" r="2.5" fill="white" />
+                        <circle cx="95" cy="46" r="2" fill="white" opacity=".6" />
+
+                        {/* Nose */}
+                        <ellipse cx="65" cy="74" rx="10" ry="7" fill="#3A7BC8" />
+                        <circle cx="60" cy="73" r="2" fill="#2A5A98" />
+                        <circle cx="70" cy="73" r="2" fill="#2A5A98" />
+
+                        {/* Mouth — open wide chaotic grin */}
+                        <path d="M40 86 Q65 102 90 86" fill="#1a0a0a" />
+                        <path d="M40 86 Q65 95 90 86" fill="#cc2020" />
+                        {/* Teeth */}
+                        <rect x="50" y="86" width="8" height="6" rx="1" fill="white" />
+                        <rect x="62" y="86" width="8" height="6" rx="1" fill="white" />
+                        <rect x="74" y="86" width="8" height="6" rx="1" fill="white" />
+                        {/* Extra sharp teeth */}
+                        <path d="M46 88 L50 82 L54 88" fill="white" />
+                        <path d="M78 88 L82 82 L86 88" fill="white" />
+
+                        {/* Extra arms behind head */}
+                        <ellipse cx="8" cy="80" rx="6" ry="12" fill="#3A7BC8" transform="rotate(-20 8 80)" />
+                        <ellipse cx="122" cy="80" rx="6" ry="12" fill="#3A7BC8" transform="rotate(20 122 80)" />
+                    </svg>
+                </div>
+
+                {/* Body + arms causing chaos */}
+                <div className="flex justify-center -mt-3">
+                    <svg width="140" height="90" viewBox="0 0 140 90" fill="none">
+                        {/* Body */}
+                        <ellipse cx="70" cy="55" rx="42" ry="35" fill="#4A90D9" />
+                        <ellipse cx="70" cy="50" rx="28" ry="22" fill="#6BB4F0" opacity=".4" />
+
+                        {/* Arms waving chaotically */}
+                        {/* Left arm — holding broken code */}
+                        <ellipse cx="14" cy="38" rx="10" ry="24" fill="#4A90D9"
+                            transform="rotate(-35 14 38)"
+                            style={{ animation: "err-arm-wave 1s ease-in-out infinite" }} />
+                        {/* Right arm — waving */}
+                        <ellipse cx="126" cy="35" rx="10" ry="24" fill="#4A90D9"
+                            transform="rotate(35 126 35)"
+                            style={{ animation: "err-arm-wave 1s .5s ease-in-out infinite" }} />
+
+                        {/* Legs */}
+                        <ellipse cx="52" cy="82" rx="14" ry="10" fill="#3A7BC8" transform="rotate(-10 52 82)" />
+                        <ellipse cx="88" cy="82" rx="14" ry="10" fill="#3A7BC8" transform="rotate(10 88 82)" />
+                    </svg>
+                </div>
+
+                {/* Tail */}
+                <div className="absolute -right-6 bottom-8" style={{ transformOrigin: "left center", animation: "err-tail 1s ease-in-out infinite" }}>
+                    <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
+                        <path d="M0 10 Q20 0 40 10 Q20 20 0 10Z" fill="#4A90D9" />
+                    </svg>
+                </div>
+            </div>
+
+            {/* Broken terminal behind him */}
+            <div className="absolute bottom-0 right-0 opacity-60"
+                style={{ animation: "err-static 1.5s ease-in-out infinite" }}>
+                <div className="p-2 font-mono text-xs border rounded-lg border-blue-400/20 bg-grey-900/80 text-blue-400/70">
+                    <div>POST /api/???</div>
+                    <div>{"{ ¿id?: NaN }"}</div>
+                    <div className="text-danger-400">❌ MALFORMED</div>
+                </div>
+            </div>
+
+            {/* Chaos badge */}
+            <div className="absolute px-2 py-1 text-xs text-white bg-blue-400 rounded-full shadow-lg -top-3 -right-3 font-aumovio-bold shadow-blue-400/30"
+                style={{ animation: "err-spark 1.5s ease-in-out infinite" }}>
+                OHANA?
+            </div>
+        </div>
+    );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   401 — Unauthorized  →  GROOT & ROCKET
+   Rocket stops you at the door. Groot just says "I am Groot."
+   ══════════════════════════════════════════════════════════════════════════════ */
+export function Unauthorized() {
+    return (
+        <ErrorLayout
+            code="401"
+            title="I am Groot. (You can't come in.)"
+            subtitle="Rocket's running security tonight. No credentials, no entry. Even a sad face won't work on these two."
+            linkTo="/"
+            linkLabel="Return to the Milano"
+            accentClass="text-success-400 dark:text-success-300"
+            bgClass="bg-gradient-to-br from-green-50/20 via-white to-grey-50 dark:from-[#050e0a] dark:via-[#0D0D14] dark:to-[#080610]"
+            badge={<CharacterBadge name="Groot & Rocket — Guardians of the Galaxy" emoji="🌿" colorClass="bg-success-400/10 border-success-400/30 text-success-600 dark:text-success-300" />}
+            illustration={<GrootRocketIllustration />}
+        />
+    );
+}
+
+function GrootRocketIllustration() {
+    return (
+        <div className="relative flex items-end justify-center gap-4" style={{ width: 280, height: 230 }}>
+
+            {/* Background glow */}
+            <div className="absolute inset-0 rounded-2xl opacity-20 dark:opacity-10"
+                style={{ background: "radial-gradient(ellipse at center, #32CB70 0%, transparent 70%)" }} />
+
+            {/* GROOT — tall tree being */}
+            <div className="relative shrink-0" style={{ animation: "err-float-sm 3s ease-in-out infinite" }}>
+                <svg width="90" height="200" viewBox="0 0 90 200" fill="none">
+                    {/* Trunk legs */}
+                    <rect x="22" y="158" width="16" height="38" rx="6" fill="#4a3728" />
+                    <rect x="52" y="158" width="16" height="38" rx="6" fill="#4a3728" />
+                    {/* Roots / feet */}
+                    <ellipse cx="30" cy="196" rx="14" ry="6" fill="#362818" />
+                    <ellipse cx="60" cy="196" rx="14" ry="6" fill="#362818" />
+
+                    {/* Main body trunk */}
+                    <rect x="18" y="80" width="54" height="82" rx="16" fill="#5a4535" />
+                    {/* Wood grain lines */}
+                    <path d="M25 100 Q45 96 65 100" stroke="#4a3728" strokeWidth="1.5" opacity=".6" />
+                    <path d="M22 115 Q45 111 68 115" stroke="#4a3728" strokeWidth="1.5" opacity=".6" />
+                    <path d="M25 130 Q45 126 65 130" stroke="#4a3728" strokeWidth="1.5" opacity=".6" />
+                    <path d="M22 148 Q45 144 68 148" stroke="#4a3728" strokeWidth="1.5" opacity=".6" />
+                    {/* Bark texture bumps */}
+                    <circle cx="32" cy="108" r="4" fill="#4a3728" opacity=".5" />
+                    <circle cx="60" cy="120" r="3" fill="#4a3728" opacity=".4" />
+
+                    {/* Arms — branches with leaves */}
+                    {/* Left arm reaching out to block */}
+                    <path d="M18 100 Q-8 85 -18 70" stroke="#5a4535" strokeWidth="12" strokeLinecap="round"
+                        style={{ animation: "err-arm-wave 2s ease-in-out infinite" }} />
+                    <circle cx="-16" cy="68" r="12" fill="#2d6b3d" />
+                    <circle cx="-22" cy="60" r="8" fill="#32CB70" opacity=".7" />
+                    <circle cx="-8" cy="58" r="7" fill="#2d6b3d" />
+
+                    {/* Right arm just hanging */}
+                    <path d="M72 110 Q95 98 102 82" stroke="#5a4535" strokeWidth="12" strokeLinecap="round" />
+                    <circle cx="104" cy="80" r="10" fill="#2d6b3d" />
+                    <circle cx="110" cy="72" r="7" fill="#32CB70" opacity=".7" />
+
+                    {/* Neck */}
+                    <rect x="30" y="66" width="30" height="18" rx="8" fill="#5a4535" />
+
+                    {/* Head */}
+                    <ellipse cx="45" cy="46" rx="30" ry="32" fill="#5a4535" />
+                    {/* Head bark texture */}
+                    <path d="M25 40 Q45 35 65 40" stroke="#4a3728" strokeWidth="1.5" opacity=".5" />
+                    <path d="M22 52 Q45 47 68 52" stroke="#4a3728" strokeWidth="1.5" opacity=".5" />
+
+                    {/* Brow ridge / branches on head */}
+                    <path d="M18 30 Q30 18 42 24" stroke="#32CB70" strokeWidth="4" strokeLinecap="round" />
+                    <path d="M72 30 Q60 18 48 24" stroke="#32CB70" strokeWidth="4" strokeLinecap="round" />
+                    <circle cx="15" cy="30" r="6" fill="#2d6b3d" />
+                    <circle cx="75" cy="30" r="6" fill="#2d6b3d" />
+                    <circle cx="10" cy="24" r="4" fill="#32CB70" opacity=".8" />
+                    <circle cx="80" cy="24" r="4" fill="#32CB70" opacity=".8" />
+
+                    {/* Eyes — glowing kind but firm */}
+                    <ellipse cx="34" cy="46" rx="9" ry="10" fill="#1a1a2e" />
+                    <ellipse cx="56" cy="46" rx="9" ry="10" fill="#1a1a2e" />
+                    {/* Glowing eye glow */}
+                    <ellipse cx="34" cy="46" rx="6" ry="7" fill="#32CB70" opacity=".5"
+                        style={{ animation: "err-pulse-op 2s ease-in-out infinite" }} />
+                    <ellipse cx="56" cy="46" rx="6" ry="7" fill="#32CB70" opacity=".5"
+                        style={{ animation: "err-pulse-op 2s .3s ease-in-out infinite" }} />
+                    <circle cx="32" cy="44" r="2" fill="white" opacity=".8" />
+                    <circle cx="54" cy="44" r="2" fill="white" opacity=".8" />
+
+                    {/* Mouth — straight serious line */}
+                    <path d="M35 62 Q45 66 55 62" stroke="#362818" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+
+                    {/* Small leaf sprouts */}
+                    <circle cx="45" cy="10" r="7" fill="#32CB70" opacity=".9" />
+                    <circle cx="38" cy="6" r="5" fill="#2d6b3d" />
+                    <circle cx="52" cy="5" r="5" fill="#2d6b3d" />
+                </svg>
+                {/* "I am Groot" speech bubble */}
+                <div className="absolute px-2 py-1 text-xs bg-white border shadow-md -top-6 -right-4 dark:bg-grey-800 border-grey-200 dark:border-grey-600 rounded-xl font-aumovio-bold text-grey-700 dark:text-grey-300 whitespace-nowrap"
+                    style={{ animation: "err-float-sm 2.5s ease-in-out infinite" }}>
+                    I am Groot. 🚫
+                    <div className="absolute -bottom-1.5 left-3 w-3 h-3 rotate-45 bg-white dark:bg-grey-800 border-r border-b border-grey-200 dark:border-grey-600" />
+                </div>
+            </div>
+
+            {/* ROCKET — standing on crate with scanner */}
+            <div className="relative mb-4 shrink-0" style={{ animation: "err-float-sm 2.8s .4s ease-in-out infinite" }}>
+                {/* Crate */}
+                <div className="mb-1">
+                    <div className="flex items-center justify-center w-20 h-10 border-2 rounded-lg border-grey-400 dark:border-grey-600 bg-grey-200 dark:bg-grey-700">
+                        <div className="grid grid-cols-2 gap-1">
+                            {[...Array(4)].map((_,i) => <div key={i} className="w-2 h-2 rounded-sm bg-grey-400 dark:bg-grey-500" />)}
+                        </div>
+                    </div>
+                </div>
+                <svg width="80" height="110" viewBox="0 0 80 110" fill="none">
+                    {/* Tail */}
+                    <path d="M42 88 Q65 82 70 70" stroke="#8B7355" strokeWidth="8" strokeLinecap="round"
+                        style={{ animation: "err-tail 1.5s ease-in-out infinite" }} />
+
+                    {/* Body */}
+                    <ellipse cx="40" cy="72" rx="24" ry="28" fill="#8B7355" />
+                    {/* Belly */}
+                    <ellipse cx="40" cy="76" rx="14" ry="18" fill="#C4A882" opacity=".6" />
+                    {/* Cyber implant lines */}
+                    <path d="M28 62 Q40 58 52 62" stroke="#4A90D9" strokeWidth="1.5" opacity=".8" />
+                    <path d="M26 70 Q40 66 54 70" stroke="#4A90D9" strokeWidth="1" opacity=".5" />
+
+                    {/* Legs */}
+                    <ellipse cx="30" cy="98" rx="8" ry="10" fill="#6B5840" />
+                    <ellipse cx="50" cy="98" rx="8" ry="10" fill="#6B5840" />
+
+                    {/* Arms — holding scanner aimed at "you" */}
+                    {/* Left arm — holding scanner */}
+                    <ellipse cx="12" cy="68" rx="7" ry="14" fill="#8B7355" transform="rotate(-25 12 68)"
+                        style={{ animation: "err-arm-wave 2.2s ease-in-out infinite" }} />
+                    {/* Scanner device */}
+                    <rect x="-8" y="52" width="22" height="14" rx="3" fill="#2a2a3e" />
+                    <rect x="-6" y="54" width="18" height="10" rx="2" fill="#4A90D9" opacity=".3" />
+                    <div style={{ position: 'absolute', top: 52, left: -8, width: 22, height: 3, background: '#ff4208', opacity: 0.9, animation: 'err-laser 1.2s ease-in-out infinite', borderRadius: 2, transform: 'translateX(-20px)' }} />
+
+                    {/* Right arm pointing */}
+                    <ellipse cx="68" cy="65" rx="7" ry="14" fill="#8B7355" transform="rotate(25 68 65)" />
+
+                    {/* Neck */}
+                    <rect x="32" y="44" width="16" height="12" rx="5" fill="#8B7355" />
+
+                    {/* Head — raccoon-like */}
+                    <ellipse cx="40" cy="32" rx="26" ry="24" fill="#8B7355" />
+                    {/* Dark mask marking */}
+                    <ellipse cx="40" cy="32" rx="22" ry="18" fill="#6B5840" opacity=".3" />
+                    {/* Mask stripes */}
+                    <path d="M14 28 Q24 20 34 26" fill="#3a3028" opacity=".6" />
+                    <path d="M66 28 Q56 20 46 26" fill="#3a3028" opacity=".6" />
+                    {/* Forehead */}
+                    <ellipse cx="40" cy="18" rx="12" ry="6" fill="#7a6448" />
+
+                    {/* Ears */}
+                    <ellipse cx="18" cy="14" rx="8" ry="11" fill="#8B7355" />
+                    <ellipse cx="62" cy="14" rx="8" ry="11" fill="#8B7355" />
+                    <ellipse cx="18" cy="14" rx="4" ry="7" fill="#C4A882" opacity=".5" />
+                    <ellipse cx="62" cy="14" rx="4" ry="7" fill="#C4A882" opacity=".5" />
+
+                    {/* Eyes — beady, smart, suspicious */}
+                    <ellipse cx="30" cy="30" rx="7" ry="8" fill="#1a1a2e" />
+                    <ellipse cx="50" cy="30" rx="7" ry="8" fill="#1a1a2e" />
+                    <ellipse cx="30" cy="30" rx="4" ry="5" fill="#8B4513" />
+                    <ellipse cx="50" cy="30" rx="4" ry="5" fill="#8B4513" />
+                    <circle cx="28" cy="28" r="1.5" fill="white" />
+                    <circle cx="48" cy="28" r="1.5" fill="white" />
+                    {/* Squinty suspicious brows */}
+                    <path d="M22 22 Q30 18 36 22" stroke="#3a3028" strokeWidth="2" strokeLinecap="round" fill="none" />
+                    <path d="M44 22 Q50 18 58 22" stroke="#3a3028" strokeWidth="2" strokeLinecap="round" fill="none" />
+
+                    {/* Nose */}
+                    <ellipse cx="40" cy="40" rx="5" ry="4" fill="#2a1a10" />
+
+                    {/* Smirk */}
+                    <path d="M33 48 Q40 52 50 46" stroke="#2a1a10" strokeWidth="2" strokeLinecap="round" fill="none" />
+                </svg>
+
+                {/* "Access Denied" scanner readout */}
+                <div className="absolute px-2 py-1 font-mono text-xs border rounded-lg top-2 -left-20 bg-grey-900 border-blue-400/30"
+                    style={{ animation: "err-hud-flicker 3s ease-in-out infinite" }}>
+                    <div className="text-blue-400">SCANNING...</div>
+                    <div className="text-danger-400">❌ DENIED</div>
+                </div>
+            </div>
+
+            {/* "RESTRICTED" tape at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center h-6 overflow-hidden"
+                style={{ background: "repeating-linear-gradient(45deg, #FF4208 0, #FF4208 10px, #FFD600 10px, #FFD600 20px)", opacity: 0.7, borderRadius: "0 0 8px 8px" }}>
+                <span className="text-xs tracking-widest text-black font-aumovio-bold">RESTRICTED ZONE — AUTHORIZED PERSONNEL ONLY</span>
+            </div>
+        </div>
+    );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   404 — Page Not Found  →  WALL-E
+   WALL-E searching the wasteland for the missing page, finding only trash
+   ══════════════════════════════════════════════════════════════════════════════ */
+export function PageNotFound() {
+    return (
+        <ErrorLayout
+            code="404"
+            title="WALL-E can't find it either."
+            subtitle="He's been searching the whole planet. There's lots of compressed junk cubes out there — just no sign of that page."
+            linkTo="/"
+            linkLabel="Back to the Axiom"
+            accentClass="text-yellow-500 dark:text-yellow-400"
+            bgClass="bg-gradient-to-br from-amber-50/30 via-white to-orange-50/10 dark:from-[#0e0b00] dark:via-[#0D0D14] dark:to-[#0D0D14]"
+            badge={<CharacterBadge name="WALL-E — Waste Allocation Load Lifter Earth-class" emoji="🤖" colorClass="bg-yellow-400/10 border-yellow-400/30 text-yellow-600 dark:text-yellow-400" />}
+            illustration={<WallEIllustration />}
+        />
+    );
+}
+
+function WallEIllustration() {
+    return (
+        <div className="relative flex items-end justify-center" style={{ width: 260, height: 220 }}>
+
+            {/* Dusty ground */}
+            <div className="absolute bottom-0 left-0 right-0 h-8 rounded-b-2xl"
+                style={{ background: "linear-gradient(to top, #c4a460 0%, #d4b470 100%)", opacity: 0.6 }} />
+
+            {/* Scattered trash cubes */}
+            {[
+                { x: 5, y: 145, w: 28, h: 22, col: "#8B7355", rot: -8 },
+                { x: 210, y: 150, w: 22, h: 28, col: "#7a6448", rot: 12 },
+                { x: 190, y: 130, w: 18, h: 16, col: "#9a8060", rot: -5 },
+                { x: 15, y: 170, w: 20, h: 18, col: "#6a5038", rot: 6 },
+            ].map((c, i) => (
+                <div key={i} className="absolute border rounded"
+                    style={{ left: c.x, top: c.y, width: c.w, height: c.h, background: c.col, transform: `rotate(${c.rot}deg)`, borderColor: "#5a4028", opacity: 0.7 }} />
+            ))}
+
+            {/* Tiny EVE floating in background */}
+            <div className="absolute right-6 top-10 opacity-70"
+                style={{ animation: "err-drift-l 3s ease-in-out infinite" }}>
+                <svg width="36" height="44" viewBox="0 0 36 44" fill="none">
+                    <ellipse cx="18" cy="20" rx="14" ry="18" fill="white" opacity=".9" />
+                    <ellipse cx="18" cy="20" rx="10" ry="14" fill="#e8e8f0" />
+                    {/* EVE eyes */}
+                    <ellipse cx="12" cy="18" rx="5" ry="4" fill="#4A90D9" />
+                    <ellipse cx="24" cy="18" rx="5" ry="4" fill="#4A90D9" />
+                    <circle cx="12" cy="17" r="1.5" fill="#1a1a5e" />
+                    <circle cx="24" cy="17" r="1.5" fill="#1a1a5e" />
+                    {/* Arm */}
+                    <ellipse cx="32" cy="24" rx="5" ry="3" fill="white" opacity=".8" transform="rotate(20 32 24)" />
+                </svg>
+                <div className="mt-1 text-xs text-center text-blue-400 font-aumovio-bold opacity-70">EVE?</div>
+            </div>
+
+            {/* WALL-E robot */}
+            <div className="relative" style={{ animation: "err-float-sm 3.5s ease-in-out infinite" }}>
+                <svg width="120" height="190" viewBox="0 0 120 190" fill="none">
+
+                    {/* Tracks / treads */}
+                    <rect x="8" y="148" width="104" height="24" rx="10" fill="#3a3028" />
+                    <rect x="4" y="152" width="112" height="16" rx="8" fill="#2a2018" />
+                    {/* Track details */}
+                    {[14,30,46,62,78,94,106].map(x => (
+                        <rect key={x} x={x} y="153" width="8" height="14" rx="2" fill="#4a4030" opacity=".7" />
+                    ))}
+                    {/* Wheels */}
+                    <circle cx="16" cy="158" r="10" fill="#5a5040" />
+                    <circle cx="104" cy="158" r="10" fill="#5a5040" />
+                    <circle cx="60" cy="162" r="8" fill="#4a4030" />
+
+                    {/* Lower body / compactor */}
+                    <rect x="22" y="106" width="76" height="46" rx="8" fill="#C4A860" />
+                    {/* Body panels */}
+                    <rect x="26" y="110" width="30" height="38" rx="4" fill="#B89850" />
+                    <rect x="64" y="110" width="30" height="38" rx="4" fill="#B89850" />
+                    {/* WALL-E logo plate */}
+                    <rect x="38" y="122" width="44" height="16" rx="3" fill="#9a7840" />
+                    <text x="60" y="134" textAnchor="middle" fill="#FFD600" fontSize="7" fontFamily="monospace" fontWeight="bold">WALL·E</text>
+
+                    {/* Arms */}
+                    {/* Left arm - reaching out searching */}
+                    <rect x="-6" y="96" width="32" height="10" rx="5" fill="#C4A860"
+                        style={{ animation: "err-arm-wave 2s ease-in-out infinite" }}
+                        transform="rotate(-15 -6 96)" />
+                    <circle cx="-8" cy="94" r="6" fill="#B89850" />
+                    {/* Right arm - holding a compressed cube */}
+                    <rect x="94" y="96" width="30" height="10" rx="5" fill="#C4A860" transform="rotate(15 94 96)" />
+                    <rect x="112" y="84" width="20" height="18" rx="3" fill="#7a6040" />
+                    <rect x="114" y="86" width="16" height="14" rx="2" fill="#8a7050" />
+
+                    {/* Neck connector */}
+                    <rect x="44" y="86" width="32" height="22" rx="6" fill="#B89850" />
+
+                    {/* Head — the iconic binocular box */}
+                    <rect x="20" y="30" width="80" height="58" rx="12" fill="#C4A860" />
+                    {/* Head panels */}
+                    <rect x="24" y="34" width="72" height="50" rx="8" fill="#B89850" />
+                    {/* Solar panel top (lid) */}
+                    <rect x="24" y="24" width="72" height="14" rx="6" fill="#d4b870" />
+
+                    {/* Binocular eyes — WALL-E's most iconic feature */}
+                    {/* Left eye housing */}
+                    <rect x="26" y="36" width="30" height="30" rx="6" fill="#2a2018" />
+                    <rect x="28" y="38" width="26" height="26" rx="5" fill="#1a1008" />
+                    {/* Right eye housing */}
+                    <rect x="64" y="36" width="30" height="30" rx="6" fill="#2a2018" />
+                    <rect x="66" y="38" width="26" height="26" rx="5" fill="#1a1008" />
+
+                    {/* Eye lenses — glowing amber/gold sad searching */}
+                    <circle cx="41" cy="51" r="10" fill="#C4A820"
+                        style={{ animation: "err-pulse-op2 2s ease-in-out infinite" }} />
+                    <circle cx="41" cy="51" r="7" fill="#FFD600" opacity=".8" />
+                    <circle cx="41" cy="51" r="4" fill="#FF8C00" opacity=".9" />
+                    <circle cx="38" cy="48" r="2" fill="white" opacity=".6" />
+
+                    <circle cx="79" cy="51" r="10" fill="#C4A820"
+                        style={{ animation: "err-pulse-op2 2s .3s ease-in-out infinite" }} />
+                    <circle cx="79" cy="51" r="7" fill="#FFD600" opacity=".8" />
+                    <circle cx="79" cy="51" r="4" fill="#FF8C00" opacity=".9" />
+                    <circle cx="76" cy="48" r="2" fill="white" opacity=".6" />
+
+                    {/* Antenna */}
+                    <rect x="56" y="10" width="8" height="16" rx="4" fill="#C4A860"
+                        style={{ animation: "err-antenna 1.5s ease-in-out infinite", transformOrigin: "60px 26px" }} />
+                    <circle cx="60" cy="8" r="5" fill="#FF4208"
+                        style={{ animation: "err-pulse-op 1s ease-in-out infinite" }} />
+
+                    {/* Question mark display on body */}
+                    <circle cx="60" cy="130" r="10" fill="#9a7840" />
+                    <text x="60" y="135" textAnchor="middle" fill="#FFD600" fontSize="12" fontFamily="monospace" fontWeight="bold">?</text>
+                </svg>
+
+                {/* Search beam from eyes */}
+                <div className="absolute"
+                    style={{ top: 80, left: -30, width: 50, height: 2, background: "linear-gradient(to left, transparent, rgba(255,214,0,0.6))", animation: "err-laser 1.8s ease-in-out infinite" }} />
+            </div>
+
+            {/* "Searching..." readout */}
+            <div className="absolute font-mono text-xs top-4 left-4 text-yellow-500/70 dark:text-yellow-400/50"
+                style={{ animation: "err-blink 2s step-end infinite" }}>
+                SCANNING...
+            </div>
+        </div>
+    );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   440 — Login Timeout  →  YODA
+   Yoda fell asleep meditating. Session expired while he dozed off.
+   ══════════════════════════════════════════════════════════════════════════════ */
+export function LoginTimeOut() {
+    useEffect(() => {
+        AuthMiddleware.signout();
+        CsrfMiddleware.clearToken();
+    }, []);
+
+    return (
+        <ErrorLayout
+            code="440"
+            title="Away, your session faded has."
+            subtitle="Too long you were gone. Meditated himself to sleep, Yoda did. Wake him gently before signing in again, hmm?"
+            linkTo="/auth"
+            linkLabel="Return to the Force"
+            accentClass="text-success-400 dark:text-success-300"
+            bgClass="bg-gradient-to-br from-green-50/20 via-white to-emerald-50/10 dark:from-[#040e06] dark:via-[#0D0D14] dark:to-[#040e08]"
+            badge={<CharacterBadge name="Yoda — Jedi Grand Master" emoji="🟢" colorClass="bg-success-400/10 border-success-400/30 text-success-600 dark:text-success-300" />}
+            illustration={<YodaIllustration />}
+        />
+    );
+}
+
+function YodaIllustration() {
+    return (
+        <div className="relative flex items-end justify-center" style={{ width: 260, height: 220 }}>
+
+            {/* Misty Dagobah fog atmosphere */}
+            <div className="absolute inset-0 rounded-2xl opacity-30 dark:opacity-20"
+                style={{ background: "radial-gradient(ellipse at bottom, #32CB70 0%, transparent 60%)" }} />
+
+            {/* Stars twinkling in background */}
+            {[[20,10],[50,25],[180,8],[220,20],[240,50],[10,60]].map(([x,y],i) => (
+                <div key={i} className="absolute w-1 h-1 rounded-full bg-success-400"
+                    style={{ left: x, top: y, animation: `err-pulse-op ${1+i*.3}s ${i*.2}s ease-in-out infinite` }} />
+            ))}
+
+            {/* Force orb glow under Yoda */}
+            <div className="absolute w-32 h-10 -translate-x-1/2 rounded-full bottom-12 left-1/2"
+                style={{ background: "radial-gradient(ellipse, rgba(50,203,112,0.4) 0%, transparent 70%)", animation: "err-pulse-op 2.5s ease-in-out infinite" }} />
+
+            {/* YODA sitting cross-legged meditating / sleeping */}
+            <div className="relative" style={{ animation: "err-float-sm 4s ease-in-out infinite" }}>
+                <svg width="160" height="180" viewBox="0 0 160 180" fill="none">
+
+                    {/* Robe / body sitting */}
+                    {/* Main robe mass */}
+                    <ellipse cx="80" cy="128" rx="58" ry="44" fill="#6B7B4A" />
+                    {/* Robe folds */}
+                    <path d="M30 130 Q50 140 80 138 Q110 140 130 130" fill="#5a6a3a" opacity=".6" />
+                    <path d="M40 120 Q60 128 80 126 Q100 128 120 120" fill="#5a6a3a" opacity=".4" />
+                    {/* Robe hem on ground */}
+                    <ellipse cx="80" cy="165" rx="55" ry="12" fill="#5a6a3a" opacity=".8" />
+
+                    {/* Legs cross-legged under robe */}
+                    <ellipse cx="55" cy="155" rx="22" ry="10" fill="#4a5a2a" transform="rotate(-8 55 155)" />
+                    <ellipse cx="105" cy="155" rx="22" ry="10" fill="#4a5a2a" transform="rotate(8 105 155)" />
+
+                    {/* Hands folded in lap (meditating) */}
+                    {/* Left hand */}
+                    <ellipse cx="60" cy="140" rx="14" ry="9" fill="#556B2F" />
+                    <ellipse cx="64" cy="138" rx="10" ry="7" fill="#6B8040" />
+                    {/* Right hand */}
+                    <ellipse cx="100" cy="140" rx="14" ry="9" fill="#556B2F" />
+                    <ellipse cx="96" cy="138" rx="10" ry="7" fill="#6B8040" />
+
+                    {/* Cane leaning against body */}
+                    <line x1="128" y1="100" x2="134" y2="170" stroke="#8B6914" strokeWidth="4" strokeLinecap="round" />
+                    <ellipse cx="128" cy="98" rx="7" ry="5" fill="#6a4a0a" transform="rotate(-10 128 98)" />
+
+                    {/* Body / torso under robe */}
+                    <ellipse cx="80" cy="110" rx="32" ry="30" fill="#6B7B4A" />
+                    {/* Robe collar */}
+                    <path d="M56 92 Q80 86 104 92 Q96 104 80 108 Q64 104 56 92Z" fill="#5a6a3a" />
+
+                    {/* Neck */}
+                    <ellipse cx="80" cy="84" rx="14" ry="10" fill="#6B8B50" />
+
+                    {/* HEAD — big domed with wrinkles */}
+                    <ellipse cx="80" cy="56" rx="42" ry="38" fill="#7aA060" />
+                    {/* Head dome top darker */}
+                    <ellipse cx="80" cy="40" rx="34" ry="24" fill="#6a9050" />
+                    {/* Wrinkle lines */}
+                    <path d="M46 50 Q64 46 80 48 Q96 46 114 50" stroke="#5a8040" strokeWidth="1.5" opacity=".7" fill="none" />
+                    <path d="M50 60 Q65 56 80 58 Q95 56 110 60" stroke="#5a8040" strokeWidth="1.5" opacity=".5" fill="none" />
+                    <path d="M52 68 Q65 65 80 66 Q95 65 108 68" stroke="#5a8040" strokeWidth="1.5" opacity=".4" fill="none" />
+
+                    {/* BIG EARS — Yoda's most iconic feature */}
+                    {/* Left ear drooping */}
+                    <path d="M38 44 Q6 26 4 58 Q6 80 38 72" fill="#6aA050" />
+                    <path d="M38 46 Q12 32 12 58 Q14 74 38 68" fill="#7aB060" opacity=".5" />
+                    {/* Ear vein details */}
+                    <path d="M20 38 Q18 52 22 64" stroke="#5a9040" strokeWidth="1" opacity=".5" fill="none" />
+                    {/* Right ear drooping */}
+                    <path d="M122 44 Q154 26 156 58 Q154 80 122 72" fill="#6aA050" />
+                    <path d="M122 46 Q148 32 148 58 Q146 74 122 68" fill="#7aB060" opacity=".5" />
+                    <path d="M140 38 Q142 52 138 64" stroke="#5a9040" strokeWidth="1" opacity=".5" fill="none" />
+
+                    {/* Eyes — CLOSED sleeping */}
+                    <path d="M56 58 Q66 62 76 58" stroke="#3a6030" strokeWidth="2.5" strokeLinecap="round" fill="none"
+                        style={{ animation: "err-float-sm 3s ease-in-out infinite" }} />
+                    <path d="M84 58 Q94 62 104 58" stroke="#3a6030" strokeWidth="2.5" strokeLinecap="round" fill="none"
+                        style={{ animation: "err-float-sm 3s ease-in-out infinite" }} />
+                    {/* Closed eye lids */}
+                    <path d="M54 55 Q66 50 78 55" fill="#7aA060" opacity=".7" />
+                    <path d="M82 55 Q94 50 106 55" fill="#7aA060" opacity=".7" />
+
+                    {/* Nose tiny */}
+                    <ellipse cx="80" cy="68" rx="5" ry="4" fill="#5a8030" />
+
+                    {/* Mouth — slightly open snoozing */}
+                    <path d="M68 76 Q80 80 92 76" stroke="#3a6020" strokeWidth="2" strokeLinecap="round" fill="none" />
+                    {/* Small open mouth snore */}
+                    <ellipse cx="80" cy="78" rx="5" ry="4" fill="#2a4a10" opacity=".5" />
+                </svg>
+
+                {/* Zzz Force bubbles */}
+                {[
+                    { text: "zzz", x: 120, y: 20, delay: "0s", size: 14 },
+                    { text: "Zzz", x: 138, y: 2, delay: ".8s", size: 18 },
+                    { text: "ZZZ", x: 150, y: -16, delay: "1.6s", size: 22 },
+                ].map((z, i) => (
+                    <div key={i} className="absolute font-aumovio-bold text-success-400"
+                        style={{ left: z.x, top: z.y, fontSize: z.size, animation: `err-zzz 3s ${z.delay} ease-in-out infinite`, color: "#32CB70" }}>
+                        {z.text}
+                    </div>
+                ))}
+
+                {/* Force glow around hands */}
+                <div className="absolute"
+                    style={{ left: 44, top: 128, width: 72, height: 20, borderRadius: "50%", background: "rgba(50,203,112,0.15)", animation: "err-pulse-op 2s ease-in-out infinite" }} />
+            </div>
+
+            {/* Session timer counting down */}
+            <div className="absolute font-mono text-xs text-right bottom-4 right-4 text-success-400/60 dark:text-success-400/40"
+                style={{ animation: "err-pulse-op 1.5s ease-in-out infinite" }}>
+                <div>SESSION</div>
+                <div className="text-danger-400 font-aumovio-bold">EXPIRED</div>
+            </div>
+        </div>
+    );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   498 — Invalid Token  →  IRON MAN
+   Tony's HUD is glitching, JARVIS can't verify the token, armor failing
+   ══════════════════════════════════════════════════════════════════════════════ */
+export function InvalidToken() {
+    useEffect(() => {
+        // AuthMiddleware.signout();
+    }, []);
+
+    return (
+        <ErrorLayout
+            code="498"
+            title="JARVIS can't verify that token."
+            subtitle="Tony's HUD is glitching out. The arc reactor logs show corrupted credentials. Suit up and try a fresh token."
+            linkTo="/auth"
+            linkLabel="Reboot JARVIS"
+            accentClass="text-danger-400 dark:text-danger-300"
+            bgClass="bg-gradient-to-br from-red-50/20 via-white to-yellow-50/10 dark:from-[#0e0304] dark:via-[#0D0D14] dark:to-[#0a0800]"
+            badge={<CharacterBadge name="Iron Man — Tony Stark / JARVIS" emoji="🔴" colorClass="bg-danger-400/10 border-danger-400/30 text-danger-500 dark:text-danger-300" />}
+            illustration={<IronManIllustration />}
+        />
+    );
+}
+
+function IronManIllustration() {
+    return (
+        <div className="relative flex items-center justify-center" style={{ width: 270, height: 230 }}>
+
+            {/* Background HUD grid */}
+            <div className="absolute inset-0 overflow-hidden rounded-2xl opacity-20 dark:opacity-30">
+                <div style={{ width: "100%", height: "100%", backgroundImage: "linear-gradient(rgba(255,66,8,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,66,8,0.3) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+            </div>
+
+            {/* HUD scan line */}
+            <div className="absolute left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-danger-400 to-transparent opacity-60"
+                style={{ animation: "err-scan 2s linear infinite", top: 0 }} />
+
+            {/* IRON MAN HELMET */}
+            <div className="relative" style={{ animation: "err-hud-flicker 4s ease-in-out infinite" }}>
+                <svg width="180" height="210" viewBox="0 0 180 210" fill="none">
+
+                    {/* Neck / collar */}
+                    <rect x="50" y="170" width="80" height="30" rx="8" fill="#8B0000" />
+                    <rect x="60" y="174" width="60" height="22" rx="6" fill="#A00000" />
+                    {/* Collar panels */}
+                    <rect x="56" y="176" width="22" height="16" rx="3" fill="#8B0000" />
+                    <rect x="102" y="176" width="22" height="16" rx="3" fill="#8B0000" />
+                    <rect x="80" y="174" width="20" height="22" rx="2" fill="#FFD700" opacity=".6" />
+
+                    {/* Helmet main shape */}
+                    {/* Back of helmet */}
+                    <ellipse cx="90" cy="98" rx="72" ry="82" fill="#8B0000" />
+                    {/* Front face plate */}
+                    <ellipse cx="90" cy="96" rx="64" ry="74" fill="#C80000" />
+
+                    {/* Cheek / jaw panels */}
+                    <path d="M26 110 Q20 140 30 168 Q50 178 90 180 Q130 178 150 168 Q160 140 154 110" fill="#A00000" />
+                    {/* Cheek armor plates */}
+                    <path d="M30 115 Q24 140 32 165 L55 170 L60 130 Z" fill="#8B0000" />
+                    <path d="M150 115 Q156 140 148 165 L125 170 L120 130 Z" fill="#8B0000" />
+
+                    {/* Forehead panel */}
+                    <path d="M36 60 Q90 20 144 60 L140 80 Q90 44 40 80 Z" fill="#B00000" />
+                    {/* Forehead ridge */}
+                    <path d="M50 64 Q90 40 130 64" stroke="#FFD700" strokeWidth="2" opacity=".8" fill="none" />
+
+                    {/* The iconic faceplate jaw line */}
+                    <path d="M38 148 Q90 155 142 148 L145 165 Q90 175 35 165 Z" fill="#900000" />
+
+                    {/* EYES — Glowing triangular arc reactor eyes GLITCHING */}
+                    {/* Left eye housing */}
+                    <path d="M32 90 Q44 76 70 82 Q72 100 60 106 Q40 108 32 90Z" fill="#1a0000" />
+                    {/* Left eye glow — glitching red/orange */}
+                    <path d="M36 90 Q46 79 66 84 Q68 98 58 103 Q42 105 36 90Z" fill="#FF4208"
+                        style={{ animation: "err-hud-flicker 1.5s ease-in-out infinite" }} />
+                    <path d="M40 90 Q48 82 62 86 Q64 96 56 100 Q44 101 40 90Z" fill="#FF6040"
+                        style={{ animation: "err-glitch 2s ease-in-out infinite" }} />
+
+                    {/* Right eye housing */}
+                    <path d="M148 90 Q136 76 110 82 Q108 100 120 106 Q140 108 148 90Z" fill="#1a0000" />
+                    {/* Right eye glow */}
+                    <path d="M144 90 Q134 79 114 84 Q112 98 122 103 Q138 105 144 90Z" fill="#FF4208"
+                        style={{ animation: "err-hud-flicker 1.5s .3s ease-in-out infinite" }} />
+                    <path d="M140 90 Q132 82 118 86 Q116 96 124 100 Q136 101 140 90Z" fill="#FF6040"
+                        style={{ animation: "err-glitch 2s .5s ease-in-out infinite" }} />
+
+                    {/* Nose bridge / center ridge */}
+                    <rect x="84" y="78" width="12" height="50" rx="4" fill="#A00000" />
+
+                    {/* Mouth grill slits */}
+                    {[138,145,152,159].map(y => (
+                        <rect key={y} x="62" y={y} width="56" height="3" rx="1.5" fill="#700000" />
+                    ))}
+                    {/* Center mouth chin piece */}
+                    <path d="M70 140 Q90 136 110 140 Q108 165 90 168 Q72 165 70 140Z" fill="#900000" />
+
+                    {/* ARC REACTOR in chest — tiny one showing at collar */}
+                    <circle cx="90" cy="188" r="8" fill="#4A90D9" opacity=".8"
+                        style={{ animation: "err-pulse-op 1.5s ease-in-out infinite" }} />
+                    <circle cx="90" cy="188" r="5" fill="#88CCFF" opacity=".9" />
+                    <circle cx="90" cy="188" r="2" fill="white" />
+
+                    {/* Gold accent trim lines */}
+                    <path d="M26 95 Q20 110 24 130" stroke="#FFD700" strokeWidth="2.5" opacity=".7" strokeLinecap="round" fill="none" />
+                    <path d="M154 95 Q160 110 156 130" stroke="#FFD700" strokeWidth="2.5" opacity=".7" strokeLinecap="round" fill="none" />
+                    <path d="M50 165 Q70 172 90 173 Q110 172 130 165" stroke="#FFD700" strokeWidth="1.5" opacity=".5" fill="none" />
+
+                    {/* ERROR crack on helmet */}
+                    <path d="M80 50 L72 70 L78 80 L70 95" stroke="#FFD700" strokeWidth="1.5" opacity=".6" strokeLinecap="round" fill="none"
+                        style={{ animation: "err-pulse-op 2s ease-in-out infinite" }} />
+                </svg>
+
+                {/* JARVIS HUD overlay floating panels */}
+                <div className="absolute space-y-1 font-mono text-xs -right-12 top-8"
+                    style={{ animation: "err-hud-flicker 2s ease-in-out infinite" }}>
+                    <div className="px-2 py-1 border rounded bg-danger-400/10 border-danger-400/30 text-danger-400 whitespace-nowrap">
+                        TOKEN: INVALID
+                    </div>
+                    <div className="px-2 py-1 border rounded bg-warn-400/10 border-warn-400/30 text-warn-500 dark:text-warn-400 whitespace-nowrap">
+                        VERIFY: FAILED
+                    </div>
+                </div>
+                <div className="absolute space-y-1 font-mono text-xs -left-14 top-12"
+                    style={{ animation: "err-hud-flicker 2.5s .5s ease-in-out infinite" }}>
+                    <div className="px-2 py-1 border rounded bg-danger-400/10 border-danger-400/30 text-danger-400 whitespace-nowrap">
+                        AUTH: ██████
+                    </div>
+                    <div className="px-2 py-1 text-blue-500 border rounded bg-blue-400/10 border-blue-400/30 dark:text-blue-300 whitespace-nowrap">
+                        JARVIS: ERR_498
+                    </div>
+                </div>
+            </div>
+
+            {/* Repulsor blast warning */}
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-danger-400/10 border border-danger-400/30 rounded-full font-aumovio-bold text-xs text-danger-400"
+                style={{ animation: "err-pulse-op 1.5s ease-in-out infinite" }}>
+                ⚡ AUTHORIZATION CORRUPTED ⚡
+            </div>
+        </div>
+    );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   523 — Service Unavailable  →  BAYMAX
+   Baymax going into low-power mode, health scan failing
+   ══════════════════════════════════════════════════════════════════════════════ */
+export function ServiceUnavailable() {
+    return (
+        <ErrorLayout
+            code="523"
+            title="Baymax is in low-power mode."
+            subtitle="On a scale of 1 to 10, how would you rate your pain? Our servers aren't feeling great either. We'll be back on our feet soon."
+            linkTo="/"
+            linkLabel="Try the home page"
+            accentClass="text-blue-400 dark:text-blue-300"
+            bgClass="bg-gradient-to-br from-blue-50/30 via-white to-purple-50/10 dark:from-[#030810] dark:via-[#0D0D14] dark:to-[#04060e]"
+            badge={<CharacterBadge name="Baymax — Healthcare Companion Unit" emoji="🤍" colorClass="bg-blue-400/10 border-blue-400/30 text-blue-500 dark:text-blue-300" />}
+            illustration={<BaymaxIllustration />}
+        >
+            <div className="p-4 text-sm text-left border bg-blue-400/5 border-blue-400/20 rounded-xl text-grey-600 dark:text-grey-400 font-aumovio">
+                <p className="mb-2 text-blue-500 font-aumovio-bold dark:text-blue-300">
+                    🏥 Baymax Health Scan — Server Status
+                </p>
+                <ul className="space-y-1 list-none">
+                    <li>⬜ Server vitals: <span className="text-danger-400 font-aumovio-bold">Unresponsive</span></li>
+                    <li>⬜ Diagnosis: <span className="text-warn-500 dark:text-warn-400 font-aumovio-bold">Resting (unplanned)</span></li>
+                    <li>✅ Our team: <span className="text-success-400 font-aumovio-bold">On the case</span></li>
+                </ul>
+            </div>
+        </ErrorLayout>
+    );
+}
+
+function BaymaxIllustration() {
+    return (
+        <div className="relative flex items-end justify-center" style={{ width: 240, height: 230 }}>
+
+            {/* Soft glow under Baymax */}
+            <div className="absolute h-12 -translate-x-1/2 rounded-full bottom-8 left-1/2 w-36 opacity-30 dark:opacity-20"
+                style={{ background: "radial-gradient(ellipse, #18A9E7 0%, transparent 70%)" }} />
+
+            {/* BAYMAX — inflatable healthcare robot */}
+            <div className="relative" style={{ animation: "err-float-sm 3s ease-in-out infinite" }}>
+                <svg width="200" height="215" viewBox="0 0 200 215" fill="none">
+
+                    {/* Feet — rounded stumps */}
+                    <ellipse cx="62" cy="202" rx="28" ry="12" fill="#e8e8f0" />
+                    <ellipse cx="138" cy="202" rx="28" ry="12" fill="#e8e8f0" />
+                    {/* Foot shading */}
+                    <ellipse cx="62" cy="202" rx="20" ry="8" fill="#d8d8e8" opacity=".5" />
+                    <ellipse cx="138" cy="202" rx="20" ry="8" fill="#d8d8e8" opacity=".5" />
+
+                    {/* Legs */}
+                    <ellipse cx="62" cy="178" rx="24" ry="28" fill="#e8e8f0" />
+                    <ellipse cx="138" cy="178" rx="24" ry="28" fill="#e8e8f0" />
+                    {/* Leg shading crease lines */}
+                    <path d="M44 168 Q62 165 80 168" stroke="#c8c8d8" strokeWidth="2" opacity=".6" fill="none" />
+                    <path d="M120 168 Q138 165 156 168" stroke="#c8c8d8" strokeWidth="2" opacity=".6" fill="none" />
+
+                    {/* Body — big round puffy */}
+                    <ellipse cx="100" cy="134" rx="68" ry="60" fill="#f0f0f8" />
+                    {/* Body shading */}
+                    <ellipse cx="88" cy="124" rx="45" ry="40" fill="white" opacity=".6" />
+                    {/* Body crease bottom */}
+                    <path d="M38 158 Q100 168 162 158" stroke="#c8c8d8" strokeWidth="2.5" opacity=".7" fill="none" />
+                    {/* Body crease middle */}
+                    <path d="M40 130 Q100 138 160 130" stroke="#d8d8e8" strokeWidth="1.5" opacity=".5" fill="none" />
+
+                    {/* Arms */}
+                    {/* Left arm — drooping down (low power) */}
+                    <ellipse cx="24" cy="138" rx="18" ry="36" fill="#e8e8f0" transform="rotate(15 24 138)" />
+                    <ellipse cx="14" cy="166" rx="14" ry="12" fill="#e8e8f0" />
+                    {/* Arm crease */}
+                    <path d="M10 132 Q22 136 28 148" stroke="#c8c8d8" strokeWidth="1.5" opacity=".5" fill="none" />
+
+                    {/* Right arm — raised slightly (wave?) */}
+                    <ellipse cx="176" cy="130" rx="18" ry="36" fill="#e8e8f0" transform="rotate(-10 176 130)" />
+                    <ellipse cx="184" cy="158" rx="14" ry="12" fill="#e8e8f0" />
+                    <path d="M172 116 Q182 122 182 136" stroke="#c8c8d8" strokeWidth="1.5" opacity=".5" fill="none" />
+
+                    {/* Neck connector */}
+                    <ellipse cx="100" cy="72" rx="22" ry="14" fill="#e0e0ea" />
+
+                    {/* Head — round puffy */}
+                    <ellipse cx="100" cy="44" rx="54" ry="50" fill="#f0f0f8" />
+                    {/* Head highlight */}
+                    <ellipse cx="82" cy="28" rx="30" ry="22" fill="white" opacity=".5" />
+                    {/* Head crease */}
+                    <path d="M52 60 Q100 66 148 60" stroke="#d0d0e0" strokeWidth="2" opacity=".5" fill="none" />
+
+                    {/* EYES — the iconic two tiny black ovals, but glitching/dimming */}
+                    {/* Eye visor strip background */}
+                    <rect x="54" y="36" width="92" height="18" rx="9" fill="#1a1a2a" />
+                    {/* Eyes glowing beam — fading */}
+                    <ellipse cx="78" cy="45" rx="14" ry="6" fill="#4A90D9" opacity=".8"
+                        style={{ animation: "err-pulse-op 2.5s ease-in-out infinite" }} />
+                    <ellipse cx="122" cy="45" rx="14" ry="6" fill="#4A90D9" opacity=".8"
+                        style={{ animation: "err-pulse-op 2.5s .5s ease-in-out infinite" }} />
+                    {/* Inner eye dots */}
+                    <ellipse cx="78" cy="45" rx="7" ry="4" fill="#88CCFF" opacity=".9" />
+                    <ellipse cx="122" cy="45" rx="7" ry="4" fill="#88CCFF" opacity=".9" />
+                    {/* Glitch bars across eyes */}
+                    <rect x="54" y="42" width="30" height="3" rx="1" fill="#FF4208" opacity=".4"
+                        style={{ animation: "err-static 1.8s ease-in-out infinite" }} />
+                    <rect x="116" y="46" width="30" height="2" rx="1" fill="#FF4208" opacity=".3"
+                        style={{ animation: "err-static 2.2s .4s ease-in-out infinite" }} />
+
+                    {/* Low power indicator dot on chest */}
+                    <circle cx="100" cy="134" r="10" fill="#1a1a2a" opacity=".5" />
+                    <circle cx="100" cy="134" r="7" fill="#4A90D9" opacity=".3"
+                        style={{ animation: "err-pulse-op 3s ease-in-out infinite" }} />
+                    <circle cx="100" cy="134" r="3" fill="#88CCFF" opacity=".5" />
+                </svg>
+
+                {/* Low battery indicator */}
+                <div className="absolute top-0 flex flex-col items-center -right-4">
+                    <div className="relative w-8 overflow-hidden border-2 rounded-sm border-blue-400/50 h-14">
+                        {/* Battery fill — very low */}
+                        <div className="absolute bottom-0 left-0 right-0 rounded-sm bg-danger-400"
+                            style={{ height: "18%", animation: "err-pulse-op 1s ease-in-out infinite" }} />
+                    </div>
+                    <div className="w-3 h-1.5 rounded-sm bg-blue-400/50 mt-0.5" />
+                    <div className="mt-1 text-xs font-aumovio-bold text-danger-400">18%</div>
+                </div>
+
+                {/* Speech bubble */}
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white dark:bg-grey-800 border border-blue-400/30 rounded-xl px-3 py-1.5 text-xs font-aumovio text-grey-700 dark:text-grey-300 shadow-md whitespace-nowrap"
+                    style={{ animation: "err-float-sm 3s .5s ease-in-out infinite" }}>
+                    I am... low on... power. 😴
+                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 bg-white dark:bg-grey-800 border-r border-b border-blue-400/30" />
+                </div>
+            </div>
+
+            {/* Scan line across screen */}
+            <div className="absolute left-0 right-0 h-px bg-linear-to-r from-transparent via-blue-400/40 to-transparent"
+                style={{ animation: "err-scan 3s linear infinite", top: 0 }} />
+        </div>
+    );
+}
+
+/* ─── Default re-exports ─── */
+export default {
+    Unauthorized,
+    BadRequest,
+    PageNotFound,
+    LoginTimeOut,
+    InvalidToken,
+    ServiceUnavailable,
+};

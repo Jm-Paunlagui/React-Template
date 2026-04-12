@@ -1,49 +1,49 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from "react";
 
 // ─── Static constants ─────────────────────────────────────────────────────────
 const RING_DELAYS = [0, 0.6, 1.2];
 const BOUNCE_DOTS = [0, 0.18, 0.36, 0.54, 0.72];
-const ORANGE = '#FF4208';
-const PURPLE = '#4827AF';
-const SLIDE_STYLE = { transition: 'opacity 0.4s ease, transform 0.4s ease' };
+const ORANGE = "#FF4208";
+const PURPLE = "#4827AF";
+const SLIDE_STYLE = { transition: "opacity 0.4s ease, transform 0.4s ease" };
 const INTERVAL_MS = 1200;
 const FADE_MS = 400;
 
 // ─── Paired content ───────────────────────────────────────────────────────────
 const TITLES = [
-    { prefix: 'Keeping', highlight: 'you', suffix: 'protected' },
-    { prefix: 'Guarding', highlight: 'your', suffix: 'session' },
-    { prefix: 'Making sure', highlight: 'everything', suffix: 'is secure' },
-    { prefix: 'Loading', highlight: 'fast', suffix: 'for you' },
-    { prefix: 'Optimizing', highlight: 'your', suffix: 'experience' },
-    { prefix: 'Getting', highlight: 'everything', suffix: 'up to speed' },
-    { prefix: 'Building', highlight: 'a stable', suffix: 'foundation' },
-    { prefix: 'Making', highlight: 'everything', suffix: 'rock solid' },
-    { prefix: 'Ensuring', highlight: 'reliable', suffix: 'uptime' },
-    { prefix: 'Keeping', highlight: 'your data', suffix: 'private' },
-    { prefix: 'Making sure', highlight: 'your info', suffix: 'stays yours' },
-    { prefix: 'Protecting', highlight: 'your', suffix: 'privacy' },
-    { prefix: 'Setting up', highlight: 'your', suffix: 'safe space' },
-    { prefix: 'Almost', highlight: 'ready', suffix: 'for you' },
-    { prefix: 'Putting', highlight: 'the final', suffix: 'touches' },
+    { prefix: "Keeping", highlight: "you", suffix: "protected" },
+    { prefix: "Guarding", highlight: "your", suffix: "session" },
+    { prefix: "Making sure", highlight: "everything", suffix: "is secure" },
+    { prefix: "Loading", highlight: "fast", suffix: "for you" },
+    { prefix: "Optimizing", highlight: "your", suffix: "experience" },
+    { prefix: "Getting", highlight: "everything", suffix: "up to speed" },
+    { prefix: "Building", highlight: "a stable", suffix: "foundation" },
+    { prefix: "Making", highlight: "everything", suffix: "rock solid" },
+    { prefix: "Ensuring", highlight: "reliable", suffix: "uptime" },
+    { prefix: "Keeping", highlight: "your data", suffix: "private" },
+    { prefix: "Making sure", highlight: "your info", suffix: "stays yours" },
+    { prefix: "Protecting", highlight: "your", suffix: "privacy" },
+    { prefix: "Setting up", highlight: "your", suffix: "safe space" },
+    { prefix: "Almost", highlight: "ready", suffix: "for you" },
+    { prefix: "Putting", highlight: "the final", suffix: "touches" },
 ];
 
 const SUBTITLES = [
-    'Your session is being carefully secured. This will only take a moment.',
+    "Your session is being carefully secured. This will only take a moment.",
     "We're watching over your connection so nothing gets through uninvited.",
-    'Running checks in the background to make sure everything is airtight.',
+    "Running checks in the background to make sure everything is airtight.",
     "We're getting things ready as quickly as possible — almost there.",
-    'Fine-tuning the experience so everything feels smooth from the start.',
-    'Spinning up resources so you hit the ground running.',
-    'Laying the groundwork so your session stays solid from start to finish.',
-    'Making sure nothing wobbles — your session deserves a strong base.',
-    'Checking that all systems are stable and ready to go.',
-    'Your information stays with you — we make sure of that every time.',
+    "Fine-tuning the experience so everything feels smooth from the start.",
+    "Spinning up resources so you hit the ground running.",
+    "Laying the groundwork so your session stays solid from start to finish.",
+    "Making sure nothing wobbles — your session deserves a strong base.",
+    "Checking that all systems are stable and ready to go.",
+    "Your information stays with you — we make sure of that every time.",
     "We never share what's yours. Setting up with your privacy in mind.",
     "Everything you do here stays protected. That's a promise, not a feature.",
     "We're setting things up safely so you can work with confidence.",
     "Sit tight — we're putting the last pieces in place just for you.",
-    'One last look to make sure everything is perfect before we let you in.',
+    "One last look to make sure everything is perfect before we let you in.",
 ];
 
 // ─── Keyframes (injected once) ────────────────────────────────────────────────
@@ -70,7 +70,7 @@ let keyframesInjected = false;
 function injectKeyframes() {
     if (keyframesInjected) return;
     keyframesInjected = true;
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = KEYFRAMES;
     document.head.appendChild(style);
 }
@@ -128,7 +128,7 @@ const ShieldCheck = memo(() => (
         <path d="M9 12l2 2 4-4" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 ));
-ShieldCheck.displayName = 'ShieldCheck';
+ShieldCheck.displayName = "ShieldCheck";
 
 const OrbitingShield = memo(() => (
     <div className="relative mb-10" style={{ width: 88, height: 88 }}>
@@ -136,39 +136,39 @@ const OrbitingShield = memo(() => (
             <div
                 key={delay}
                 style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
                     width: 88 + i * 60,
                     height: 88 + i * 60,
-                    borderRadius: '50%',
+                    borderRadius: "50%",
                     border: `1px solid rgba(255,66,8,${0.12 - i * 0.03})`,
-                    transform: 'translate(-50%, -50%)',
+                    transform: "translate(-50%, -50%)",
                     animation: `expandRing 3.5s ${delay}s ease-out infinite`,
-                    pointerEvents: 'none',
+                    pointerEvents: "none",
                 }}
             />
         ))}
         <div
             style={{
-                position: 'absolute',
+                position: "absolute",
                 inset: 0,
-                borderRadius: '50%',
-                border: '1.5px solid rgba(72,39,175,0.5)',
-                animation: 'rotateSlow 8s linear infinite',
+                borderRadius: "50%",
+                border: "1.5px solid rgba(72,39,175,0.5)",
+                animation: "rotateSlow 8s linear infinite",
             }}
         >
             <div
                 style={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: -4,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
+                    left: "50%",
+                    transform: "translateX(-50%)",
                     width: 8,
                     height: 8,
-                    borderRadius: '50%',
+                    borderRadius: "50%",
                     background: ORANGE,
-                    boxShadow: '0 0 8px rgba(255,66,8,0.8)',
+                    boxShadow: "0 0 8px rgba(255,66,8,0.8)",
                 }}
             />
         </div>
@@ -176,17 +176,17 @@ const OrbitingShield = memo(() => (
             className="absolute inset-0 flex items-center justify-center"
             style={{
                 margin: 12,
-                borderRadius: '50%',
-                background: 'rgba(72,39,175,0.15)',
-                border: '1px solid rgba(72,39,175,0.35)',
-                animation: 'shieldPulse 2.4s ease-in-out infinite',
+                borderRadius: "50%",
+                background: "rgba(72,39,175,0.15)",
+                border: "1px solid rgba(72,39,175,0.35)",
+                animation: "shieldPulse 2.4s ease-in-out infinite",
             }}
         >
             <ShieldCheck />
         </div>
     </div>
 ));
-OrbitingShield.displayName = 'OrbitingShield';
+OrbitingShield.displayName = "OrbitingShield";
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 const LoadingScreen = memo(() => {
@@ -200,21 +200,21 @@ const LoadingScreen = memo(() => {
     const fadeStyle = {
         ...SLIDE_STYLE,
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(6px)',
+        transform: visible ? "translateY(0)" : "translateY(6px)",
     };
 
     return (
-        <div className="flex justify-center min-h-screen overflow-hidden font-aumovio animate-fade-in" style={{ background: 'linear-gradient(135deg, #0f0c1a 0%, #1a1030 50%, #0d0d14 100%)', color: '#FFFFFF' }}>
+        <div className="flex justify-center min-h-screen overflow-hidden font-aumovio animate-fade-in" style={{ background: "linear-gradient(135deg, #0f0c1a 0%, #1a1030 50%, #0d0d14 100%)", color: "#FFFFFF" }}>
             <div className="flex flex-col items-center justify-center text-center animate-scale-in-center">
                 <OrbitingShield />
 
                 {/* Title */}
-                <p className="mb-16 text-3xl font-extrabold xl:text-6xl drop-shadow-lg" style={{ ...fadeStyle, minHeight: '4.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35em' }}>
+                <p className="mb-16 text-3xl font-extrabold xl:text-6xl drop-shadow-lg" style={{ ...fadeStyle, minHeight: "4.5rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.35em" }}>
                     {prefix} <span style={{ color: ORANGE }}>{highlight}</span> {suffix}
                 </p>
 
                 {/* Subtitle */}
-                <p className="mb-8 text-base xl:text-xl font-aumovio" style={{ ...fadeStyle, maxWidth: 440, color: 'rgba(255,255,255,0.55)', minHeight: '3rem' }}>
+                <p className="mb-8 text-base xl:text-xl font-aumovio" style={{ ...fadeStyle, maxWidth: 440, color: "rgba(255,255,255,0.55)", minHeight: "3rem" }}>
                     {SUBTITLES[subtitleIdx]}
                 </p>
 
@@ -235,7 +235,7 @@ const LoadingScreen = memo(() => {
                             style={{
                                 width: 8,
                                 height: 8,
-                                borderRadius: '50%',
+                                borderRadius: "50%",
                                 background: i % 2 === 0 ? ORANGE : PURPLE,
                                 animation: `bounceDot 1.2s ${delay}s infinite`,
                             }}
@@ -246,6 +246,6 @@ const LoadingScreen = memo(() => {
         </div>
     );
 });
-LoadingScreen.displayName = 'LoadingScreen';
+LoadingScreen.displayName = "LoadingScreen";
 
 export default LoadingScreen;
