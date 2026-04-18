@@ -10,6 +10,7 @@
  *   align          — 'left'|'center'|'right'
  *   size           — 'sm'|'md'|'lg'|'full'
  */
+import { HOVER_LIFT, TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
 const ALIGNS = {
     left: "text-left items-start",
     center: "text-center items-center",
@@ -72,9 +73,9 @@ export function Jumbotron({ title, subtitle, description, primaryAction, seconda
                             <a
                                 href={primaryAction.href ?? "#"}
                                 onClick={primaryAction.onClick}
-                                className="px-6 py-3 rounded-lg font-aumovio-bold text-sm
+                                className={`px-6 py-3 rounded-lg font-aumovio-bold text-sm
                   bg-white text-orange-400 hover:bg-orange-50
-                  shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+                  shadow-lg hover:shadow-xl ${TRANSITION_SMOOTH} ${HOVER_LIFT}`}
                             >
                                 {primaryAction.label}
                             </a>
@@ -83,9 +84,9 @@ export function Jumbotron({ title, subtitle, description, primaryAction, seconda
                             <a
                                 href={secondaryAction.href ?? "#"}
                                 onClick={secondaryAction.onClick}
-                                className="px-6 py-3 rounded-lg font-aumovio-bold text-sm
+                                className={`px-6 py-3 rounded-lg font-aumovio-bold text-sm
                   border-2 border-white/60 text-white hover:bg-white/10
-                  transition-all duration-300 hover:-translate-y-0.5"
+                  ${TRANSITION_SMOOTH} ${HOVER_LIFT}`}
                             >
                                 {secondaryAction.label}
                             </a>

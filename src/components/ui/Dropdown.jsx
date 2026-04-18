@@ -8,6 +8,7 @@
  *   width    — 'auto'|'sm'|'md'|'lg' (sm=160,md=192,lg=224)
  */
 import { useEffect, useRef, useState } from "react";
+import { TRANSITION_COLORS, TRANSITION_SNAP } from "../../assets/styles/pre-set-styles";
 
 const WIDTHS = { auto: "min-w-max", sm: "w-40", md: "w-48", lg: "w-56" };
 const PLACEMENT = {
@@ -39,7 +40,7 @@ export function Dropdown({ trigger, items = [], placement = "bottom-start", widt
                 <div
                     className={`absolute z-50 ${PLACEMENT[placement]} ${WIDTHS[width]}
           bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700
-          rounded-xl shadow-2xl py-1.5 animate-scale-in origin-top`}
+          rounded-xl shadow-2xl py-1.5 animate-scale-in origin-top ${TRANSITION_SNAP}`}
                 >
                     {items.map((item, i) => {
                         if (item.divider) return <div key={i} className="my-1.5 border-t border-grey-200 dark:border-grey-700" />;
@@ -54,7 +55,7 @@ export function Dropdown({ trigger, items = [], placement = "bottom-start", widt
                                 }}
                                 disabled={item.disabled}
                                 className={`w-full flex items-center gap-2.5 px-3.5 py-2 text-sm text-left
-                  transition-colors duration-150 font-aumovio
+                  ${TRANSITION_COLORS} font-aumovio
                   ${item.disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
                   ${item.danger ? "text-danger-500 hover:bg-danger-100 dark:hover:bg-danger-400/10" : "text-black/80 dark:text-white/80 hover:bg-orange-50 dark:hover:bg-orange-400/5 hover:text-orange-500"}`}
                             >

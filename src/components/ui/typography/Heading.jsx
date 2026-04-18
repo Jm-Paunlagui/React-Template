@@ -8,6 +8,7 @@
  *   align    — 'left'|'center'|'right'
  *   children
  */
+import { TRANSITION_SMOOTH } from "../../../assets/styles/pre-set-styles";
 const SCALE = {
     h1: "text-4xl md:text-5xl font-extrabold tracking-tight leading-tight",
     h2: "text-3xl md:text-4xl font-extrabold tracking-tight leading-tight",
@@ -27,7 +28,7 @@ export function Heading({ as: Tag = "h2", size, gradient = false, align = "left"
     const sz = SCALE[size ?? Tag] ?? SCALE.h2;
     return (
         <Tag
-            className={`font-aumovio-bold text-black dark:text-white ${sz} ${ALIGNS[align]} ${className}
+            className={`font-aumovio-bold text-black dark:text-white ${sz} ${ALIGNS[align]} ${className} ${TRANSITION_SMOOTH}
       ${gradient ? "bg-linear-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent" : ""}`}
         >
             {children}

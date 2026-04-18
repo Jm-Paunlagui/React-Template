@@ -8,8 +8,10 @@
  *   variant      — 'default' | 'flush' | 'separated'
  *   size         — 'sm' | 'md' | 'lg'
  */
+
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useCallback, useState } from "react";
+import { TRANSITION_COLORS, TRANSITION_SMOOTH, TRANSITION_TRANSFORM_SPRING } from "../../assets/styles/pre-set-styles";
 
 const VARIANTS = {
     default: "border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden divide-y divide-grey-200 dark:divide-grey-700",
@@ -58,19 +60,19 @@ export function Accordion({ items = [], defaultOpen = null, multiple = false, va
                 text-left font-aumovio-bold text-black/85 dark:text-white/90
                 hover:bg-orange-50 dark:hover:bg-orange-400/5
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50
-                transition-colors duration-200 ${sz.header}`}
+                ${TRANSITION_COLORS} ${sz.header}`}
                         >
                             <span className="flex items-center gap-2">
                                 {item.icon && <item.icon className="w-4 h-4 text-orange-400 shrink-0" />}
                                 {item.title}
                             </span>
                             <ChevronDownIcon
-                                className={`w-4 h-4 text-grey-400 shrink-0 transition-transform duration-300
+                                className={`w-4 h-4 text-grey-400 shrink-0 ${TRANSITION_TRANSFORM_SPRING}
                   ${isOpen ? "rotate-180 text-orange-400" : ""}`}
                             />
                         </button>
                         <div
-                            className={`overflow-hidden transition-all duration-300 ease-in-out
+                            className={`overflow-hidden ${TRANSITION_SMOOTH}
                 ${isOpen ? "max-h-500 opacity-100" : "max-h-0 opacity-0"}`}
                         >
                             <div className={`text-black/70 dark:text-white/60 leading-relaxed ${sz.body}`}>{item.content}</div>

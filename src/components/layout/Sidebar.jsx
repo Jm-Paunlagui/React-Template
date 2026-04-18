@@ -52,6 +52,9 @@ import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronDownIcon, Chevron
 import { useCallback, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
+// Animation/transition tokens
+import { ANIMATE_SLIDE_LEFT, ANIMATE_SLIDE_RIGHT, TRANSITION_COLORS, TRANSITION_SMOOTH, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
+
 // ── UI component library ──────────────────────────────────────────────────────
 import { Avatar } from "../ui/Avatar";
 import { Badge } from "../ui/Badge";
@@ -59,8 +62,8 @@ import Logo from "../ui/Logo";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { Tooltip } from "../ui/Tooltip";
 
-import { useLayout } from "../../contexts/layout/LayoutContext";
 import { faHome, faQuestionCircle, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { useLayout } from "../../contexts/layout/LayoutContext";
 
 // ─── Group colour palette ─────────────────────────────────────────────────────
 const GROUP_COLOR_MAP = {
@@ -159,8 +162,8 @@ function FlatNavItem({ item, collapsed, colorKey = "orange", danger = false }) {
         <NavLink to={item.href} onClick={item.onClick}>
             <div
                 className={`
-                    flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm
-                    transition-all duration-200 font-aumovio
+                    flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio
+                    ${TRANSITION_SMOOTH}
                     ${collapsed ? "justify-center px-0! w-10 h-10 mx-auto" : ""}
                     ${danger ? "text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10" : isActive ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-grey-600 dark:text-grey-400 ${col.hoverBg} ${col.hoverText}`}
                 `}
@@ -227,7 +230,7 @@ function SidebarGroup({ group, collapsed, currentPath }) {
                                 <div
                                     className={`
                                         w-9 h-9 flex items-center justify-center rounded-xl
-                                        transition-all duration-200
+                                        ${TRANSITION_SMOOTH}
                                         ${active ? `${col.activeBg} ${col.activeText}` : `text-grey-400 dark:text-grey-500 ${col.hoverBg} ${col.hoverText}`}
                                     `}
                                 >
@@ -252,7 +255,7 @@ function SidebarGroup({ group, collapsed, currentPath }) {
                 className={`
                     w-full flex items-center gap-2 px-3 py-1.5 rounded-lg
                     text-[11px] font-aumovio-bold uppercase tracking-wider
-                    transition-colors duration-200
+                    ${TRANSITION_COLORS}
                     ${isGroupActive ? col.activeText : "text-grey-400 dark:text-grey-500 hover:text-grey-600 dark:hover:text-grey-300"}
                 `}
             >
@@ -271,7 +274,8 @@ function SidebarGroup({ group, collapsed, currentPath }) {
                                 <div
                                     className={`
                                         flex items-center gap-2.5 px-3 py-2 rounded-lg
-                                        text-sm transition-all duration-200 font-aumovio
+                                        text-sm font-aumovio
+                                        ${TRANSITION_SMOOTH}
                                         ${active ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-grey-600 dark:text-grey-400 ${col.hoverBg} ${col.hoverText}`}
                                     `}
                                 >
@@ -356,17 +360,10 @@ export default function Sidebar({
     const { pathname } = useLocation();
     const isAuth = Boolean(user);
 
+    // Sidebar open/close animation
+    const sidebarAnim = sidebarOpen ? ANIMATE_SLIDE_RIGHT : ANIMATE_SLIDE_LEFT;
     return (
-        <aside
-            className={`
-                fixed top-0 left-0 z-40 h-screen flex flex-col
-                bg-white dark:bg-[#0d0d14]
-                border-r border-grey-100 dark:border-grey-800
-                shadow-[1px_0_8px_0_rgba(0,0,0,0.04)] dark:shadow-none
-                transition-all duration-300 ease-in-out
-                ${sidebarOpen ? "w-auto" : "w-16"}
-            `}
-        >
+        <aside className={["fixed top-0 left-0 z-40 h-screen flex flex-col", "bg-white dark:bg-[#0d0d14]", "border-r border-grey-100 dark:border-grey-800", "shadow-[1px_0_8px_0_rgba(0,0,0,0.04)] dark:shadow-none", sidebarAnim, sidebarOpen ? "w-auto" : "w-16"].join(" ")}>
             {/* ── Header: Logo + collapse toggle ───────────────────────── */}
             <div
                 className={`
@@ -382,19 +379,7 @@ export default function Sidebar({
                 )}
 
                 <Tooltip content={sidebarOpen ? "Collapse" : "Expand"} placement="right" delay={300}>
-                    <button
-                        onClick={toggleSidebar}
-                        aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-                        className="
-                            p-1.5 rounded-lg shrink-0
-                            text-grey-400 dark:text-grey-500
-                            hover:bg-orange-50 dark:hover:bg-orange-400/10
-                            hover:text-orange-400
-                            transition-all duration-200
-                            focus-visible:outline-none
-                            focus-visible:ring-2 focus-visible:ring-orange-400/50
-                        "
-                    >
+                    <button onClick={toggleSidebar} aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"} className={["p-1.5 rounded-lg shrink-0", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
                         {sidebarOpen ? <ChevronDoubleLeftIcon className="w-4 h-4" /> : <ChevronDoubleRightIcon className="w-4 h-4" />}
                     </button>
                 </Tooltip>

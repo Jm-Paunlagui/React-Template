@@ -11,6 +11,9 @@
  *   size        — 'sm'|'md'|'lg'
  *   variant     — 'default'|'filled'|'underline'
  */
+
+import { TRANSITION_COLORS, TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+
 const SZ = {
     sm: "px-3 py-1.5 text-xs rounded-lg",
     md: "px-3.5 py-2 text-sm rounded-lg",
@@ -46,7 +49,7 @@ export function Input({ label, name, type = "text", value, onChange, placeholder
                     autoComplete={autoComplete}
                     className={`w-full bg-white dark:bg-[#1a1030] font-aumovio
             text-black/85 dark:text-white/85
-            border transition-all duration-200
+            border ${TRANSITION_COLORS} 
             placeholder-grey-400 dark:placeholder-grey-600
             focus:outline-none focus:ring-2 focus:shadow-md
             disabled:opacity-50 disabled:cursor-not-allowed

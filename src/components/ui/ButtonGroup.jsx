@@ -9,6 +9,7 @@
  *   size      — 'sm' | 'md' | 'lg'
  *   orientation — 'horizontal' | 'vertical'
  */
+import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
 const SZ = {
     sm: "px-3 py-1.5 text-xs",
     md: "px-4 py-2 text-sm",
@@ -35,7 +36,7 @@ export function ButtonGroup({ items = [], active, onChange, variant = "primary",
                         key={item.id}
                         onClick={() => !item.disabled && onChange?.(item.id)}
                         disabled={item.disabled}
-                        className={`flex items-center gap-2 tracking-wide transition-all duration-200
+                        className={`flex items-center gap-2 tracking-wide ${TRANSITION_SMOOTH}
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50
               disabled:opacity-50 disabled:cursor-not-allowed
               ${SZ[size] ?? SZ.md}

@@ -11,6 +11,7 @@
  */
 import { CloudArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
+import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
 
 export function FileInput({ label, name, accept, multiple = false, disabled = false, onChange, maxSize, error, preview = false, dropzone = true }) {
     const ref = useRef(null);
@@ -39,7 +40,7 @@ export function FileInput({ label, name, accept, multiple = false, disabled = fa
                     multiple={multiple}
                     disabled={disabled}
                     onChange={(e) => handle(e.target.files)}
-                    className="block w-full text-sm text-grey-500 dark:text-grey-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-aumovio-bold file:text-xs file:bg-orange-400/10 file:text-orange-400 hover:file:bg-orange-400 hover:file:text-white file:cursor-pointer file:transition-all file:duration-200"
+                    className={`block w-full text-sm text-grey-500 dark:text-grey-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-aumovio-bold file:text-xs file:bg-orange-400/10 file:text-orange-400 hover:file:bg-orange-400 hover:file:text-white file:cursor-pointer ${TRANSITION_SMOOTH}`}
                 />
             </div>
         );
@@ -60,7 +61,7 @@ export function FileInput({ label, name, accept, multiple = false, disabled = fa
                     handle(e.dataTransfer.files);
                 }}
                 className={`relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer
-          transition-all duration-200
+          ${TRANSITION_SMOOTH}
           ${disabled ? "opacity-50 cursor-not-allowed" : ""}
           ${error ? "border-danger-400 bg-danger-100/10" : ""}
           ${dragging ? "border-orange-400 bg-orange-50 dark:bg-orange-400/5 scale-[1.01]" : error ? "" : "border-grey-300 dark:border-grey-700 hover:border-orange-400 bg-white dark:bg-[#1a1030]"}`}

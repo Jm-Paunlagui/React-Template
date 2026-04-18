@@ -12,6 +12,7 @@
  */
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
+import { TRANSITION_BOUNCE, TRANSITION_COLORS, TRANSITION_OPACITY } from "../../assets/styles/pre-set-styles";
 
 const TRANSLATE = {
     left: {
@@ -75,7 +76,7 @@ export function Drawer({ open, onClose, side = "right", size = "md", title, back
             {backdrop && (
                 <div
                     onClick={onClose}
-                    className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300
+                    className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm ${TRANSITION_OPACITY}
             ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
                 />
             )}
@@ -84,7 +85,7 @@ export function Drawer({ open, onClose, side = "right", size = "md", title, back
                 aria-modal="true"
                 className={`fixed z-50 ${t.pos} ${dim} ${isH ? "h-full" : "w-full"}
           bg-white dark:bg-[#1a1030] shadow-2xl
-          transform transition-transform duration-300 ease-in-out font-aumovio
+                    transform ${TRANSITION_BOUNCE} font-aumovio
           flex flex-col
           ${open ? t.open : t.closed}`}
             >
@@ -94,8 +95,8 @@ export function Drawer({ open, onClose, side = "right", size = "md", title, back
                     <button
                         onClick={onClose}
                         aria-label="Close drawer"
-                        className="p-1.5 rounded-lg text-grey-400 hover:text-grey-600 dark:hover:text-grey-300 hover:bg-grey-100
-              dark:hover:bg-grey-800 transition-colors"
+                        className={`p-1.5 rounded-lg text-grey-400 hover:text-grey-600 dark:hover:text-grey-300 hover:bg-grey-100
+              dark:hover:bg-grey-800 ${TRANSITION_COLORS}`}
                     >
                         <XMarkIcon className="w-5 h-5" />
                     </button>

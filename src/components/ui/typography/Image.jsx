@@ -31,8 +31,8 @@ export function Image({ src, alt = "", caption, aspect = "auto", rounded = "md",
                     loading="lazy"
                     decoding="async"
                     className={`${ASPECT[aspect] ? "w-full h-full object-cover" : "max-w-full h-auto"}
-            ${hover ? "transition-transform duration-500 hover:scale-105" : ""}
-            ${className}`}
+                    ${hover ? require("../../../assets/styles/pre-set-styles").TRANSITION_SMOOTH + " hover:scale-105" : ""}
+                    ${className}`}
                 />
             </div>
             {caption && <figcaption className="mt-2 text-xs text-center text-grey-400">{caption}</figcaption>}

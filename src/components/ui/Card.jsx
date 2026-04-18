@@ -12,6 +12,8 @@
  *   image     — { src, alt, height? }
  *   children
  */
+import { TRANSITION_SMOOTH, TRANSITION_TRANSFORM_SPRING } from "../../assets/styles/pre-set-styles";
+
 const VARIANTS = {
     default: "bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700 shadow-sm",
     elevated: "bg-white dark:bg-[#1a1030] shadow-xl border border-grey-100 dark:border-grey-800",
@@ -30,15 +32,15 @@ export function Card({ variant = "default", padding = "md", hover = false, click
             onClick={onClick}
             onAnimationEnd={onAnimationEnd}
             className={`rounded-xl overflow-hidden font-aumovio
-        transition-all duration-300
+        ${TRANSITION_SMOOTH}
         ${VARIANTS[variant] ?? VARIANTS.default}
-        ${hover || clickable ? "hover:-translate-y-1 hover:shadow-xl cursor-pointer" : ""}
+        ${hover || clickable ? `${TRANSITION_TRANSFORM_SPRING} hover:-translate-y-1 hover:shadow-xl cursor-pointer` : ""}
         ${clickable ? "text-left w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400" : ""}
         ${className}`}
         >
             {image && (
                 <div className={`overflow-hidden ${image.height ?? "h-48"}`}>
-                    <img src={image.src} alt={image.alt ?? ""} className="object-cover w-full h-full transition-transform duration-500 hover:scale-105" />
+                    <img src={image.src} alt={image.alt ?? ""} className={`object-cover w-full h-full ${TRANSITION_TRANSFORM_SPRING} hover:scale-105`} />
                 </div>
             )}
             {header && <div className="px-5 py-4 border-b border-grey-200 dark:border-grey-700 font-aumovio-bold text-black/85 dark:text-white/90">{header}</div>}

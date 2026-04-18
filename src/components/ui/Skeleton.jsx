@@ -9,7 +9,8 @@
  *   count    — number (repeat)
  *   animate  — boolean
  */
-const base = "bg-grey-200 dark:bg-grey-700 rounded animate-pulse";
+import { SKELETON_SURFACE, TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+const base = `${SKELETON_SURFACE} rounded ${TRANSITION_SMOOTH}`;
 
 function SkeletonLine({ w = "100%", h = "0.875rem" }) {
     return <div className={base} style={{ width: w, height: h }} />;

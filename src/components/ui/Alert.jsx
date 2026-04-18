@@ -12,8 +12,10 @@
  *   bordered  — boolean
  *   size      — 'sm' | 'md'
  */
+
 import { CheckCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 const CONFIG = {
     info: {
@@ -54,11 +56,12 @@ export function Alert({ variant = "info", title, children, icon: CustomIcon, dis
 
     if (!visible) return null;
 
+    const { ANIMATE_FADE_IN } = require("../../assets/styles/pre-set-styles");
     return (
         <div
             role="alert"
             className={`
-      flex gap-3 rounded-xl font-aumovio animate-fade-in
+      flex gap-3 rounded-xl font-aumovio ${ANIMATE_FADE_IN}
       ${size === "sm" ? "p-3 text-xs" : "p-4 text-sm"}
       ${cfg.bg} ${bordered ? `border ${cfg.border}` : ""}
     `}
@@ -78,7 +81,7 @@ export function Alert({ variant = "info", title, children, icon: CustomIcon, dis
                 )}
             </div>
             {dismissible && (
-                <button onClick={dismiss} aria-label="Dismiss" className="transition-colors shrink-0 text-grey-400 hover:text-grey-600 dark:hover:text-grey-300">
+                <button onClick={dismiss} aria-label="Dismiss" className={`${TRANSITION_COLORS} shrink-0 text-grey-400 hover:text-grey-600 dark:hover:text-grey-300`}>
                     <XMarkIcon className="w-4 h-4" />
                 </button>
             )}

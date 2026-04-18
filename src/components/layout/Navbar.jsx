@@ -24,7 +24,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { ACCENT_COLOR_BORDER, BASE_COLOR_TEXT, DELAY_1, MAIN_FOREGROUND_COLOR_TEXT, MAIN_OVERLAY_COLOR_BG, MAIN_PULSE_COLOR_BG, SECONDARY_COLOR_TEXT, SUBTITLE_COLOR_TEXT, TITLE_COLOR_TEXT } from "../../assets/styles/pre-set-styles";
+import { ACCENT_COLOR_BORDER, ANIMATE_SCALE_IN, ANIMATE_SCALE_OUT, ANIMATE_SLIDE_DOWN, BASE_COLOR_TEXT, DELAY_1, MAIN_FOREGROUND_COLOR_TEXT, MAIN_OVERLAY_COLOR_BG, MAIN_PULSE_COLOR_BG, SECONDARY_COLOR_TEXT, SUBTITLE_COLOR_TEXT, TITLE_COLOR_TEXT, TRANSITION_COLORS, TRANSITION_SMOOTH, TRANSITION_SNAP, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
 import { AuthMiddleware } from "../../middleware/authentication/AuthMiddleware";
 import httpClient from "../../middleware/HttpClient";
 
@@ -55,7 +55,7 @@ const NavItem = ({ item }) => (
         <div
             className={`
                 ${item.current ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow` : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
-                px-3 py-2 rounded-lg text-sm font-aumovio transition-all duration-200 cursor-pointer
+                px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_SMOOTH} cursor-pointer
             `}
         >
             {item.name}
@@ -69,20 +69,20 @@ const DropdownGroup = ({ label, isActive: active, isLoading, items }) => (
         <div
             className={`
                 ${isLoading ? `${SECONDARY_COLOR_TEXT} animate-pulse ${MAIN_PULSE_COLOR_BG} cursor-default` : active ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow` : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
-                px-3 py-2 rounded-lg text-sm font-aumovio transition-all duration-200 cursor-pointer
+                px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_SMOOTH} cursor-pointer
             `}
         >
             {isLoading ? <span className={`w-20 bg-orange-300 rounded animate-pulse text-transparent ${DELAY_1}`}>{label}</span> : label}
         </div>
         {items.length > 0 && (
             <div
-                className="
-                    absolute z-10 invisible py-4 mt-2 transition-all duration-300
-                    ease-out origin-top transform -translate-x-1/2 left-1/2 w-72
+                className={`
+                    absolute z-10 invisible py-4 mt-2 ${TRANSITION_SNAP}
+                    origin-top transform -translate-x-1/2 left-1/2 w-72
                     bg-white dark:bg-[#1a1030] rounded-xl shadow-2xl opacity-0
                     ring-1 ring-black/5 dark:ring-white/10
                     group-hover:opacity-100 group-hover:visible
-                "
+                `}
             >
                 <div className="px-4">
                     <p className="mb-3 text-[10px] font-aumovio-bold uppercase tracking-widest text-grey-400">{label}</p>
@@ -92,7 +92,7 @@ const DropdownGroup = ({ label, isActive: active, isLoading, items }) => (
                                 <div
                                     className={`
                                         flex items-center justify-between p-2.5 rounded-lg
-                                        transition-all duration-200
+                                        ${TRANSITION_SMOOTH}
                                         hover:bg-orange-50 dark:hover:bg-orange-400/5
                                         ${item.current ? "text-orange-400 font-aumovio-bold" : "text-grey-700 dark:text-grey-300 hover:text-orange-500"}
                                     `}
@@ -290,14 +290,14 @@ export default function Navbar() {
                                             className="
                                                 focus-visible:outline-none
                                                 focus-visible:ring-2 focus-visible:ring-orange-400/50
-                                                rounded-full transition-all duration-200
+                                                rounded-full ${TRANSITION_SPRING}
                                                 hover:ring-2 hover:ring-orange-400/40
                                             "
                                         >
                                             {isLoading ? <div className="w-9 h-9 rounded-full bg-orange-200 animate-pulse" /> : <Avatar name={userName} size="sm" bordered />}
                                         </MenuButton>
 
-                                        <Transition as="div" enter="transition-all ease-out duration-200" enterFrom="opacity-0 scale-95 -translate-y-1" enterTo="opacity-100 scale-100 translate-y-0" leave="transition-all ease-in duration-150" leaveFrom="opacity-100 scale-100 translate-y-0" leaveTo="opacity-0 scale-95 -translate-y-1">
+                                        <Transition as="div" enter={`${ANIMATE_SCALE_IN}`} leave={`${ANIMATE_SCALE_OUT}`}>
                                             <MenuItems
                                                 className="
                                                     absolute right-0 z-50 mt-2 w-56
@@ -333,7 +333,7 @@ export default function Navbar() {
                                                                     className={`
                                                                         w-full flex items-center gap-2.5
                                                                         px-3 py-2 rounded-lg text-sm font-aumovio
-                                                                        transition-colors duration-150
+                                                                        ${TRANSITION_COLORS}
                                                                         ${item.danger ? "text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10" : "text-grey-700 dark:text-grey-300 hover:bg-orange-50 dark:hover:bg-orange-400/5 hover:text-orange-500"}
                                                                     `}
                                                                 >
@@ -353,7 +353,7 @@ export default function Navbar() {
                                 <MenuButton
                                     className={`
                                         lg:hidden inline-flex items-center justify-center p-2
-                                        rounded-lg transition-all duration-200
+                                        rounded-lg ${TRANSITION_SPRING}
                                         text-grey-600 dark:text-grey-300
                                         hover:bg-orange-50 dark:hover:bg-orange-400/10
                                         hover:text-orange-500
@@ -367,7 +367,7 @@ export default function Navbar() {
                     </div>
 
                     {/* ── Mobile menu ──────────────────────────────────── */}
-                    <Transition show={open} as="div" className="absolute left-0 right-0 z-50 lg:hidden top-full" enter="transition-all ease-out duration-300" enterFrom="opacity-0 scale-95 -translate-y-4" enterTo="opacity-100 scale-100 translate-y-0" leave="transition-all ease-in duration-200" leaveFrom="opacity-100 scale-100 translate-y-0" leaveTo="opacity-0 scale-95 -translate-y-4">
+                    <Transition show={open} as="div" className="absolute left-0 right-0 z-50 lg:hidden top-full" enter={`${ANIMATE_SLIDE_DOWN}`} leave={`${ANIMATE_SCALE_OUT}`}>
                         <div
                             className={`
                                 mx-2 mb-2 px-2 pt-4 pb-4 space-y-1
@@ -402,7 +402,7 @@ export default function Navbar() {
                                     <div
                                         className={`
                                             px-3 py-2 rounded-xl text-sm font-aumovio
-                                            transition-all duration-200 block
+                                            ${TRANSITION_SMOOTH} block
                                             ${item.isLoading ? `${SECONDARY_COLOR_TEXT} animate-pulse bg-orange-100/50 cursor-default` : item.current ? `${MAIN_FOREGROUND_COLOR_TEXT} bg-orange-50 dark:bg-orange-400/10 ${ACCENT_COLOR_BORDER}` : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
                                         `}
                                     >

@@ -6,6 +6,7 @@
  *   variant — 'solid'|'dashed'|'gradient'|'dot'
  *   spacing — 'sm'|'md'|'lg'
  */
+import { TRANSITION_SMOOTH } from "../../../assets/styles/pre-set-styles";
 const SP = { sm: "my-4", md: "my-6", lg: "my-10" };
 
 export function Divider({ label, variant = "solid", spacing = "md" }) {
@@ -18,9 +19,9 @@ export function Divider({ label, variant = "solid", spacing = "md" }) {
     if (label)
         return (
             <div className={`flex items-center gap-4 font-aumovio ${SP[spacing] ?? SP.md}`}>
-                <div className={`flex-1 ${variant !== "gradient" ? `border-t ${line[variant]}` : "h-px bg-linear-to-r from-transparent to-grey-200 dark:to-grey-700"}`} />
+                <div className={`flex-1 ${variant !== "gradient" ? `border-t ${line[variant]} ${TRANSITION_SMOOTH}` : "h-px bg-linear-to-r from-transparent to-grey-200 dark:to-grey-700"}`} />
                 <span className="text-xs tracking-wider uppercase font-aumovio-bold text-grey-400 whitespace-nowrap">{label}</span>
-                <div className={`flex-1 ${variant !== "gradient" ? `border-t ${line[variant]}` : "h-px bg-linear-to-l from-transparent to-grey-200 dark:to-grey-700"}`} />
+                <div className={`flex-1 ${variant !== "gradient" ? `border-t ${line[variant]} ${TRANSITION_SMOOTH}` : "h-px bg-linear-to-l from-transparent to-grey-200 dark:to-grey-700"}`} />
             </div>
         );
 

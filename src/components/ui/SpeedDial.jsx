@@ -23,12 +23,13 @@ export function SpeedDial({ icon: Icon = PlusIcon, actions = [], direction = "up
     const isV = direction === "up" || direction === "down";
     const isReverse = direction === "up" || direction === "left";
 
+    const { TRANSITION_SMOOTH, TRANSITION_SPRING, HOVER_PRESS, ANIMATE_SCALE_SPRING } = require("../../assets/styles/pre-set-styles");
     const actionList = (
         <div className={`flex ${isV ? "flex-col" : "flex-row"} ${isReverse ? "flex-col-reverse" : ""} gap-3 mb-3`}>
             {actions.map((a, i) => (
                 <div
                     key={a.id}
-                    className={`flex items-center gap-2 transition-all duration-200
+                    className={`flex items-center gap-2 ${TRANSITION_SMOOTH}
           ${open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
                     style={{ transitionDelay: open ? `${i * 50}ms` : "0ms" }}
                 >
@@ -39,7 +40,7 @@ export function SpeedDial({ icon: Icon = PlusIcon, actions = [], direction = "up
                             setOpen(false);
                         }}
                         className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg
-              transition-all duration-200 hover:scale-110 active:scale-95 text-white
+              ${TRANSITION_SMOOTH} ${HOVER_PRESS} text-white
               ${a.color ?? "bg-purple-400 hover:bg-purple-500"}`}
                         aria-label={a.label}
                     >
@@ -54,12 +55,11 @@ export function SpeedDial({ icon: Icon = PlusIcon, actions = [], direction = "up
         <div className={`${POSITIONS[position]} flex flex-col items-center`}>
             {isReverse && actionList}
             <button
-                onClick={() => setOpen((o) => !o)}
                 className={`w-14 h-14 rounded-full bg-orange-400 text-white shadow-2xl shadow-orange-400/40
-          flex items-center justify-center transition-all duration-300
-          hover:scale-110 active:scale-95 hover:bg-orange-500 focus-visible:outline-none
-          focus-visible:ring-4 focus-visible:ring-orange-400/40
+          flex items-center justify-center ${TRANSITION_SPRING} ${HOVER_PRESS} ${ANIMATE_SCALE_SPRING}
+          hover:bg-orange-500 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-400/40
           ${open ? "rotate-45" : ""}`}
+                onClick={() => setOpen((o) => !o)}
                 aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
             >

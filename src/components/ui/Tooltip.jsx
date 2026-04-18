@@ -9,7 +9,9 @@
  *   size      — 'sm'|'md'
  *   disabled  — boolean
  */
+
 import { useRef, useState } from "react";
+import { ANIMATE_FADE_IN } from "../../assets/styles/pre-set-styles";
 
 const PL = {
     top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
@@ -36,7 +38,7 @@ export function Tooltip({ children, content, placement = "top", delay = 300, siz
             {children}
             {visible && content && (
                 <div
-                    className={`absolute z-50 pointer-events-none animate-fade-in whitespace-nowrap
+                    className={`absolute z-50 pointer-events-none ${ANIMATE_FADE_IN} whitespace-nowrap
           ${PL[placement] ?? PL.top}
           ${size === "sm" ? "px-2.5 py-1 text-xs rounded-lg" : "px-3 py-1.5 text-sm rounded-xl"}
           bg-grey-900 dark:bg-grey-700 text-white font-aumovio shadow-xl`}

@@ -24,6 +24,8 @@ export function Toggle({ checked = false, onChange, label, description, disabled
     const sz = SIZES[size] ?? SIZES.md;
     const col = COLORS[color] ?? COLORS.orange;
 
+    // Import transition constants
+    const { TRANSITION_COLORS, TRANSITION_TRANSFORM_SPRING } = require("../../assets/styles/pre-set-styles");
     const track = (
         <button
             type="button"
@@ -32,7 +34,7 @@ export function Toggle({ checked = false, onChange, label, description, disabled
             onClick={() => !disabled && onChange?.(!checked)}
             disabled={disabled}
             className={`relative inline-flex items-center rounded-full shrink-0
-        transition-colors duration-200 ease-in-out focus-visible:outline-none
+        ${TRANSITION_COLORS} focus-visible:outline-none
         focus-visible:ring-2 focus-visible:ring-orange-400/50 focus-visible:ring-offset-2
         ${sz.track}
         ${checked ? col : "bg-grey-300 dark:bg-grey-600"}
@@ -40,7 +42,7 @@ export function Toggle({ checked = false, onChange, label, description, disabled
         >
             <span
                 className={`${sz.thumb} inline-block bg-white rounded-full shadow-sm
-        transform transition-transform duration-200 ease-in-out mx-0.5
+        transform ${TRANSITION_TRANSFORM_SPRING} mx-0.5
         ${checked ? sz.translate : "translate-x-0"}`}
             />
         </button>

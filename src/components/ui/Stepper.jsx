@@ -7,7 +7,9 @@
  *   variant — 'default'|'numbered'|'icon'
  *   orientation — 'horizontal'|'vertical'
  */
+
 import { CheckIcon } from "@heroicons/react/24/outline";
+import { ANIMATE_ENTER_UP, staggerDelay, TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
 
 export function Stepper({ steps = [], current = 0, variant = "numbered", orientation = "horizontal" }) {
     const isV = orientation === "vertical";
@@ -25,7 +27,7 @@ export function Stepper({ steps = [], current = 0, variant = "numbered", orienta
                             {/* Circle */}
                             <div
                                 className={`flex items-center justify-center rounded-full font-aumovio-bold shrink-0
-                transition-all duration-300 z-10
+                ${TRANSITION_SMOOTH} ${ANIMATE_ENTER_UP} ${staggerDelay(i)} z-10
                 ${done ? "w-8 h-8 bg-orange-400 text-white shadow-lg shadow-orange-400/30" : ""}
                 ${active ? "w-8 h-8 bg-orange-400 text-white ring-4 ring-orange-400/30 shadow-lg shadow-orange-400/30" : ""}
                 ${pending ? "w-8 h-8 bg-grey-100 dark:bg-grey-800 text-grey-400 border-2 border-grey-300 dark:border-grey-600" : ""}`}
@@ -36,7 +38,7 @@ export function Stepper({ steps = [], current = 0, variant = "numbered", orienta
                             {/* Connector */}
                             {i < steps.length - 1 && (
                                 <div
-                                    className={`flex-1 transition-all duration-500
+                                    className={`flex-1 ${TRANSITION_SMOOTH}
                   ${isV ? "w-0.5 h-8 mx-auto my-1" : "h-0.5 mx-2"}
                   ${done || active ? "bg-orange-400" : "bg-grey-200 dark:bg-grey-700"}`}
                                 />

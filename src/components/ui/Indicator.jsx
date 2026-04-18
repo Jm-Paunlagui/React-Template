@@ -10,6 +10,7 @@
  *   max       — number (99+ truncation)
  *   hidden    — boolean
  */
+import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
 const COLORS = {
     orange: "bg-orange-400 text-white",
     danger: "bg-danger-400 text-white",
@@ -38,6 +39,7 @@ export function Indicator({ children, content, color = "danger", position = "top
                 <span
                     className={`absolute ${POS[position]} z-10 flex items-center justify-center
           font-aumovio-bold tracking-wide
+          ${TRANSITION_SMOOTH}
           ${hasContent ? "min-w-5 h-5 px-1 text-[10px] rounded-full" : "w-2.5 h-2.5 rounded-full"}
           ${COLORS[color] ?? COLORS.danger}
           ${pulse ? "animate-pulse" : ""}`}

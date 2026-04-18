@@ -17,8 +17,10 @@
  *   striped    — boolean
  *   compact    — boolean
  */
+
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import Skeleton from "./Skeleton";
+import { TRANSITION_SMOOTH } from '../../assets/styles/pre-set-styles';
 
 export function Table({ columns = [], data = [], loading = false, selectable = false, selectedIds = new Set(), onSelect, onSelectAll, sortKey, sortDir = "asc", onSort, emptyText = "No records found.", stickyHeader = false, striped = false, compact = false }) {
     const allSelected = data.length > 0 && data.every((r) => selectedIds.has(r.id));
@@ -32,11 +34,11 @@ export function Table({ columns = [], data = [], loading = false, selectable = f
                     className={`${stickyHeader ? "sticky top-0 z-10" : ""}
           bg-grey-50 dark:bg-grey-800 border-b border-grey-200 dark:border-grey-700`}
                 >
-                    <tr>
-                        {selectable && (
-                            <th className={`${cellPad} w-10`}>
-                                <input
-                                    type="checkbox"
+                                <tr
+                                    key={row.id ?? ri}
+                                    className={`${TRANSITION_SMOOTH}
+                        ${striped && ri % 2 === 1 ? "bg-grey-50/50 dark:bg-grey-800/30" : "bg-white dark:bg-[#1a1030]"}`}
+                                >
                                     checked={allSelected}
                                     ref={(el) => {
                                         if (el) el.indeterminate = someSelected && !allSelected;

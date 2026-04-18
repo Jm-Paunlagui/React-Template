@@ -8,6 +8,7 @@
  *   label   — string
  *   fullPage — boolean
  */
+import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
 const SZ = {
     xs: "w-4 h-4 border-2",
     sm: "w-5 h-5 border-2",
@@ -27,8 +28,8 @@ export function Spinner({ size = "md", variant = "ring", color = "primary", labe
     if (variant === "ring") {
         element = (
             <div className="flex flex-col items-center gap-3">
-                <div className={`${SZ[size] ?? SZ.md} ${COL[color] ?? COL.primary} rounded-full animate-spin`} />
-                {label && <p className="text-sm font-aumovio text-grey-400 animate-pulse">{label}</p>}
+                <div className={`${SZ[size] ?? SZ.md} ${COL[color] ?? COL.primary} rounded-full animate-spin ${TRANSITION_SMOOTH}`} />
+                {label && <p className={`text-sm font-aumovio text-grey-400 animate-pulse ${TRANSITION_SMOOTH}`}>{label}</p>}
             </div>
         );
     } else if (variant === "dots") {
@@ -42,7 +43,7 @@ export function Spinner({ size = "md", variant = "ring", color = "primary", labe
         );
     } else if (variant === "pulse") {
         const pulseCol = color === "primary" ? "bg-orange-400" : color === "white" ? "bg-white" : "bg-grey-400";
-        element = <div className={`${SZ[size] ?? SZ.md} ${pulseCol} rounded-full animate-ping opacity-75`} />;
+        element = <div className={`${SZ[size] ?? SZ.md} ${pulseCol} rounded-full animate-ping opacity-75 ${TRANSITION_SMOOTH}`} />;
     }
 
     if (fullPage) return <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14]">{element}</div>;

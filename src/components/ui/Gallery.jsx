@@ -8,8 +8,10 @@
  *   lightbox   — boolean
  *   masonry    — boolean
  */
+
 import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { ANIMATE_FADE_IN, HOVER_SCALE, TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
 
 export function Gallery({ images = [], columns = 3, gap = "md", lightbox = true }) {
     const [selected, setSelected] = useState(null);
@@ -31,14 +33,14 @@ export function Gallery({ images = [], columns = 3, gap = "md", lightbox = true 
                         className={`overflow-hidden rounded-xl bg-grey-100 dark:bg-grey-800
               ${lightbox ? "cursor-zoom-in" : ""} group`}
                     >
-                        <img src={img.src} alt={img.alt ?? ""} className="object-cover w-full h-48 transition-transform duration-500 group-hover:scale-110" />
+                        <img src={img.src} alt={img.alt ?? ""} className={`object-cover w-full h-48 ${TRANSITION_SMOOTH} ${HOVER_SCALE}`} />
                     </div>
                 ))}
             </div>
 
             {/* Lightbox */}
             {lightbox && selected !== null && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90" onClick={() => setSelected(null)}>
+                <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 ${ANIMATE_FADE_IN}`} onClick={() => setSelected(null)}>
                     <button onClick={() => setSelected(null)} className="absolute top-4 right-4 text-white/70 hover:text-white">
                         <XMarkIcon className="w-8 h-8" />
                     </button>

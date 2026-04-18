@@ -12,6 +12,7 @@
  */
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 const SIZES = {
     sm: "max-w-sm",
@@ -56,7 +57,7 @@ export function Modal({ open, onClose, title, size = "md", variant = "default", 
                 {title && (
                     <div className="flex items-center justify-between px-6 py-4 border-b border-grey-200 dark:border-grey-700">
                         <h2 className="text-base font-aumovio-bold text-black/85 dark:text-white/90">{title}</h2>
-                        <button onClick={onClose} aria-label="Close" className="flex items-center justify-center transition-colors rounded-lg w-7 h-7 text-grey-400 hover:text-grey-600 dark:hover:text-grey-300 hover:bg-grey-100 dark:hover:bg-grey-800">
+                        <button onClick={onClose} aria-label="Close" className={`flex items-center justify-center ${TRANSITION_COLORS} rounded-lg w-7 h-7 text-grey-400 hover:text-grey-600 dark:hover:text-grey-300 hover:bg-grey-100 dark:hover:bg-grey-800`}>
                             <XMarkIcon className="w-4 h-4" />
                         </button>
                     </div>

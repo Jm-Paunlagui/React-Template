@@ -9,6 +9,7 @@
  *   fullWidth — boolean
  */
 import { useState } from "react";
+const { TRANSITION_SMOOTH } = require("../../assets/styles/pre-set-styles");
 
 const SZ = {
     sm: "px-3 py-1.5 text-xs",
@@ -29,15 +30,15 @@ export function Tabs({ tabs = [], defaultTab, variant = "underline", size = "md"
     };
 
     const TAB_STYLES = {
-        underline: (a) => `border-b-2 transition-all duration-200 font-aumovio-bold
-      ${a ? "border-orange-400 text-orange-400" : "border-transparent text-grey-500 hover:text-orange-400 hover:border-orange-200"}`,
-        pill: (a) => `rounded-lg transition-all duration-200 font-aumovio-bold
-      ${a ? "bg-white dark:bg-[#1a1030] text-orange-400 shadow-sm" : "text-grey-500 hover:text-orange-400"}`,
+        underline: (a) => `border-b-2 ${TRANSITION_SMOOTH} font-aumovio-bold
+            ${a ? "border-orange-400 text-orange-400" : "border-transparent text-grey-500 hover:text-orange-400 hover:border-orange-200"}`,
+        pill: (a) => `rounded-lg ${TRANSITION_SMOOTH} font-aumovio-bold
+            ${a ? "bg-white dark:bg-[#1a1030] text-orange-400 shadow-sm" : "text-grey-500 hover:text-orange-400"}`,
         boxed: (a) => `border-r last:border-0 border-grey-200 dark:border-grey-700 font-aumovio-bold
-      transition-all duration-200
-      ${a ? "bg-orange-400 text-white" : "bg-white dark:bg-[#1a1030] text-grey-500 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-400"}`,
-        vertical: (a) => `rounded-lg text-left transition-all duration-200 font-aumovio-bold
-      ${a ? "bg-orange-50 dark:bg-orange-400/10 text-orange-400" : "text-grey-500 hover:bg-grey-100 dark:hover:bg-grey-800 hover:text-orange-400"}`,
+            ${TRANSITION_SMOOTH}
+            ${a ? "bg-orange-400 text-white" : "bg-white dark:bg-[#1a1030] text-grey-500 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-400"}`,
+        vertical: (a) => `rounded-lg text-left ${TRANSITION_SMOOTH} font-aumovio-bold
+            ${a ? "bg-orange-50 dark:bg-orange-400/10 text-orange-400" : "text-grey-500 hover:bg-grey-100 dark:hover:bg-grey-800 hover:text-orange-400"}`,
     };
 
     return (

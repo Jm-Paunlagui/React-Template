@@ -25,6 +25,8 @@ const HEIGHTS = { xs: "h-1", sm: "h-1.5", md: "h-2.5", lg: "h-4" };
 export function Progress({ value = 0, max = 100, variant = "primary", size = "md", label = false, animated = false, circular = false, radius = 36 }) {
     const pct = Math.min(100, Math.max(0, (value / max) * 100));
 
+    // Import transition constant
+    const { TRANSITION_LAZY } = require("../../assets/styles/pre-set-styles");
     if (circular) {
         const circ = 2 * Math.PI * radius;
         const dash = circ - (pct / 100) * circ;
@@ -33,7 +35,7 @@ export function Progress({ value = 0, max = 100, variant = "primary", size = "md
             <div className="relative inline-flex items-center justify-center font-aumovio">
                 <svg width={sz} height={sz} className="-rotate-90">
                     <circle cx={sz / 2} cy={sz / 2} r={radius} fill="none" stroke="var(--ring-track)" strokeWidth="8" />
-                    <circle cx={sz / 2} cy={sz / 2} r={radius} fill="none" stroke="#FF4208" strokeWidth="8" strokeDasharray={circ} strokeDashoffset={dash} strokeLinecap="round" style={{ transition: "stroke-dashoffset 0.6s ease" }} />
+                    <circle cx={sz / 2} cy={sz / 2} r={radius} fill="none" stroke="#FF4208" strokeWidth="8" strokeDasharray={circ} strokeDashoffset={dash} strokeLinecap="round" style={{ transition: `stroke-dashoffset var(--duration-lazy) var(--ease-decelerate)` }} />
                 </svg>
                 <span className="absolute text-sm font-aumovio-bold text-black/85 dark:text-white/90">{Math.round(pct)}%</span>
             </div>
@@ -51,7 +53,7 @@ export function Progress({ value = 0, max = 100, variant = "primary", size = "md
             <div className={`w-full bg-grey-200 dark:bg-grey-700 rounded-full overflow-hidden ${HEIGHTS[size] ?? HEIGHTS.md}`}>
                 <div
                     className={`h-full rounded-full ${COLORS[variant] ?? COLORS.primary}
-            transition-all duration-700 ease-out
+            ${TRANSITION_LAZY}
             ${animated ? "bg-stripes animate-stripes" : ""}`}
                     style={{ width: `${pct}%` }}
                     role="progressbar"

@@ -6,6 +6,8 @@
  *   variant — 'left'|'alternating'
  *   connect — boolean (connecting line)
  */
+import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+
 const COLORS = {
     orange: "bg-orange-400  ring-orange-400/30",
     purple: "bg-purple-400  ring-purple-400/30",
@@ -29,12 +31,12 @@ export function Timeline({ items = [], variant = "left", connect = true }) {
                             <div
                                 className={`relative z-10 w-8 h-8 rounded-full shrink-0
                 flex items-center justify-center ring-4 text-white shadow
-                ${colCls}`}
+                ${TRANSITION_SMOOTH} ${colCls}`}
                             >
                                 {item.icon ? <item.icon className="w-4 h-4" /> : <span className="w-2 h-2 bg-white rounded-full" />}
                             </div>
                             {/* Content */}
-                            <div className="flex-1 pb-2">
+                            <div className={`flex-1 pb-2 ${TRANSITION_SMOOTH}`}>
                                 <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
                                     <h3 className="text-sm font-aumovio-bold text-black/85 dark:text-white/90">{item.title}</h3>
                                     <div className="flex items-center gap-2">

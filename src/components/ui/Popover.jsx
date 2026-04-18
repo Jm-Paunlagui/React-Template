@@ -9,7 +9,9 @@
  *   width     — 'sm'|'md'|'lg'
  *   trigger   — 'click'|'hover'
  */
+
 import { useEffect, useRef, useState } from "react";
+import { ANIMATE_SCALE_IN } from "../../assets/styles/pre-set-styles";
 
 const PLACEMENT = {
     top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
@@ -48,7 +50,7 @@ export function Popover({ trigger, content, title, placement = "bottom", width =
                 <div
                     className={`absolute z-50 ${PLACEMENT[placement]} ${WIDTHS[width]}
           bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700
-          rounded-xl shadow-2xl animate-scale-in`}
+          rounded-xl shadow-2xl ${ANIMATE_SCALE_IN}`}
                 >
                     {title && (
                         <div className="px-4 py-3 border-b border-grey-200 dark:border-grey-700">

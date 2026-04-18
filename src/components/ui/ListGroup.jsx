@@ -7,6 +7,9 @@
  *   selectable — boolean
  *   numbered   — boolean
  */
+
+import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+
 export function ListGroup({ items = [], variant = "default", selectable = false, numbered = false }) {
     const wrap = {
         default: "border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden divide-y divide-grey-200 dark:divide-grey-700",
@@ -21,7 +24,7 @@ export function ListGroup({ items = [], variant = "default", selectable = false,
                     key={item.id ?? i}
                     onClick={() => !item.disabled && item.onClick?.()}
                     className={`flex items-center gap-3 px-4 py-3 bg-white dark:bg-[#1a1030] text-sm
-            transition-all duration-150
+            ${TRANSITION_SMOOTH}
             ${variant === "separated" ? "rounded-xl border border-grey-200 dark:border-grey-700" : ""}
             ${selectable && !item.disabled ? "cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-400/5 hover:text-orange-400" : ""}
             ${item.active ? "bg-orange-50 dark:bg-orange-400/10 text-orange-400 border-l-4 border-orange-400" : ""}
