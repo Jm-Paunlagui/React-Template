@@ -1,6 +1,7 @@
 // (See full SearchBar in SearchBar.jsx — this is the standalone form version)
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 export function SearchInput({ value = "", onChange, onSubmit, placeholder = "Search…", disabled = false, loading = false, suggestions = [], onSuggestionSelect, debounce = 0, size = "md" }) {
     const [local, setLocal] = useState(value);
@@ -52,7 +53,7 @@ export function SearchInput({ value = "", onChange, onSubmit, placeholder = "Sea
           bg-white dark:bg-[#1a1030] text-black/85 dark:text-white/85 placeholder-grey-400
           border-grey-300 dark:border-grey-700
           focus:outline-none focus:ring-2 focus:ring-orange-400/30 focus:border-orange-400
-          transition-all duration-200 disabled:opacity-50
+          ${TRANSITION_COLORS} disabled:opacity-50
           ${SZ[size] ?? SZ.md}`}
             />
             <span className="absolute -translate-y-1/2 right-3 top-1/2">
@@ -66,7 +67,7 @@ export function SearchInput({ value = "", onChange, onSubmit, placeholder = "Sea
                                 onChange?.("");
                             }}
                         >
-                            <XMarkIcon className="w-4 h-4 transition-colors text-grey-400 hover:text-orange-400" />
+                            <XMarkIcon className={`w-4 h-4 ${TRANSITION_COLORS} text-grey-400 hover:text-orange-400`} />
                         </button>
                     )
                 )}

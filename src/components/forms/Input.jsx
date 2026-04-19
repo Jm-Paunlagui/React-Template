@@ -12,7 +12,7 @@
  *   variant     — 'default'|'filled'|'underline'
  */
 
-import { TRANSITION_COLORS, TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 const SZ = {
     sm: "px-3 py-1.5 text-xs rounded-lg",

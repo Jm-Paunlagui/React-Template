@@ -770,6 +770,21 @@
 .transition-opacity       { transition: opacity var(--duration-normal) var(--ease-standard); }
 .transition-scale-spring  { transition: transform var(--duration-moderate) var(--ease-spring); }
 
+/*
+ * Button — spring transform + shadow, fast bg/color/border.
+ * The physical lift uses spring easing; colour swaps stay fast and crisp.
+ */
+.transition-button {
+    transition:
+        transform        var(--duration-moderate) var(--ease-spring),
+        box-shadow       var(--duration-moderate) var(--ease-spring),
+        background-color var(--duration-fast)     var(--ease-standard),
+        color            var(--duration-fast)     var(--ease-standard),
+        border-color     var(--duration-fast)     var(--ease-standard),
+        opacity          var(--duration-normal)   var(--ease-decelerate);
+    will-change: transform;
+}
+
 /* ── Hover lift patterns ─────────────────────────────────────────────────── */
 .hover-lift {
     transition: transform var(--duration-moderate) var(--ease-spring), box-shadow var(--duration-moderate) var(--ease-standard);

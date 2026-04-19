@@ -53,7 +53,7 @@ import { useCallback, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 // Animation/transition tokens
-import { ANIMATE_SLIDE_LEFT, ANIMATE_SLIDE_RIGHT, TRANSITION_COLORS, TRANSITION_SMOOTH, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
+import { ANIMATE_SLIDE_LEFT, ANIMATE_SLIDE_RIGHT, TRANSITION_COLORS, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
 
 // ── UI component library ──────────────────────────────────────────────────────
 import { Avatar } from "../ui/Avatar";
@@ -163,7 +163,7 @@ function FlatNavItem({ item, collapsed, colorKey = "orange", danger = false }) {
             <div
                 className={`
                     flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio
-                    ${TRANSITION_SMOOTH}
+                    ${TRANSITION_COLORS}
                     ${collapsed ? "justify-center px-0! w-10 h-10 mx-auto" : ""}
                     ${danger ? "text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10" : isActive ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-grey-600 dark:text-grey-400 ${col.hoverBg} ${col.hoverText}`}
                 `}
@@ -230,7 +230,7 @@ function SidebarGroup({ group, collapsed, currentPath }) {
                                 <div
                                     className={`
                                         w-9 h-9 flex items-center justify-center rounded-xl
-                                        ${TRANSITION_SMOOTH}
+                                        ${TRANSITION_COLORS}
                                         ${active ? `${col.activeBg} ${col.activeText}` : `text-grey-400 dark:text-grey-500 ${col.hoverBg} ${col.hoverText}`}
                                     `}
                                 >
@@ -275,7 +275,7 @@ function SidebarGroup({ group, collapsed, currentPath }) {
                                     className={`
                                         flex items-center gap-2.5 px-3 py-2 rounded-lg
                                         text-sm font-aumovio
-                                        ${TRANSITION_SMOOTH}
+                                        ${TRANSITION_COLORS}
                                         ${active ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-grey-600 dark:text-grey-400 ${col.hoverBg} ${col.hoverText}`}
                                     `}
                                 >

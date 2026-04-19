@@ -24,7 +24,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { ACCENT_COLOR_BORDER, ANIMATE_SCALE_IN, ANIMATE_SCALE_OUT, ANIMATE_SLIDE_DOWN, BASE_COLOR_TEXT, DELAY_1, MAIN_FOREGROUND_COLOR_TEXT, MAIN_OVERLAY_COLOR_BG, MAIN_PULSE_COLOR_BG, SECONDARY_COLOR_TEXT, SUBTITLE_COLOR_TEXT, TITLE_COLOR_TEXT, TRANSITION_COLORS, TRANSITION_SMOOTH, TRANSITION_SNAP, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
+import { ACCENT_COLOR_BORDER, ANIMATE_SCALE_IN, ANIMATE_SCALE_OUT, ANIMATE_SLIDE_DOWN, BASE_COLOR_TEXT, DELAY_1, MAIN_FOREGROUND_COLOR_TEXT, MAIN_OVERLAY_COLOR_BG, MAIN_PULSE_COLOR_BG, SECONDARY_COLOR_TEXT, SUBTITLE_COLOR_TEXT, TITLE_COLOR_TEXT, TRANSITION_COLORS, TRANSITION_SNAP, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
 import { AuthMiddleware } from "../../middleware/authentication/AuthMiddleware";
 import httpClient from "../../middleware/HttpClient";
 
@@ -55,7 +55,7 @@ const NavItem = ({ item }) => (
         <div
             className={`
                 ${item.current ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow` : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
-                px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_SMOOTH} cursor-pointer
+                px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_COLORS} cursor-pointer
             `}
         >
             {item.name}
@@ -69,7 +69,7 @@ const DropdownGroup = ({ label, isActive: active, isLoading, items }) => (
         <div
             className={`
                 ${isLoading ? `${SECONDARY_COLOR_TEXT} animate-pulse ${MAIN_PULSE_COLOR_BG} cursor-default` : active ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow` : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
-                px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_SMOOTH} cursor-pointer
+                px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_COLORS} cursor-pointer
             `}
         >
             {isLoading ? <span className={`w-20 bg-orange-300 rounded animate-pulse text-transparent ${DELAY_1}`}>{label}</span> : label}
@@ -92,7 +92,7 @@ const DropdownGroup = ({ label, isActive: active, isLoading, items }) => (
                                 <div
                                     className={`
                                         flex items-center justify-between p-2.5 rounded-lg
-                                        ${TRANSITION_SMOOTH}
+                                        ${TRANSITION_COLORS}
                                         hover:bg-orange-50 dark:hover:bg-orange-400/5
                                         ${item.current ? "text-orange-400 font-aumovio-bold" : "text-grey-700 dark:text-grey-300 hover:text-orange-500"}
                                     `}
@@ -402,7 +402,7 @@ export default function Navbar() {
                                     <div
                                         className={`
                                             px-3 py-2 rounded-xl text-sm font-aumovio
-                                            ${TRANSITION_SMOOTH} block
+                                            ${TRANSITION_COLORS} block
                                             ${item.isLoading ? `${SECONDARY_COLOR_TEXT} animate-pulse bg-orange-100/50 cursor-default` : item.current ? `${MAIN_FOREGROUND_COLOR_TEXT} bg-orange-50 dark:bg-orange-400/10 ${ACCENT_COLOR_BORDER}` : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
                                         `}
                                     >

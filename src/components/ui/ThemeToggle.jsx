@@ -1,6 +1,6 @@
 import { ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { useTheme } from "../../contexts/theme/ThemeContext";
-import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 const ICONS = {
     system: ComputerDesktopIcon,
@@ -22,7 +22,7 @@ export function ThemeToggle({ size = "md", variant = "cycle" }) {
     if (variant === "cycle") {
         const Icon = ICONS[mode];
         return (
-            <button onClick={toggle} aria-label={LABELS[mode]} title={LABELS[mode]} className={`p-2 border border-transparent rounded-lg text-grey-500 dark:text-grey-400 hover:text-orange-400 hover:bg-orange-400/10 hover:border-orange-400/20 ${TRANSITION_SMOOTH}`}>
+            <button onClick={toggle} aria-label={LABELS[mode]} title={LABELS[mode]} className={`p-2 border border-transparent rounded-lg text-grey-500 dark:text-grey-400 hover:text-orange-400 hover:bg-orange-400/10 hover:border-orange-400/20 ${TRANSITION_COLORS}`}>
                 <Icon className={sz} />
             </button>
         );
@@ -35,7 +35,7 @@ export function ThemeToggle({ size = "md", variant = "cycle" }) {
                 const Icon = ICONS[m];
                 const active = mode === m;
                 return (
-                    <button key={m} onClick={() => setMode(m)} aria-label={LABELS[m]} title={LABELS[m]} className={`p-1.5 rounded-lg ${TRANSITION_SMOOTH} ${active ? "bg-white dark:bg-grey-700 text-orange-400 shadow-sm" : "text-grey-500 dark:text-grey-400 hover:text-orange-400"}`}>
+                    <button key={m} onClick={() => setMode(m)} aria-label={LABELS[m]} title={LABELS[m]} className={`p-1.5 rounded-lg ${TRANSITION_COLORS} ${active ? "bg-white dark:bg-grey-700 text-orange-400 shadow-sm" : "text-grey-500 dark:text-grey-400 hover:text-orange-400"}`}>
                         <Icon className={sz} />
                     </button>
                 );

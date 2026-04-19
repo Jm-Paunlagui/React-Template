@@ -9,6 +9,7 @@
  */
 import { CheckIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef } from "react";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 export function Checkbox({ id, name, label, checked = false, onChange, disabled = false, indeterminate = false, description, variant = "default", error }) {
     const ref = useRef(null);
@@ -20,7 +21,7 @@ export function Checkbox({ id, name, label, checked = false, onChange, disabled 
         <div className="relative w-4 h-4 shrink-0">
             <input ref={ref} type="checkbox" id={id ?? name} name={name} checked={checked} onChange={onChange} disabled={disabled} className="sr-only peer" />
             <div
-                className={`w-4 h-4 rounded border-2 transition-all duration-150 flex items-center justify-center
+                className={`w-4 h-4 rounded border-2 ${TRANSITION_COLORS} flex items-center justify-center
         ${checked || indeterminate ? "bg-orange-400 border-orange-400" : "bg-white dark:bg-grey-800 border-grey-300 dark:border-grey-600 peer-hover:border-orange-400"}
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
         ${error ? "border-danger-400" : ""}`}
@@ -35,7 +36,7 @@ export function Checkbox({ id, name, label, checked = false, onChange, disabled 
         return (
             <label
                 className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer
-      transition-all duration-200 font-aumovio
+      ${TRANSITION_COLORS} font-aumovio
       ${checked ? "border-orange-400 bg-orange-50 dark:bg-orange-400/5" : "border-grey-200 dark:border-grey-700 bg-white dark:bg-[#1a1030] hover:border-orange-300"}
       ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
             >

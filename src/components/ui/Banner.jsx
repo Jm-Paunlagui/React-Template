@@ -14,6 +14,7 @@ import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { TRANSITION_OPACITY } from "../../assets/styles/pre-set-styles";
 
 const BANNERS = {
     info: "bg-purple-400 text-white",
@@ -32,8 +33,6 @@ export function Banner({ variant = "promo", sticky = false, dismissible = true, 
         onDismiss?.();
     };
 
-    // Import transition constant
-    const { TRANSITION_OPACITY } = require("../../assets/styles/pre-set-styles");
     return (
         <div className={`w-full z-50 font-aumovio ${BANNERS[variant]} ${sticky ? "sticky top-0" : ""}`}>
             <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4 flex-wrap">

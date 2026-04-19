@@ -12,7 +12,7 @@
  *   image     — { src, alt, height? }
  *   children
  */
-import { TRANSITION_SMOOTH, TRANSITION_TRANSFORM_SPRING } from "../../assets/styles/pre-set-styles";
+import { HOVER_LIFT, TRANSITION_SMOOTH, TRANSITION_TRANSFORM_SPRING } from "../../assets/styles/pre-set-styles";
 
 const VARIANTS = {
     default: "bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700 shadow-sm",
@@ -34,7 +34,7 @@ export function Card({ variant = "default", padding = "md", hover = false, click
             className={`rounded-xl overflow-hidden font-aumovio
         ${TRANSITION_SMOOTH}
         ${VARIANTS[variant] ?? VARIANTS.default}
-        ${hover || clickable ? `${TRANSITION_TRANSFORM_SPRING} hover:-translate-y-1 hover:shadow-xl cursor-pointer` : ""}
+        ${hover || clickable ? `${HOVER_LIFT} cursor-pointer` : ""}
         ${clickable ? "text-left w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400" : ""}
         ${className}`}
         >

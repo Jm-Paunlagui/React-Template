@@ -6,6 +6,7 @@
  *   value, onChange, label, placeholder, error, disabled, multiple, size
  */
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 export function Select({ options = [], value, onChange, label, placeholder = "Select…", error, disabled = false, multiple = false, size = "md", id, name }) {
     const inputId = id ?? name;
@@ -42,7 +43,7 @@ export function Select({ options = [], value, onChange, label, placeholder = "Se
                     onChange={(e) => onChange?.(multiple ? [...e.target.selectedOptions].map((o) => o.value) : e.target.value)}
                     className={`w-full rounded-xl border px-3 pr-8 font-aumovio appearance-none cursor-pointer
             bg-white dark:bg-[#1a1030] text-black/85 dark:text-white/85
-            focus:outline-none focus:ring-2 focus:shadow-md transition-all duration-200
+            focus:outline-none focus:ring-2 focus:shadow-md ${TRANSITION_COLORS}
             disabled:opacity-50 disabled:cursor-not-allowed
             ${SZ[size] ?? SZ.md}
             ${error ? "border-danger-400 focus:ring-danger-400/30" : "border-grey-300 dark:border-grey-700 focus:ring-orange-400/30 focus:border-orange-400"}`}

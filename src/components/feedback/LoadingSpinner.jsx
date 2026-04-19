@@ -7,6 +7,8 @@
  *   label    — optional text shown below the spinner
  */
 
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
+
 const SIZES = {
     sm: "w-5 h-5 border-2",
     md: "w-8 h-8 border-[3px]",
@@ -25,7 +27,7 @@ export function LoadingSpinner({ size = "md", fullPage = false, label }) {
     );
 
     if (fullPage) {
-        return <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14] transition-colors duration-300">{spinner}</div>;
+        return <div className={`flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14] ${TRANSITION_COLORS}`}>{spinner}</div>;
     }
 
     return <div className="flex items-center justify-center py-12">{spinner}</div>;

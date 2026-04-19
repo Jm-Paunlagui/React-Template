@@ -12,7 +12,7 @@
  */
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
-import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
+import { ANIMATE_FADE_IN, ANIMATE_SCALE_IN, TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 const SIZES = {
     sm: "max-w-sm",
@@ -47,11 +47,11 @@ export function Modal({ open, onClose, title, size = "md", variant = "default", 
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+            <div className={`absolute inset-0 bg-black/50 backdrop-blur-sm ${ANIMATE_FADE_IN}`} onClick={onClose} />
             <div
                 className={`relative w-full ${SIZES[size] ?? SIZES.md}
         bg-white dark:bg-[#1a1030] rounded-2xl shadow-2xl
-        animate-scale-in overflow-hidden font-aumovio ${VARIANTS[variant]}`}
+        ${ANIMATE_SCALE_IN} overflow-hidden font-aumovio ${VARIANTS[variant]}`}
             >
                 {/* Header */}
                 {title && (

@@ -15,7 +15,7 @@
 
 import { CheckCircleIcon, ExclamationTriangleIcon, InformationCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
+import { ANIMATE_FADE_IN, TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 const CONFIG = {
     info: {
@@ -56,7 +56,6 @@ export function Alert({ variant = "info", title, children, icon: CustomIcon, dis
 
     if (!visible) return null;
 
-    const { ANIMATE_FADE_IN } = require("../../assets/styles/pre-set-styles");
     return (
         <div
             role="alert"

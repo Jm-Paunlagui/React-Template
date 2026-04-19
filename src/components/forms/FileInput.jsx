@@ -11,7 +11,7 @@
  */
 import { CloudArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
-import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+import { TRANSITION_COLORS, TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
 
 export function FileInput({ label, name, accept, multiple = false, disabled = false, onChange, maxSize, error, preview = false, dropzone = true }) {
     const ref = useRef(null);
@@ -40,7 +40,7 @@ export function FileInput({ label, name, accept, multiple = false, disabled = fa
                     multiple={multiple}
                     disabled={disabled}
                     onChange={(e) => handle(e.target.files)}
-                    className={`block w-full text-sm text-grey-500 dark:text-grey-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-aumovio-bold file:text-xs file:bg-orange-400/10 file:text-orange-400 hover:file:bg-orange-400 hover:file:text-white file:cursor-pointer ${TRANSITION_SMOOTH}`}
+                    className={`block w-full text-sm text-grey-500 dark:text-grey-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-aumovio-bold file:text-xs file:bg-orange-400/10 file:text-orange-400 hover:file:bg-orange-400 hover:file:text-white file:cursor-pointer ${TRANSITION_COLORS}`}
                 />
             </div>
         );

@@ -110,7 +110,7 @@ export const TEXT_FIELD = `w-full p-2 font-aumovio-bold tracking-wider rounded-l
 // ============================================================================
 export const DEFAULT_BUTTON_TRANSITION = `border border-transparent rounded-lg
   hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-lg transition-all duration-300`;
+  hover:shadow-lg transition-button`;
 
 // ============================================================================
 // BUTTON VARIANTS
@@ -484,6 +484,13 @@ export const TRANSITION_LAZY = "transition-lazy";
 
 /** color + background-color + border-color, 150ms standard. */
 export const TRANSITION_COLORS = "transition-colors-fast";
+
+/**
+ * Button: spring transform + shadow (350ms spring) + fast bg/color/border (150ms standard).
+ * Gives physical lift feel while keeping colour swaps instant and crisp.
+ * Use on every interactive button element.
+ */
+export const TRANSITION_BUTTON = "transition-button";
 
 /** transform only, 350ms spring easing with will-change. */
 export const TRANSITION_TRANSFORM_SPRING = "transition-transform-spring";

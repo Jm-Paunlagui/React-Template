@@ -7,6 +7,8 @@
  *   variant — 'default'|'card'|'button-group'
  *   orientation — 'vertical'|'horizontal'
  */
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
+
 export function Radio({ name, options = [], value, onChange, label: groupLabel, error, disabled = false, variant = "default", orientation = "vertical" }) {
     if (variant === "button-group")
         return (
@@ -16,7 +18,7 @@ export function Radio({ name, options = [], value, onChange, label: groupLabel, 
                     {options.map((opt) => (
                         <label
                             key={opt.value}
-                            className={`px-4 py-2 text-sm font-aumovio-bold cursor-pointer transition-colors
+                            className={`px-4 py-2 text-sm font-aumovio-bold cursor-pointer ${TRANSITION_COLORS}
               ${opt.disabled || disabled ? "opacity-40 cursor-not-allowed" : ""}
               ${value === opt.value ? "bg-orange-400 text-white" : "bg-white dark:bg-[#1a1030] text-grey-600 dark:text-grey-300 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-400"}`}
                         >
@@ -38,7 +40,7 @@ export function Radio({ name, options = [], value, onChange, label: groupLabel, 
                         className={`flex items-start gap-2.5 cursor-pointer
               ${
                   variant === "card"
-                      ? `p-4 rounded-xl border transition-all duration-200
+                      ? `p-4 rounded-xl border ${TRANSITION_COLORS}
                 ${value === opt.value ? "border-orange-400 bg-orange-50 dark:bg-orange-400/5" : "border-grey-200 dark:border-grey-700 hover:border-orange-300"}`
                       : ""
               }
@@ -47,7 +49,7 @@ export function Radio({ name, options = [], value, onChange, label: groupLabel, 
                         <div className="relative shrink-0 mt-0.5">
                             <input type="radio" name={name} value={opt.value} checked={value === opt.value} onChange={() => !opt.disabled && !disabled && onChange?.(opt.value)} disabled={opt.disabled || disabled} className="sr-only" />
                             <div
-                                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-150
+                                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${TRANSITION_COLORS}
                 ${value === opt.value ? "border-orange-400 bg-orange-400" : "border-grey-300 dark:border-grey-600 hover:border-orange-400 bg-white dark:bg-grey-800"}`}
                             >
                                 {value === opt.value && <div className="w-1.5 h-1.5 rounded-full bg-white" />}

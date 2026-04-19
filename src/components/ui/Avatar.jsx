@@ -10,6 +10,8 @@
  *   bordered  — boolean
  *   stacked   — boolean (for Avatar.Group)
  */
+import { HOVER_SCALE } from "../../assets/styles/pre-set-styles";
+
 const SIZES = {
     xs: { wrap: "w-6 h-6", text: "text-xs", dot: "w-1.5 h-1.5" },
     sm: { wrap: "w-8 h-8", text: "text-xs", dot: "w-2 h-2" },
@@ -47,7 +49,7 @@ export function Avatar({ src, name = "", size = "md", shape = "circle", status, 
     const radius = shape === "circle" ? "rounded-full" : "rounded-lg";
 
     return (
-        <div className={`relative inline-flex shrink-0 ${sz.wrap} ${stacked ? "-ml-3 first:ml-0" : ""}`}>
+        <div className={`relative inline-flex shrink-0 ${sz.wrap} ${stacked ? "-ml-3 first:ml-0" : HOVER_SCALE}`}>
             {src ? (
                 <img
                     src={src}

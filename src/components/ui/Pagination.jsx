@@ -12,7 +12,7 @@
  */
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 function buildRange(start, end) {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
@@ -54,7 +54,7 @@ export function Pagination({ page, totalPages, onChange, siblingCount = 1, showE
             aria-label={typeof label === "string" ? label : undefined}
             aria-current={label === page ? "page" : undefined}
             className={`flex items-center justify-center font-aumovio-bold shrink-0
-        border ${TRANSITION_SMOOTH} ${sz} ${radius}
+        border ${TRANSITION_COLORS} ${sz} ${radius}
         ${disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
         ${label === page ? "bg-orange-400 text-white border-orange-400 shadow-lg shadow-orange-400/30" : label === "..." ? "bg-transparent border-transparent text-grey-400 cursor-default hover:bg-transparent" : "bg-white dark:bg-[#1a1030] border-grey-200 dark:border-grey-700 text-black/70 dark:text-white/70 hover:border-orange-400 hover:text-orange-400 dark:hover:border-orange-400"}`}
         >

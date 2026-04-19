@@ -4,7 +4,7 @@
  * Props:
  *   label, name, type, value, onChange, error, disabled, required, size
  */
-import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+import { TRANSITION_COLORS, TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
 export function FloatingLabel({ label, name, type = "text", value = "", onChange, error, disabled = false, required = false, id }) {
     const inputId = id ?? name;
     const filled = value !== "" && value !== null && value !== undefined;
@@ -22,7 +22,7 @@ export function FloatingLabel({ label, name, type = "text", value = "", onChange
                 placeholder=" "
                 className={`peer w-full px-3.5 pt-5 pb-2 text-sm rounded-xl border
           bg-white dark:bg-[#1a1030] text-black/85 dark:text-white/85
-          focus:outline-none focus:ring-2 focus:shadow-md ${TRANSITION_SMOOTH}
+          focus:outline-none focus:ring-2 focus:shadow-md ${TRANSITION_COLORS}
           disabled:opacity-50 disabled:cursor-not-allowed placeholder-transparent
           ${error ? "border-danger-400 focus:ring-danger-400/30" : "border-grey-300 dark:border-grey-700 focus:ring-orange-400/30 focus:border-orange-400"}`}
             />

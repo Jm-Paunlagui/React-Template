@@ -12,9 +12,11 @@
  *   rounded  — boolean (pill shape)
  *   onClick, type, className, children
  */
+import { RIPPLE_HOST, TRANSITION_BUTTON } from "../../assets/styles/pre-set-styles";
+
 const BASE = [
     "inline-flex items-center justify-center gap-2 font-aumovio-bold tracking-wide",
-    "transition-all duration-300 ease-out",
+    TRANSITION_BUTTON,
     "hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98]",
     "backface-hidden border",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#0D0D14]",
@@ -41,12 +43,25 @@ const SIZES = {
 };
 
 export default function Button({ variant = "primary", size = "md", loading = false, disabled = false, fullWidth = false, leftIcon: LeftIcon, rightIcon: RightIcon, rounded = false, onClick, type = "button", className = "", children }) {
+    const handleClick = (e) => {
+        onClick?.(e);
+        const btn = e.currentTarget;
+        const circle = document.createElement("span");
+        const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+        const radius = diameter / 2;
+        const rect = btn.getBoundingClientRect();
+        circle.style.cssText = `width:${diameter}px;height:${diameter}px;left:${e.clientX - rect.left - radius}px;top:${e.clientY - rect.top - radius}px`;
+        circle.classList.add("ripple");
+        btn.querySelector(".ripple")?.remove();
+        btn.appendChild(circle);
+    };
+
     return (
         <button
             type={type}
-            onClick={onClick}
+            onClick={handleClick}
             disabled={disabled || loading}
-            className={`${BASE} ${VARIANTS[variant] ?? VARIANTS.primary}
+            className={`${BASE} ${RIPPLE_HOST} ${VARIANTS[variant] ?? VARIANTS.primary}
         ${SIZES[size] ?? SIZES.md}
         ${fullWidth ? "w-full" : ""}
         ${rounded ? "rounded-full!" : ""}

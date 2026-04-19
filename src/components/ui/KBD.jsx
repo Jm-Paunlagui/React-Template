@@ -6,7 +6,7 @@
  *   size    — 'sm'|'md'|'lg'
  *   variant — 'default'|'dark'
  */
-import { TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 const SZ = {
     sm: "text-[10px] px-1.5 py-0.5",
     md: "text-xs px-2 py-1",
@@ -30,7 +30,7 @@ export function KBD({ keys = [], size = "md", variant = "default" }) {
                     <kbd
                         key={key}
                         className={`inline-flex items-center justify-center rounded font-aumovio-bold
-            ${TRANSITION_SMOOTH} ${SZ[size] ?? SZ.md} ${V[variant] ?? V.default}`}
+            ${TRANSITION_COLORS} ${SZ[size] ?? SZ.md} ${V[variant] ?? V.default}`}
                     >
                         {key}
                     </kbd>

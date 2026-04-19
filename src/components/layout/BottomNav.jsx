@@ -8,6 +8,7 @@
  *   variant — 'default' | 'pill' | 'floating'
  */
 import { NavLink } from "react-router-dom";
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 export function BottomNav({ items = [], variant = "default" }) {
     const base = {
@@ -23,7 +24,7 @@ export function BottomNav({ items = [], variant = "default" }) {
                     {({ isActive }) => (
                         <div
                             className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl
-              transition-all duration-200 cursor-pointer relative
+              ${TRANSITION_COLORS} cursor-pointer relative
               ${isActive ? "text-orange-400" : "text-grey-400 hover:text-grey-600 dark:hover:text-grey-300"}`}
                         >
                             <div className="relative">

@@ -11,6 +11,8 @@
  *   circular  — boolean (ring variant)
  *   radius    — number (for circular, default 36)
  */
+import { TRANSITION_LAZY } from "../../assets/styles/pre-set-styles";
+
 const COLORS = {
     primary: "bg-orange-400",
     success: "bg-success-400",
@@ -25,8 +27,6 @@ const HEIGHTS = { xs: "h-1", sm: "h-1.5", md: "h-2.5", lg: "h-4" };
 export function Progress({ value = 0, max = 100, variant = "primary", size = "md", label = false, animated = false, circular = false, radius = 36 }) {
     const pct = Math.min(100, Math.max(0, (value / max) * 100));
 
-    // Import transition constant
-    const { TRANSITION_LAZY } = require("../../assets/styles/pre-set-styles");
     if (circular) {
         const circ = 2 * Math.PI * radius;
         const dash = circ - (pct / 100) * circ;

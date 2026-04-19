@@ -9,8 +9,8 @@
  *   count    — number (repeat)
  *   animate  — boolean
  */
-import { SKELETON_SURFACE, TRANSITION_SMOOTH } from "../../assets/styles/pre-set-styles";
-const base = `${SKELETON_SURFACE} rounded ${TRANSITION_SMOOTH}`;
+import { SKELETON_SURFACE } from "../../assets/styles/pre-set-styles";
+const base = `${SKELETON_SURFACE} rounded`;
 
 function SkeletonLine({ w = "100%", h = "0.875rem" }) {
     return <div className={base} style={{ width: w, height: h }} />;
