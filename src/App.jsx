@@ -25,11 +25,11 @@ const LoginView = lazy(() => import("./features/auth/Login.view"));
 const LogoutView = lazy(() => import("./features/auth/Logout.view"));
 const DashboardView = lazy(() => import("./features/dashboard/Dashboard.view"));
 
-// Role constants — your app defines these
-// Permission strings (AREAS) are NOT here — they are inline at each route
-const ROLES = { SADMIN: 3, ADMIN: 2, USER: 1 };
+// Role constants — must match the strings stored in T_EMP_MGMT_ADMIN.EMP_ROLE
+// and returned in the JWT payload as user.role
+const ROLES = { SADMIN: "SuperAdmin", ADMIN: "Admin", USER: "User" };
 
-const BARE_ROUTES = ["/auths", "/sign-up", "/", "/user/logout", "/unauthorized", "/login-timeout", "/invalid-token", "/bad-request", "/page-not-found", "/service-is-currently-unavailable"];
+const BARE_ROUTES = ["/auth", "/sign-up", "/", "/user/logout", "/unauthorized", "/login-timeout", "/invalid-token", "/bad-request", "/page-not-found", "/service-is-currently-unavailable"];
 
 function isBareRoute(pathname) {
     return BARE_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/"));
@@ -69,14 +69,13 @@ function PageLoader() {
 
 function AppContent() {
     const { pathname } = useLocation();
-    const { layout, sidebarOpen } = useLayout();
+    const { layout } = useLayout();
     const bare = isBareRoute(pathname);
-    const useSidebar = !bare && layout === "sidebar";
 
     return (
         <div className="flex min-h-screen bg-white dark:bg-[#0D0D14] transition-colors duration-300">
             <ConditionalSidebar />
-            <div className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ${useSidebar ? (sidebarOpen ? "ml-auto" : "ml-16") : ""}`}>
+            <div className="flex flex-col flex-1 min-h-screen transition-all duration-300">
                 <ConditionalNavbar />
                 <main className="grow">
                     <Suspense fallback={<PageLoader />}>
