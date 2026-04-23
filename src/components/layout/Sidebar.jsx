@@ -28,6 +28,9 @@ import { ThemeToggle } from "../ui/ThemeToggle";
 import { Tooltip } from "../ui/Tooltip";
 import { useNav } from "./useNav";
 
+const APP_DISPLAY_NAME = import.meta.env.VITE_APP_NAME || null;
+const APP_SHORT_NAME = import.meta.env.VITE_APP_NAME_SHORT || null;
+
 // ── Group colour palette ──────────────────────────────────────────────────────
 const GROUP_COLOR_MAP = {
     orange: {
@@ -264,18 +267,35 @@ export default function Sidebar() {
 
     return (
         <aside className={["sticky top-0 z-40 h-screen self-start flex flex-col shrink-0", "bg-white dark:bg-[#0d0d14]", "border-r border-grey-100 dark:border-grey-800", "shadow-[1px_0_8px_0_rgba(0,0,0,0.04)] dark:shadow-none", sidebarOpen ? `${ANIMATE_SLIDE_RIGHT} w-auto` : `${ANIMATE_SLIDE_LEFT} w-16`].join(" ")}>
-            {/* Header: Logo + collapse toggle */}
-            <div className={`flex items-center h-16 md:h-20 lg:h-24 shrink-0 border-b border-grey-100 dark:border-grey-800 ${sidebarOpen ? "px-4 gap-3 justify-between" : "px-2 justify-center"}`}>
-                {sidebarOpen && (
-                    <NavLink to="/" className="flex items-center flex-1 min-w-0 overflow-hidden">
-                        <Logo className="w-auto h-16 md:h-20 lg:h-24" />
-                    </NavLink>
+            {/* Header: Logo + app title + collapse toggle */}
+            <div className={`flex shrink-0 border-b border-grey-100 dark:border-grey-800 ${sidebarOpen ? "flex-col px-4 py-3" : "flex-col items-center px-2 gap-1 py-3"}`}>
+                {sidebarOpen ? (
+                    <div className="flex items-start justify-between gap-2">
+                        <NavLink to="/" className="flex flex-col items-start min-w-0 overflow-hidden">
+                            <Logo className="w-auto h-16 md:h-20 lg:h-24" />
+                            {APP_DISPLAY_NAME && <span className="text-sm font-aumovio-bold text-black/80 dark:text-white/85 tracking-wide truncate mt-0.5">{APP_DISPLAY_NAME}</span>}
+                        </NavLink>
+                        <Tooltip content="Collapse" placement="right" delay={300}>
+                            <button onClick={toggleSidebar} aria-label="Collapse sidebar" className={["p-1.5 rounded-lg shrink-0 mt-1", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
+                                <ChevronDoubleLeftIcon className="w-4 h-4" />
+                            </button>
+                        </Tooltip>
+                    </div>
+                ) : (
+                    <>
+                        <Tooltip content={APP_DISPLAY_NAME ?? "Home"} placement="right" delay={100}>
+                            <NavLink to="/" className="flex flex-col items-center gap-0.5">
+                                {/* <Logo className="w-auto h-8" /> */}
+                                {/* {(APP_SHORT_NAME || APP_DISPLAY_NAME) && <span className="text-[9px] font-aumovio-bold text-grey-400 dark:text-grey-500 tracking-wider uppercase leading-none text-center">{APP_SHORT_NAME || APP_DISPLAY_NAME}</span>} */}
+                            </NavLink>
+                        </Tooltip>
+                        <Tooltip content="Expand" placement="right" delay={300}>
+                            <button onClick={toggleSidebar} aria-label="Expand sidebar" className={["p-1.5 rounded-lg shrink-0", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
+                                <ChevronDoubleRightIcon className="w-4 h-4" />
+                            </button>
+                        </Tooltip>
+                    </>
                 )}
-                <Tooltip content={sidebarOpen ? "Collapse" : "Expand"} placement="right" delay={300}>
-                    <button onClick={toggleSidebar} aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"} className={["p-1.5 rounded-lg shrink-0", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
-                        {sidebarOpen ? <ChevronDoubleLeftIcon className="w-4 h-4" /> : <ChevronDoubleRightIcon className="w-4 h-4" />}
-                    </button>
-                </Tooltip>
             </div>
 
             {/* User card */}
