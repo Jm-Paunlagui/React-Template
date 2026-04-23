@@ -18,6 +18,7 @@ import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
 import Sidebar from "./components/layout/Sidebar";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
+import Breadcrumb from "./components/ui/Breadcrumb";
 import { useLayout } from "./contexts/layout/LayoutContext";
 import { BadRequest, InvalidToken, LoginTimeOut, PageNotFound, ServiceUnavailable, Unauthorized } from "./views/errors/ClientErrorResponses";
 
@@ -51,6 +52,14 @@ function ConditionalSidebar() {
     return <Sidebar />;
 }
 
+function ConditionalBreadcrumb() {
+    const { pathname } = useLocation();
+    const { layout } = useLayout();
+    if (isBareRoute(pathname)) return null;
+    //if (layout === "sidebar") return null;
+    return <Breadcrumb auto homeIcon separator="chevron" size="md" variant="bar" />;
+}
+
 function ConditionalFooter() {
     const { pathname } = useLocation();
     const { layout } = useLayout();
@@ -77,6 +86,7 @@ function AppContent() {
             <ConditionalSidebar />
             <div className="flex flex-col flex-1 min-h-screen transition-all duration-300">
                 <ConditionalNavbar />
+                <ConditionalBreadcrumb />
                 <main className="grow">
                     <Suspense fallback={<PageLoader />}>
                         <AppRoutes />
