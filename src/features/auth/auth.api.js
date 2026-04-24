@@ -3,37 +3,19 @@
  *
  * Only HTTP calls live here. No state, no side effects, no React.
  * All functions return the raw Axios response.
+ *
+ * Backend contract:
+ *   POST auth/login    { userId, password } → { data: { user, accessToken } }
+ *   POST auth/logout   (protected, clears HTTP-only cookies)
+ *   POST auth/refresh  (reads refreshToken HTTP-only cookie)
+ *   GET  auth/me       (protected, returns decoded JWT payload)
  */
 
 import httpClient from "../../middleware/HttpClient";
 
 export const authApi = {
-    /**
-     * Login with username + password.
-     * @param {{ username: string, password: string }} credentials
-     */
-    login: (credentials) => httpClient.post("user-auth/login", credentials),
-
-    /**
-     * Logout the current session on the server.
-     */
-    logout: () => httpClient.post("user-auth/logout"),
-
-    /**
-     * Verify the current JWT token.
-     * @param {string} token
-     */
-    verify: (token) => httpClient.post("user-auth/verify", { TOKEN: token }),
-
-    /**
-     * Register a new user account.
-     * @param {Object} userData
-     */
-    register: (userData) => httpClient.post("user-identity/register", userData),
-
-    /**
-     * Change password.
-     * @param {{ currentPassword: string, newPassword: string }} payload
-     */
-    changePassword: (payload) => httpClient.post("user-auth/change-password", payload),
+    login: (credentials) => httpClient.post("auth/login", credentials),
+    logout: () => httpClient.post("auth/logout"),
+    refresh: () => httpClient.post("auth/refresh"),
+    me: () => httpClient.get("auth/me"),
 };

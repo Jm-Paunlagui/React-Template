@@ -86,6 +86,16 @@ class HttpClient {
         this._client.interceptors.response.use(
             (response) => response,
             async (error) => {
+                // 498 — Session expired. Redirect to /invalid-token immediately.
+                // This must run BEFORE the CSRF retry block so an expired token
+                // is never mistaken for a CSRF failure.
+                if (error.response?.status === 498) {
+                    AuthMiddleware.signout();
+                    CsrfMiddleware.clearToken();
+                    window.location.replace("/invalid-token");
+                    return Promise.reject(error);
+                }
+
                 const originalRequest = error.config;
                 const errorCode = error.response?.data?.code;
                 const requiresRefresh = error.response?.data?.requiresRefresh;

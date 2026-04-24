@@ -1,23 +1,22 @@
 /**
  * Logout.view.jsx — Logout page.
- * Clears auth state on mount and redirects to login.
+ * Delegates to useAuth().logout which calls the backend (clears HTTP-only
+ * token cookies), clears local state, and navigates to /auth.
  */
 
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import { Spinner } from "../../components/ui/Spinner";
-import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
-import CsrfMiddleware from "../../middleware/security/CsrfMiddleware";
+import { useAuth } from "./auth.hook";
 
 export default function LogoutView() {
-    const navigate = useNavigate();
+    const { logout } = useAuth();
+    const hasRun = useRef(false);
 
     useEffect(() => {
-        AuthMiddleware.signout();
-        CsrfMiddleware.clearToken();
-        const timer = setTimeout(() => navigate("/auth"), 1500);
-        return () => clearTimeout(timer);
-    }, [navigate]);
+        if (hasRun.current) return;
+        hasRun.current = true;
+        logout();
+    }, [logout]);
 
     return <Spinner fullPage size="lg" label="Signing out…" />;
 }

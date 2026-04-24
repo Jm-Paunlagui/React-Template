@@ -7,7 +7,7 @@
 
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from "../../components/ui/toast.utils";
 import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
 import CsrfMiddleware from "../../middleware/security/CsrfMiddleware";
 import { authApi } from "./auth.api";
@@ -15,39 +15,58 @@ import { authApi } from "./auth.api";
 export const useAuth = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [integrityError, setIntegrityError] = useState(false);
+    const [rateLimitSeconds, setRateLimitSeconds] = useState(null);
+    const [accountLocked, setAccountLocked] = useState(false);
     const navigate = useNavigate();
 
     /**
-     * Log in with username + password.
-     * On success: sets token cookie, clears auth cache, redirects to dashboard.
+     * Log in with userId + password.
+     *
+     * The view uses "username" as the form field name (UX label).
+     * We map it to "userId" here to match the backend contract.
+     *
+     * The server sets the HTTP-only signed token + refreshToken cookies.
+     * We only store the user payload in localStorage for isAuth() fast-path.
      */
     const login = useCallback(
         async (credentials, redirectPath = "/dashboard") => {
             setLoading(true);
             setError(null);
+            setIntegrityError(false);
+            setAccountLocked(false);
             try {
-                const response = await authApi.login(credentials);
-                const token = response.data?.data?.token || response.data?.token;
-
-                if (!token) throw new Error("No token in response");
-
-                AuthMiddleware.authenticate(token, () => {
-                    // Store user data if returned
-                    const user = response.data?.data?.user || response.data?.user;
-                    if (user) {
-                        AuthMiddleware.setLocalStorage("user", {
-                            ...user,
-                            _lastVerified: Date.now(),
-                        });
-                    }
-                    navigate(redirectPath);
+                const response = await authApi.login({
+                    userId: credentials.username ?? credentials.userId,
+                    password: credentials.password,
                 });
 
+                const user = response.data?.data?.user;
+                if (user) {
+                    AuthMiddleware.setLocalStorage("user", {
+                        ...user,
+                        _lastVerified: Date.now(),
+                    });
+                }
+
+                AuthMiddleware.clearAuthCache();
+                navigate(redirectPath);
                 toast.success(response.data?.message || "Welcome!");
                 return true;
             } catch (err) {
                 const message = err.response?.data?.message || err.message || "Login failed";
+                const errorType = err.response?.data?.error?.type;
                 setError(message);
+                if (err.response?.status === 422 && errorType === "DataIntegrityError") {
+                    setIntegrityError(true);
+                } else if (err.response?.status === 429) {
+                    const details = err.response?.data?.error?.details ?? [];
+                    const retryDetail = details.find((d) => d.field === "retryAfter");
+                    const secs = parseInt(retryDetail?.issue, 10);
+                    if (!isNaN(secs)) setRateLimitSeconds(secs);
+                } else if (err.response?.status === 423) {
+                    setAccountLocked(true);
+                }
                 toast.error(message);
                 return false;
             } finally {
@@ -58,7 +77,8 @@ export const useAuth = () => {
     );
 
     /**
-     * Log out — calls server endpoint, then clears local auth state.
+     * Log out — calls server to clear HTTP-only cookies, then clears local state.
+     * Server failure is non-critical: local state is cleared regardless.
      */
     const logout = useCallback(async () => {
         try {
@@ -73,49 +93,10 @@ export const useAuth = () => {
         navigate("/auth");
     }, [navigate]);
 
-    /**
-     * Register a new user account.
-     */
-    const register = useCallback(
-        async (userData, redirectPath = "/auth") => {
-            setLoading(true);
-            setError(null);
-            try {
-                const response = await authApi.register(userData);
-                toast.success(response.data?.message || "Account created");
-                navigate(redirectPath);
-                return true;
-            } catch (err) {
-                const message = err.response?.data?.message || "Registration failed";
-                setError(message);
-                toast.error(message);
-                return false;
-            } finally {
-                setLoading(false);
-            }
-        },
-        [navigate],
-    );
-
-    /**
-     * Change password.
-     */
-    const changePassword = useCallback(async (payload) => {
-        setLoading(true);
+    const clearRateLimit = useCallback(() => {
+        setRateLimitSeconds(null);
         setError(null);
-        try {
-            const response = await authApi.changePassword(payload);
-            toast.success(response.data?.message || "Password changed");
-            return true;
-        } catch (err) {
-            const message = err.response?.data?.message || "Failed to change password";
-            setError(message);
-            toast.error(message);
-            return false;
-        } finally {
-            setLoading(false);
-        }
     }, []);
 
-    return { loading, error, login, logout, register, changePassword };
+    return { loading, error, integrityError, login, logout, rateLimitSeconds, clearRateLimit, accountLocked };
 };

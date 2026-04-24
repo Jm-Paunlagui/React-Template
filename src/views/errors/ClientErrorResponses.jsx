@@ -2790,7 +2790,7 @@ function UnauthorizedIllustration() {
                 ))}
             </div>
             <div
-                className="relative flex items-center justify-center border-4 border-purple-400 rounded-full bg-grey-100 dark:bg-grey-800"
+                className="relative flex items-center justify-center border-4 border-purple-400 rounded-full bg-grey-100 dark:bg-[#251d3a]"
                 style={{
                     width: 120,
                     height: 120,
@@ -3019,7 +3019,8 @@ function LoginTimeOutIllustration() {
    ══════════════════════════════════════════════════════════════════════════════ */
 export function InvalidToken() {
     useEffect(() => {
-        //AuthMiddleware.signout();
+        import.meta.env.VITE_ENV === "development" ? "" : AuthMiddleware.signout();
+        CsrfMiddleware.clearToken();
     }, []);
 
     return (
@@ -3150,7 +3151,7 @@ function ServiceUnavailableIllustration() {
     return (
         <div className="relative flex items-center justify-center" style={{ width: 220, height: 220 }}>
             <div className="relative" style={{ animation: "err-float 4s ease-in-out infinite" }}>
-                <div className="relative overflow-hidden border-2 bg-grey-100 dark:bg-grey-800 border-grey-300 dark:border-grey-600 rounded-xl" style={{ width: 110, height: 130 }}>
+                <div className="relative overflow-hidden border-2 bg-grey-100 dark:bg-[#251d3a] border-grey-300 dark:border-grey-600 rounded-xl" style={{ width: 110, height: 130 }}>
                     {[0, 1, 2, 3].map((i) => (
                         <div key={i} className="flex items-center gap-2 px-3 py-2 border-b border-grey-200 dark:border-grey-700">
                             <div
@@ -3222,6 +3223,308 @@ function ServiceUnavailableIllustration() {
     );
 }
 
+/* ══════════════════════════════════════════════════════════════════════════════
+   FINGERPRINT / SEAL DECORS  (422)
+   ══════════════════════════════════════════════════════════════════════════════ */
+function SealLeftDecor() {
+    const dotPositions = [
+        [18, "8%"],
+        [62, "16%"],
+        [28, "30%"],
+        [80, "24%"],
+        [44, "42%"],
+        [75, "52%"],
+        [20, "64%"],
+        [58, "70%"],
+        [10, "82%"],
+        [72, "88%"],
+        [40, "94%"],
+    ];
+
+    return (
+        <div className="absolute inset-0">
+            {/* Wax seal stamp */}
+            <div className="absolute" style={{ left: 8, top: "8%", animation: "err-floatxs 5s ease-in-out infinite" }}>
+                <svg width="150" height="150" viewBox="0 0 150 150" fill="none">
+                    <defs>
+                        <radialGradient id="seal-grad" cx="40%" cy="35%">
+                            <stop offset="0%" stopColor="#D85A30" />
+                            <stop offset="100%" stopColor="#7f2810" />
+                        </radialGradient>
+                    </defs>
+                    {/* Wax blob */}
+                    <path d="M75 10 C110 12 142 38 140 75 C138 112 110 142 75 140 C40 138 10 108 10 75 C10 42 40 8 75 10Z" fill="url(#seal-grad)" opacity="0.85" />
+                    {/* Embossed pattern rings */}
+                    <circle cx="75" cy="75" r="50" fill="none" stroke="#f97316" strokeWidth="1.5" opacity="0.4" />
+                    <circle cx="75" cy="75" r="38" fill="none" stroke="#f97316" strokeWidth="1" opacity="0.3" />
+                    {/* X mark — tampered */}
+                    <path d="M55 55 L95 95 M95 55 L55 95" stroke="#fca5a5" strokeWidth="4" strokeLinecap="round" style={{ animation: "err-pulse-op 2s ease-in-out infinite" }} />
+                    {/* Wax edge texture */}
+                    {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg, i) => (
+                        <ellipse key={i} cx={75 + 62 * Math.cos((deg * Math.PI) / 180)} cy={75 + 62 * Math.sin((deg * Math.PI) / 180)} rx="5" ry="3" fill="#b83c15" opacity="0.6" transform={`rotate(${deg}, ${75 + 62 * Math.cos((deg * Math.PI) / 180)}, ${75 + 62 * Math.sin((deg * Math.PI) / 180)})`} />
+                    ))}
+                </svg>
+            </div>
+
+            {/* Hash stream left side */}
+            {["a3f9·2c18", "INVALID→", "c42a·0d??", "sig≠hash", "b81d·5e90"].map((label, i) => (
+                <div
+                    key={i}
+                    className="absolute font-mono text-xs"
+                    style={{
+                        left: 10 + (i % 2) * 40,
+                        top: `${46 + i * 9}%`,
+                        color: i % 2 === 0 ? "#c04828" : "#6b7280",
+                        opacity: 0.45 + (i % 3) * 0.1,
+                        animation: `err-drift-${i % 2 === 0 ? "l" : "r"} ${2.5 + i * 0.3}s ${i * 0.2}s ease-in-out infinite`,
+                    }}
+                >
+                    {label}
+                </div>
+            ))}
+
+            {/* Broken chain links */}
+            <div className="absolute" style={{ left: 20, top: "75%", animation: "err-bob 4s ease-in-out infinite" }}>
+                <svg width="110" height="50" viewBox="0 0 110 50" fill="none" opacity="0.5">
+                    {/* Link 1 */}
+                    <ellipse cx="18" cy="25" rx="14" ry="9" fill="none" stroke="#6b7280" strokeWidth="3" />
+                    {/* Break gap */}
+                    <line x1="32" y1="20" x2="44" y2="20" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+                    <line x1="32" y1="30" x2="44" y2="30" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
+                    {/* Link 2 */}
+                    <ellipse cx="62" cy="25" rx="14" ry="9" fill="none" stroke="#6b7280" strokeWidth="3" />
+                    <line x1="76" y1="20" x2="88" y2="20" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+                    <line x1="76" y1="30" x2="88" y2="30" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
+                    {/* Link 3 — floating away */}
+                    <ellipse cx="102" cy="22" rx="8" ry="6" fill="none" stroke="#6b7280" strokeWidth="2.5" opacity="0.6" style={{ animation: "err-floatxs 2.5s ease-in-out infinite" }} />
+                </svg>
+            </div>
+
+            {/* Scattered dots (redacted / corrupted data) */}
+            {dotPositions.map(([left, top], i) => (
+                <div
+                    key={i}
+                    className="absolute rounded-full bg-orange-400"
+                    style={{
+                        left,
+                        top,
+                        width: i % 4 === 0 ? 3 : 2,
+                        height: i % 4 === 0 ? 3 : 2,
+                        opacity: 0.2 + (i % 3) * 0.12,
+                        animation: `err-twinkle ${1.3 + i * 0.35}s ${i * 0.15}s ease-in-out infinite`,
+                    }}
+                />
+            ))}
+
+            {/* Warning: REJECTED stamp */}
+            <div
+                className="absolute font-mono font-black text-xs border-2 rounded px-2 py-0.5"
+                style={{
+                    left: 18,
+                    top: "91%",
+                    borderColor: "#D85A30",
+                    color: "#D85A30",
+                    opacity: 0.5,
+                    transform: "rotate(-5deg)",
+                    animation: "err-pulse-op 2.5s ease-in-out infinite",
+                }}
+            >
+                SIG INVALID
+            </div>
+        </div>
+    );
+}
+
+function SealRightDecor() {
+    return (
+        <div className="absolute inset-0">
+            {/* Signature slip / envelope */}
+            <div className="absolute" style={{ right: 10, top: "6%", animation: "err-floatxs 5s 1s ease-in-out infinite" }}>
+                <svg width="140" height="100" viewBox="0 0 140 100" fill="none">
+                    <rect x="4" y="4" width="132" height="92" rx="6" fill="#111827" stroke="#374151" strokeWidth="1.5" />
+                    {/* Envelope flap */}
+                    <path d="M4 4 L70 52 L136 4Z" fill="#1f2937" stroke="#374151" strokeWidth="1" />
+                    {/* Contents — hash lines */}
+                    <text x="14" y="68" fontFamily="monospace" fontSize="7" fill="#6b7280">
+                        HMAC-SHA256
+                    </text>
+                    <rect x="14" y="74" width="80" height="4" rx="1" fill="#374151" />
+                    <rect x="14" y="81" width="100" height="4" rx="1" fill="#374151" />
+                    {/* Red X corner stamp */}
+                    <path d="M112 60 L130 80 M130 60 L112 80" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" style={{ animation: "err-pulse-op 1.5s ease-in-out infinite" }} />
+                </svg>
+            </div>
+
+            {/* Compare panel — two columns */}
+            <div className="absolute" style={{ right: 6, top: "32%", animation: "err-floatxs 4s ease-in-out infinite" }}>
+                <svg width="150" height="110" viewBox="0 0 150 110" fill="none" opacity="0.6">
+                    <rect x="0" y="0" width="150" height="110" rx="5" fill="#111827" stroke="#374151" strokeWidth="1" />
+                    <rect x="0" y="0" width="150" height="16" rx="5" fill="#1f2937" />
+                    <text x="8" y="11" fontFamily="monospace" fontSize="7" fill="#6b7280">
+                        SIGNATURE COMPARE
+                    </text>
+                    <line x1="75" y1="0" x2="75" y2="110" stroke="#374151" strokeWidth="0.8" />
+                    <text x="10" y="28" fontFamily="monospace" fontSize="6" fill="#22c55e">
+                        Expected
+                    </text>
+                    <text x="82" y="28" fontFamily="monospace" fontSize="6" fill="#ef4444">
+                        Received
+                    </text>
+                    {[
+                        ["a3f9", "a3f9", true],
+                        ["2c18", "2c18", true],
+                        ["e047", "e047", true],
+                        ["b81d", "b81d", true],
+                        ["c42a", "d99f", false],
+                        ["9e51", "3b7a", false],
+                    ].map(([exp, got, match], i) => (
+                        <g key={i}>
+                            <text x="10" y={40 + i * 11} fontFamily="monospace" fontSize="6.5" fill={match ? "#22c55e" : "#6b7280"}>
+                                {exp}
+                            </text>
+                            <text x="82" y={40 + i * 11} fontFamily="monospace" fontSize="6.5" fill={match ? "#22c55e" : "#ef4444"} style={!match ? { animation: "err-static 1.2s ease-in-out infinite" } : {}}>
+                                {got}
+                            </text>
+                            {!match && (
+                                <text x="60" y={40 + i * 11} fontFamily="monospace" fontSize="8" fill="#ef4444">
+                                    ≠
+                                </text>
+                            )}
+                        </g>
+                    ))}
+                </svg>
+            </div>
+
+            {/* Floating tamper badges */}
+            {["TAMPERED", "REPLAY?", "BAD KEY"].map((label, i) => (
+                <div
+                    key={i}
+                    className="absolute font-mono font-black text-xs border rounded px-2 py-0.5"
+                    style={{
+                        right: 12 + i * 8,
+                        top: `${72 + i * 6}%`,
+                        borderColor: "#D85A30",
+                        color: "#D85A30",
+                        opacity: 0.35 + i * 0.08,
+                        transform: `rotate(${-6 + i * 7}deg)`,
+                        animation: `err-pulse-op ${2 + i * 0.5}s ${i * 0.3}s ease-in-out infinite`,
+                    }}
+                >
+                    {label}
+                </div>
+            ))}
+
+            {/* Key icon — wrong/broken */}
+            <div className="absolute" style={{ right: 25, top: "55%", animation: "err-wander 6s 2s ease-in-out infinite" }}>
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" opacity="0.5">
+                    <circle cx="22" cy="22" r="14" fill="none" stroke="#6b7280" strokeWidth="3" />
+                    <circle cx="22" cy="22" r="7" fill="none" stroke="#6b7280" strokeWidth="2" />
+                    <line x1="32" y1="32" x2="54" y2="54" stroke="#6b7280" strokeWidth="3" strokeLinecap="round" />
+                    <line x1="44" y1="42" x2="50" y2="38" stroke="#6b7280" strokeWidth="2.5" strokeLinecap="round" />
+                    {/* Red X through key */}
+                    <path d="M10 10 L34 34 M34 10 L10 34" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" opacity="0.6" style={{ animation: "err-flicker 2s ease-in-out infinite" }} />
+                </svg>
+            </div>
+
+            {/* Hex corruption bottom */}
+            <div className="absolute" style={{ right: 0, top: "90%" }}>
+                <svg width="160" height="30" viewBox="0 0 160 30" fill="none" opacity="0.3">
+                    {["3F", "??", "C4", "XX", "A9", "00", "??", "B2", "FF", "!!"].map((h, i) => (
+                        <text key={i} x={i * 16 + 2} y={12 + (i % 2) * 10} fontFamily="monospace" fontSize="9" fill={["??", "XX", "!!"].includes(h) ? "#ef4444" : "#374151"} style={{ animation: `err-static ${1 + i * 0.12}s ${i * 0.06}s ease-in-out infinite` }}>
+                            {h}
+                        </text>
+                    ))}
+                </svg>
+            </div>
+        </div>
+    );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   422 — Unprocessable Entity (Signature Mismatch)
+   ══════════════════════════════════════════════════════════════════════════════ */
+export function SignatureMismatch() {
+    return (
+        <ErrorLayout
+            code="422"
+            title="The seal has been broken."
+            subtitle="Your request arrived intact — but the signature doesn't match. The payload may have been altered in transit, or the wrong signing key was used."
+            linkTo="/"
+            linkLabel="Start over"
+            accentClass="text-orange-400"
+            bgClass="bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[#0D0D14] dark:via-[#180a00] dark:to-[#0D0D14]"
+            illustration={<SignatureMismatchIllustration />}
+            leftDecor={<SealLeftDecor />}
+            rightDecor={<SealRightDecor />}
+        >
+            <div className="p-4 mt-2 text-sm text-left border bg-white/60 dark:bg-white/5 border-orange-400/20 rounded-xl text-grey-600 dark:text-grey-400 font-aumovio space-y-1">
+                <p className="font-aumovio-bold text-black/70 dark:text-white/70 mb-2">Common causes:</p>
+                <ul className="space-y-1 list-disc list-inside">
+                    <li>Payload was modified after signing</li>
+                    <li>Signing key mismatch or rotation</li>
+                    <li>Replay with an expired or reused token</li>
+                    <li>Missing or extra fields in the body</li>
+                </ul>
+            </div>
+        </ErrorLayout>
+    );
+}
+
+function SignatureMismatchIllustration() {
+    return (
+        <div className="relative flex items-center justify-center" style={{ width: 240, height: 210 }}>
+            {/* Outer spinning dashed ring */}
+            <div className="absolute border-2 border-dashed rounded-full border-orange-400/25" style={{ width: 200, height: 200, animation: "err-spin-slow 18s linear infinite" }} />
+            {/* Inner counter-ring */}
+            <div className="absolute border rounded-full border-danger-400/20" style={{ width: 160, height: 160, animation: "err-spin-rev 12s linear infinite" }}>
+                {[0, 72, 144, 216, 288].map((deg) => (
+                    <div
+                        key={deg}
+                        className="absolute w-2 h-2 rounded-full bg-danger-400/40"
+                        style={{
+                            top: "50%",
+                            left: "50%",
+                            transform: `rotate(${deg}deg) translateX(78px) translateY(-50%)`,
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Core shield */}
+            <div className="relative flex items-center justify-center border-4 border-orange-400 rounded-full bg-grey-100 dark:bg-[#251d3a]" style={{ width: 110, height: 110, animation: "err-float 3.5s ease-in-out infinite" }}>
+                {/* Hash-grid lines behind icon */}
+                {[0, 45, 90, 135].map((deg) => (
+                    <div key={deg} className="absolute bg-orange-400/30" style={{ width: 2, height: 48, borderRadius: 2, transform: `rotate(${deg}deg)`, transformOrigin: "50% 50%" }} />
+                ))}
+                {/* Shield + X icon */}
+                <div className="absolute z-10 flex items-center justify-center w-12 h-12 bg-danger-400 rounded-full shadow-lg shadow-danger-400/30">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2L4 5v6c0 5.25 3.5 10.15 8 11.35C16.5 21.15 20 16.25 20 11V5l-8-3z" fill="white" opacity="0.2" />
+                        <path d="M8 8 L16 16 M16 8 L8 16" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+                    </svg>
+                </div>
+            </div>
+
+            {/* Left label: Expected */}
+            <div className="absolute left-0 flex flex-col items-center" style={{ top: "50%", transform: "translateY(-60%)", animation: "err-drift-l 2.5s ease-in-out infinite" }}>
+                <div className="px-2 py-1 text-xs font-mono rounded bg-success-400/10 border border-success-400/30 text-success-500 dark:text-success-400 font-aumovio-bold whitespace-nowrap">a3f9·c42a</div>
+                <div className="mt-1 text-xs text-grey-400 font-aumovio">expected</div>
+            </div>
+
+            {/* Right label: Received */}
+            <div className="absolute right-0 flex flex-col items-center" style={{ top: "50%", transform: "translateY(-60%)", animation: "err-drift-r 2.5s ease-in-out infinite" }}>
+                <div className="px-2 py-1 text-xs font-mono rounded bg-danger-400/10 border border-danger-400/30 text-danger-400 font-aumovio-bold whitespace-nowrap">a3f9·d99f</div>
+                <div className="mt-1 text-xs text-grey-400 font-aumovio">received</div>
+            </div>
+
+            {/* Bottom label */}
+            <div className="absolute bottom-0 px-3 py-1 text-xs text-white bg-danger-400 rounded-full font-aumovio-bold" style={{ animation: "err-pulse-op 1.5s ease-in-out infinite" }}>
+                SIGNATURE MISMATCH
+            </div>
+        </div>
+    );
+}
+
 /* ─── Default exports (named) ─── */
 export default {
     Unauthorized,
@@ -3230,4 +3533,5 @@ export default {
     LoginTimeOut,
     InvalidToken,
     ServiceUnavailable,
+    SignatureMismatch,
 };
