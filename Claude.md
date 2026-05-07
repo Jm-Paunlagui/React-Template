@@ -1,7 +1,7 @@
 # CLAUDE.md — Aumovio UI Component Usage Guide
 
 > **Persona:** Senior React + Tailwind CSS v4 Developer with design-system expertise.
-> Every feature should use the component library — never inline ad-hoc markup when a component exists.
+> Every feature use component library — never inline ad-hoc markup when component exists.
 
 ---
 
@@ -88,7 +88,7 @@
 
 ## 2. Design Tokens (Tailwind v4 `@theme`)
 
-All colours, spacing, and shadow values are defined in `src/assets/styles/index.css`.
+All colours, spacing, shadow values defined in `src/assets/styles/index.css`.
 
 ### Colour hierarchy
 
@@ -102,12 +102,12 @@ Warn      → warn-400    (#FFD600)
 Grey      → grey-50…950             Neutral surfaces, text
 ```
 
-All token names are available as standard Tailwind utilities:
+All token names available as standard Tailwind utilities:
 `bg-orange-400`, `text-purple-400`, `border-success-400/30`, etc.
 
 ### Dark mode
 
-Dark mode is controlled by `data-theme="dark"` on `<html>`. Use the `dark:` prefix:
+Dark mode controlled by `data-theme="dark"` on `<html>`. Use `dark:` prefix:
 
 ```jsx
 <div className="bg-white dark:bg-[#1a1030] text-black/85 dark:text-white/85" />
@@ -119,7 +119,7 @@ Dark mode is controlled by `data-theme="dark"` on `<html>`. Use the `dark:` pref
 
 ### Step 1 — API layer (`feature.api.js`)
 
-Only HTTP calls, no state, no React. Returns raw Axios response.
+HTTP calls only. No state, no React. Returns raw Axios response.
 
 ```js
 export const widgetApi = {
@@ -176,9 +176,7 @@ import { Modal } from "../../components/ui/Modal";
 
 ### 4.1 Forms
 
-Always compose a form from the typed form components. Never write raw `<input>` unless
-you are rendering on a dark background where the white `Input` surface would clash
-(in that case, apply the same design tokens manually as shown in `Login.view.jsx`).
+Always compose form from typed form components. Never write raw `<input>` unless rendering on dark background where white `Input` surface clashes (apply same design tokens manually as shown in `Login.view.jsx`).
 
 ```jsx
 // Standard light-background form
@@ -309,36 +307,29 @@ import { DonutChart } from '../../components/charts/DonutChart';
 
 ## 5. Security: CWE & CVE Hardening Guidelines
 
-These rules apply to **every feature** in this codebase.
+Rules apply to **every feature** in this codebase.
 
 ### 5.1 Authentication & Session (CWE-287, CWE-384)
 
-- JWT tokens are stored **only in HTTP-only cookies** (set by the server).  
+- JWT tokens stored **only in HTTP-only cookies** (set by server).
   Never store tokens in `localStorage`, `sessionStorage`, or React state.
-- The CSRF token lives **in memory only** (`CsrfMiddleware._token`).  
-  It is never written to localStorage or a non-HTTP-only cookie.
-- Call `AuthMiddleware.signout()` on logout — this removes the token cookie **and**
-  clears localStorage user data in one step.
-- `ProtectedRoute` re-verifies the token on every mount — do not cache role checks
-  across navigations at the component level.
+- CSRF token lives **in memory only** (`CsrfMiddleware._token`).
+  Never written to localStorage or non-HTTP-only cookie.
+- Call `AuthMiddleware.signout()` on logout — removes token cookie **and** clears localStorage user data.
+- `ProtectedRoute` re-verifies token on every mount — don't cache role checks across navigations at component level.
 
 ### 5.2 Cross-Site Request Forgery (CWE-352)
 
-- `HttpClient` automatically injects `x-csrf-token` on every mutating request
-  (POST, PUT, PATCH, DELETE). **Never bypass this interceptor** by importing Axios directly.
-- If you receive a 403 with `CSRF_TOKEN_INVALID`, the interceptor retries once
-  after `CsrfMiddleware.forceRefresh()`. You do not need to handle this manually.
+- `HttpClient` auto-injects `x-csrf-token` on every mutating request (POST, PUT, PATCH, DELETE). **Never bypass this interceptor** by importing Axios directly.
+- On 403 with `CSRF_TOKEN_INVALID`, interceptor retries once after `CsrfMiddleware.forceRefresh()`. No manual handling needed.
 
 ### 5.3 Cross-Site Scripting (CWE-79)
 
-- React's JSX escapes all interpolated strings automatically. **Never use
-  `dangerouslySetInnerHTML`** unless the content has been sanitised with
-  a library such as DOMPurify first.
-- User-supplied values rendered into `href` attributes must be validated to start
-  with `https://` or `/` — never `javascript:`.
+- React JSX escapes all interpolated strings. **Never use `dangerouslySetInnerHTML`** unless content sanitised with DOMPurify first.
+- User-supplied values in `href` must validate to start with `https://` or `/` — never `javascript:`.
 
 ```jsx
-// ❌ Dangerous
+// ⚠ Dangerous
 <a href={user.url}>Visit</a>;
 
 // ✅ Safe
@@ -348,17 +339,14 @@ const safeHref = /^(https?:\/\/|\/)/.test(user.url) ? user.url : "#";
 
 ### 5.4 Sensitive Data Exposure (CWE-200, CWE-312)
 
-- Never log tokens, passwords, or PII to the console in any environment.  
-  Remove all `console.log(token)` and similar lines before committing.
-- Mask emails and sensitive values in the UI using `maskEmail()` from
-  `src/utils/formatters.js`.
-- If you add new `localStorage` writes, never store raw tokens, passwords,
-  or full PII objects — store only non-sensitive identifiers.
+- Never log tokens, passwords, or PII to console in any environment. Remove all `console.log(token)` before committing.
+- Mask emails and sensitive values in UI using `maskEmail()` from `src/utils/formatters.js`.
+- New `localStorage` writes: never store raw tokens, passwords, or full PII — store only non-sensitive identifiers.
 
 ### 5.5 Input Validation (CWE-20)
 
-- Always validate on both client **and** server. Client validation is UX only.
-- Use the helpers in `src/utils/validators.js`:
+- Validate on both client **and** server. Client validation is UX only.
+- Use helpers in `src/utils/validators.js`:
 
 ```js
 import { isValidEmail, isStrongPassword, isNonEmpty, validateRequired } from "../../utils/validators";
@@ -377,11 +365,10 @@ if (!isStrongPassword(form.password)) {
 
 ### 5.6 Error Handling — Information Leakage (CWE-209)
 
-- In production builds, only show generic messages to the user.  
-  Full error details go to the server log, not the UI.
+- Production builds show only generic messages to user. Full error details go to server log, not UI.
 
 ```jsx
-// ❌ Exposes stack trace
+// ⚠ Exposes stack trace
 <p>{err.stack}</p>
 
 // ✅ Safe
@@ -398,14 +385,13 @@ if (!isStrongPassword(form.password)) {
 
 ### 5.7 Dependency Security (CVE hygiene)
 
-- Run `npm audit` before every release and address critical/high severity advisories.
+- Run `npm audit` before every release. Address critical/high severity advisories.
 - Pin exact versions for security-sensitive packages (auth, crypto, HTTP).
-- Never commit `.env` files — all secrets must live in environment variables
-  that are injected at build time via Vite (`VITE_*`).
+- Never commit `.env` files — all secrets in environment variables injected at build time via Vite (`VITE_*`).
 
 ### 5.8 Content Security Policy (CSP)
 
-When deploying, configure your web server or CDN to send:
+Configure web server or CDN to send:
 
 ```
 Content-Security-Policy:
@@ -421,7 +407,7 @@ Content-Security-Policy:
 
 ### 5.9 Secure HTTP Headers
 
-Ensure the server sends:
+Server must send:
 
 ```
 X-Content-Type-Options: nosniff           # CWE-430
@@ -433,10 +419,8 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 ### 5.10 Race Conditions & State (CWE-362)
 
-- Always set a `cancelled` flag in `useEffect` async functions and check it before
-  calling `setState`. See `ProtectedRoute.jsx` for the reference pattern.
-- The `useRequest` hook deduplicates in-flight requests at module scope — use it
-  instead of raw `useEffect` + fetch for data loading.
+- Always set `cancelled` flag in `useEffect` async functions and check before calling `setState`. See `ProtectedRoute.jsx` for reference pattern.
+- `useRequest` hook deduplicates in-flight requests at module scope — use instead of raw `useEffect` + fetch for data loading.
 
 ---
 
@@ -462,8 +446,7 @@ const ROLES = { SADMIN: 3, ADMIN: 2, USER: 1 };
 </Route>
 ```
 
-Permission strings (`area` values) are defined **inline at each route** in `App.jsx`,
-not in a shared constant — this keeps access control readable and co-located with the route.
+Permission strings (`area` values) defined **inline at each route** in `App.jsx`, not in shared constant — keeps access control readable and co-located with route.
 
 ---
 
@@ -478,8 +461,7 @@ not in a shared constant — this keeps access control readable and co-located w
 | Form state                 | Local `useState` object                         |
 | Global server mutations    | `useCallback` inside feature hook               |
 
-Never use external state managers (Redux, Zustand, etc.) unless explicitly required —
-the existing patterns cover all standard cases.
+Never use external state managers (Redux, Zustand, etc.) unless explicitly required — existing patterns cover all standard cases.
 
 ---
 
@@ -489,7 +471,7 @@ the existing patterns cover all standard cases.
 
 ```jsx
 const FinanceView = lazy(() => import("./features/finance/Finance.view"));
-// ❌ Never lazy-load shared UI components
+// ⚠ Never lazy-load shared UI components
 ```
 
 ### Data fetching — use `useRequest`
@@ -542,7 +524,11 @@ src/
 │   └── <feature>/
 │       ├── <feature>.api.js
 │       ├── <feature>.hook.js
-│       └── <Feature>.view.jsx
+│       ├── <Feature>.view.jsx           ← orchestrator; calls hook, fans out props to tab components
+│       └── components/                  ← add when view exceeds ~400 lines
+│           ├── <TabName>Tab.jsx         ← one file per tab / major section
+│           ├── <ModalName>Modal.jsx     ← one file per modal
+│           └── shared/                  ← sub-components + pure helpers used by 2+ components
 ├── hooks/                  # useDebounce, useDocumentTitle, usePagination, useRequest
 ├── middleware/
 │   ├── authentication/AuthMiddleware.js
@@ -574,9 +560,8 @@ src/
 
 ## 11. Accordion, Tabs, and Multi-panel Layouts
 
-Use `Tabs` for horizontal navigation and `Accordion` for vertical collapsible sections.
-Prefer `Tabs` when all panels are visible above the fold; prefer `Accordion` for long
-FAQ/settings pages.
+Use `Tabs` for horizontal navigation, `Accordion` for vertical collapsible sections.
+Prefer `Tabs` when all panels visible above fold; prefer `Accordion` for long FAQ/settings pages.
 
 ```jsx
 <Tabs
@@ -600,32 +585,28 @@ FAQ/settings pages.
 
 ## 12. Animation System
 
-All animation, transition, and motion constants are defined in `src/assets/styles/index.css`
-and exposed as named exports from `src/assets/styles/pre-set-styles.jsx`.
+All animation, transition, motion constants defined in `src/assets/styles/index.css` and exposed as named exports from `src/assets/styles/pre-set-styles.jsx`.
 
-> **Rule:** Always use a named constant or an animation class from `index.css`. Never
-> hard-code `transition: all 300ms` inline — use the design tokens.
+> **Rule:** Always use named constant or animation class from `index.css`. Never hard-code `transition: all 300ms` inline — use design tokens.
 
 ---
 
 ### 12.1 Easing Curves
 
-The easing library lives in `:root` as CSS custom properties. Reference them in
-`style={{ transition: ... }}` or raw CSS. Never write raw `cubic-bezier(...)` —
-use the token.
+Easing library lives in `:root` as CSS custom properties. Reference in `style={{ transition: ... }}` or raw CSS. Never write raw `cubic-bezier(...)` — use token.
 
-| CSS var               | Curve                              | When to use                                |
-| --------------------- | ---------------------------------- | ------------------------------------------ |
-| `--ease-standard`     | `cubic-bezier(0.4, 0, 0.2, 1)`    | General colour/opacity changes, nav links  |
-| `--ease-decelerate`   | `cubic-bezier(0, 0, 0.2, 1)`      | Elements entering the screen (ease-out)    |
-| `--ease-accelerate`   | `cubic-bezier(0.4, 0, 1, 1)`      | Elements leaving the screen (ease-in)      |
-| `--ease-spring`       | `cubic-bezier(0.34, 1.56, 0.64, 1)` | **Buttons, toggles, interactive cards** — spring overshoot |
-| `--ease-spring-soft`  | `cubic-bezier(0.25, 1.4, 0.5, 1)` | Gentle spring for menus and panels         |
-| `--ease-spring-hard`  | `cubic-bezier(0.5, 2.0, 0.6, 0.8)` | Snappy spring for small badge pops        |
-| `--ease-bounce`       | `cubic-bezier(0.68, -0.55, 0.265, 1.55)` | **Checkmarks, success states** — hard bounce |
-| `--ease-bounce-out`   | `cubic-bezier(0.34, 1.4, 0.64, 1)` | Settle after bounce                       |
-| `--ease-snap`         | `cubic-bezier(0.2, 0, 0, 1)`      | **Dropdowns, tooltips** — instant snap     |
-| `--ease-overshoot`    | `cubic-bezier(0.3, 1.8, 0.4, 0.9)` | Overshoot + settle for counters           |
+| CSS var              | Curve                                    | When to use                                                |
+| -------------------- | ---------------------------------------- | ---------------------------------------------------------- |
+| `--ease-standard`    | `cubic-bezier(0.4, 0, 0.2, 1)`           | General colour/opacity changes, nav links                  |
+| `--ease-decelerate`  | `cubic-bezier(0, 0, 0.2, 1)`             | Elements entering screen (ease-out)                        |
+| `--ease-accelerate`  | `cubic-bezier(0.4, 0, 1, 1)`             | Elements leaving screen (ease-in)                          |
+| `--ease-spring`      | `cubic-bezier(0.34, 1.56, 0.64, 1)`      | **Buttons, toggles, interactive cards** — spring overshoot |
+| `--ease-spring-soft` | `cubic-bezier(0.25, 1.4, 0.5, 1)`        | Gentle spring for menus and panels                         |
+| `--ease-spring-hard` | `cubic-bezier(0.5, 2.0, 0.6, 0.8)`       | Snappy spring for small badge pops                         |
+| `--ease-bounce`      | `cubic-bezier(0.68, -0.55, 0.265, 1.55)` | **Checkmarks, success states** — hard bounce               |
+| `--ease-bounce-out`  | `cubic-bezier(0.34, 1.4, 0.64, 1)`       | Settle after bounce                                        |
+| `--ease-snap`        | `cubic-bezier(0.2, 0, 0, 1)`             | **Dropdowns, tooltips** — instant snap                     |
+| `--ease-overshoot`   | `cubic-bezier(0.3, 1.8, 0.4, 0.9)`       | Overshoot + settle for counters                            |
 
 ```jsx
 // Using a CSS easing token in an inline style
@@ -636,14 +617,14 @@ use the token.
 
 ### 12.2 Duration Tokens
 
-| CSS var                 | Value  | Use case                                   |
-| ----------------------- | ------ | ------------------------------------------ |
-| `--duration-instant`    | 80ms   | Ripple click feedback, micro interactions  |
-| `--duration-fast`       | 150ms  | Tooltip show/hide, snap interactions       |
-| `--duration-normal`     | 250ms  | Most UI state transitions                  |
-| `--duration-moderate`   | 350ms  | Modals, drawers, slide animations          |
-| `--duration-slow`       | 500ms  | Page enters, hero animations               |
-| `--duration-lazy`       | 700ms  | Background decorations, ambient motion     |
+| CSS var               | Value | Use case                                  |
+| --------------------- | ----- | ----------------------------------------- |
+| `--duration-instant`  | 80ms  | Ripple click feedback, micro interactions |
+| `--duration-fast`     | 150ms | Tooltip show/hide, snap interactions      |
+| `--duration-normal`   | 250ms | Most UI state transitions                 |
+| `--duration-moderate` | 350ms | Modals, drawers, slide animations         |
+| `--duration-slow`     | 500ms | Page enters, hero animations              |
+| `--duration-lazy`     | 700ms | Background decorations, ambient motion    |
 
 ```jsx
 // Combining tokens
@@ -654,125 +635,102 @@ use the token.
 
 ### 12.3 Transition Preset Classes
 
-Import from `pre-set-styles.jsx` or use the class name directly.
+Import from `pre-set-styles.jsx` or use class name directly.
 
 ```jsx
-import {
-    TRANSITION_SMOOTH,
-    TRANSITION_SPRING,
-    TRANSITION_BOUNCE,
-    TRANSITION_SNAP,
-    TRANSITION_LAZY,
-} from "../../assets/styles/pre-set-styles";
+import { TRANSITION_SMOOTH, TRANSITION_SPRING, TRANSITION_BOUNCE, TRANSITION_SNAP, TRANSITION_LAZY } from "../../assets/styles/pre-set-styles";
 ```
 
-| Constant              | Class                  | What it transitions                            | Best for                          |
-| --------------------- | ---------------------- | ---------------------------------------------- | --------------------------------- |
-| `TRANSITION_SMOOTH`   | `transition-smooth`    | transform + opacity + shadow + bg + color      | Nav links, colour swaps, tabs     |
-| `TRANSITION_SPRING`   | `transition-spring`    | transform + shadow (spring easing)             | Buttons, toggles, interactive cards |
-| `TRANSITION_BOUNCE`   | `transition-bounce`    | transform + opacity (bounce easing)            | Modals, drawers, toasts           |
-| `TRANSITION_SNAP`     | `transition-snap`      | transform + opacity (snap easing, 150ms)       | Dropdowns, tooltips               |
-| `TRANSITION_LAZY`     | `transition-lazy`      | All, 700ms standard                            | Decorative, hero, ambient         |
+| Constant            | Class               | What it transitions                       | Best for                            |
+| ------------------- | ------------------- | ----------------------------------------- | ----------------------------------- |
+| `TRANSITION_SMOOTH` | `transition-smooth` | transform + opacity + shadow + bg + color | Nav links, colour swaps, tabs       |
+| `TRANSITION_SPRING` | `transition-spring` | transform + shadow (spring easing)        | Buttons, toggles, interactive cards |
+| `TRANSITION_BOUNCE` | `transition-bounce` | transform + opacity (bounce easing)       | Modals, drawers, toasts             |
+| `TRANSITION_SNAP`   | `transition-snap`   | transform + opacity (snap easing, 150ms)  | Dropdowns, tooltips                 |
+| `TRANSITION_LAZY`   | `transition-lazy`   | All, 700ms standard                       | Decorative, hero, ambient           |
 
 **Shorthand property constants:**
 
-| Constant                    | Class                        | Transitions              |
-| --------------------------- | ---------------------------- | ------------------------ |
-| `TRANSITION_COLORS`         | `transition-colors-fast`     | color, bg, border (150ms) |
-| `TRANSITION_TRANSFORM_SPRING` | `transition-transform-spring` | transform only (350ms spring) |
-| `TRANSITION_SHADOW`         | `transition-shadow`          | box-shadow (350ms standard) |
-| `TRANSITION_OPACITY`        | `transition-opacity`         | opacity (250ms standard) |
-| `TRANSITION_SCALE_SPRING`   | `transition-scale-spring`    | transform scale (350ms spring) |
+| Constant                      | Class                         | Transitions                    |
+| ----------------------------- | ----------------------------- | ------------------------------ |
+| `TRANSITION_COLORS`           | `transition-colors-fast`      | color, bg, border (150ms)      |
+| `TRANSITION_TRANSFORM_SPRING` | `transition-transform-spring` | transform only (350ms spring)  |
+| `TRANSITION_SHADOW`           | `transition-shadow`           | box-shadow (350ms standard)    |
+| `TRANSITION_OPACITY`          | `transition-opacity`          | opacity (250ms standard)       |
+| `TRANSITION_SCALE_SPRING`     | `transition-scale-spring`     | transform scale (350ms spring) |
 
 ---
 
 ### 12.4 Enter / Exit Animation Classes
 
-All one-shot animations use `animation-fill-mode: both`. They are safe to apply at mount.
+All one-shot animations use `animation-fill-mode: both`. Safe to apply at mount.
 
 ```jsx
-import {
-    ANIMATE_FADE_IN, ANIMATE_SLIDE_UP, ANIMATE_SCALE_IN,
-    ANIMATE_ENTER_UP, ANIMATE_BOUNCE_IN,
-    ANIMATE_FADE_IN_UP, ANIMATE_FADE_IN_DOWN,
-    ANIMATE_FADE_IN_LEFT, ANIMATE_FADE_IN_RIGHT,
-    ANIMATE_PAGE_ENTER, ANIMATE_PAGE_EXIT,
-} from "../../assets/styles/pre-set-styles";
+import { ANIMATE_FADE_IN, ANIMATE_SLIDE_UP, ANIMATE_SCALE_IN, ANIMATE_ENTER_UP, ANIMATE_BOUNCE_IN, ANIMATE_FADE_IN_UP, ANIMATE_FADE_IN_DOWN, ANIMATE_FADE_IN_LEFT, ANIMATE_FADE_IN_RIGHT, ANIMATE_PAGE_ENTER, ANIMATE_PAGE_EXIT } from "../../assets/styles/pre-set-styles";
 ```
 
-| Constant                | Class                    | Description                                              |
-| ----------------------- | ------------------------ | -------------------------------------------------------- |
-| `ANIMATE_FADE_IN`       | `animate-fade-in`        | Opacity 0 → 1. 250ms decelerate.                         |
-| `ANIMATE_FADE_OUT`      | `animate-fade-out`       | Opacity 1 → 0. 250ms accelerate.                         |
-| `ANIMATE_SLIDE_UP`      | `animate-slide-up`       | Y(16px) + fade. 350ms spring. Drawers, panels.           |
-| `ANIMATE_SLIDE_DOWN`    | `animate-slide-down`     | Y(-16px) + fade. 350ms spring. Top dropdowns.            |
-| `ANIMATE_SLIDE_LEFT`    | `animate-slide-left`     | X(16px) + fade. Slides from right.                       |
-| `ANIMATE_SLIDE_RIGHT`   | `animate-slide-right`    | X(-16px) + fade. Slides from left.                       |
-| `ANIMATE_SCALE_IN`      | `animate-scale-in`       | Scale(0.95) + fade. 250ms spring. Modals, popovers.      |
-| `ANIMATE_SCALE_IN_CENTER` | `animate-scale-in-center` | Scale(0.85) + fade. 500ms spring. Hero / loading.      |
-| `ANIMATE_SCALE_OUT`     | `animate-scale-out`      | Scale(1) → scale(0.92) + fade. 150ms accelerate.         |
-| `ANIMATE_SCALE_SPRING`  | `animate-scale-spring`   | Spring with 4% overshoot. FABs, badges, pings.           |
-| `ANIMATE_ENTER_UP`      | `animate-enter-up`       | Y(12px) + scale(0.97). **Preferred card/item enter.**    |
-| `ANIMATE_ENTER_DOWN`    | `animate-enter-down`     | Y(-12px) + scale(0.97). Top-entering items.              |
-| `ANIMATE_BOUNCE_IN`     | `animate-bounce-in`      | Scale 0.3 → 1.08 → 1. 500ms bounce. Success states.     |
-| `ANIMATE_FADE_IN_UP`    | `animate-fade-in-up`     | Y(20px) + fade. **⚠ Sets `opacity:0` in CSS.**          |
-| `ANIMATE_FADE_IN_DOWN`  | `animate-fade-in-down`   | Y(-20px) + fade.                                         |
-| `ANIMATE_FADE_IN_LEFT`  | `animate-fade-in-left`   | X(20px) + fade.                                          |
-| `ANIMATE_FADE_IN_RIGHT` | `animate-fade-in-right`  | X(-20px) + fade.                                         |
-| `ANIMATE_PAGE_ENTER`    | `animate-page-enter`     | Route enter: Y(10px) + scale(0.99). 350ms spring.        |
-| `ANIMATE_PAGE_EXIT`     | `animate-page-exit`      | Route exit: Y(-10px) + scale(0.99). 250ms accelerate.    |
+| Constant                  | Class                     | Description                                           |
+| ------------------------- | ------------------------- | ----------------------------------------------------- |
+| `ANIMATE_FADE_IN`         | `animate-fade-in`         | Opacity 0 → 1. 250ms decelerate.                      |
+| `ANIMATE_FADE_OUT`        | `animate-fade-out`        | Opacity 1 → 0. 250ms accelerate.                      |
+| `ANIMATE_SLIDE_UP`        | `animate-slide-up`        | Y(16px) + fade. 350ms spring. Drawers, panels.        |
+| `ANIMATE_SLIDE_DOWN`      | `animate-slide-down`      | Y(-16px) + fade. 350ms spring. Top dropdowns.         |
+| `ANIMATE_SLIDE_LEFT`      | `animate-slide-left`      | X(16px) + fade. Slides from right.                    |
+| `ANIMATE_SLIDE_RIGHT`     | `animate-slide-right`     | X(-16px) + fade. Slides from left.                    |
+| `ANIMATE_SCALE_IN`        | `animate-scale-in`        | Scale(0.95) + fade. 250ms spring. Modals, popovers.   |
+| `ANIMATE_SCALE_IN_CENTER` | `animate-scale-in-center` | Scale(0.85) + fade. 500ms spring. Hero / loading.     |
+| `ANIMATE_SCALE_OUT`       | `animate-scale-out`       | Scale(1) → scale(0.92) + fade. 150ms accelerate.      |
+| `ANIMATE_SCALE_SPRING`    | `animate-scale-spring`    | Spring with 4% overshoot. FABs, badges, pings.        |
+| `ANIMATE_ENTER_UP`        | `animate-enter-up`        | Y(12px) + scale(0.97). **Preferred card/item enter.** |
+| `ANIMATE_ENTER_DOWN`      | `animate-enter-down`      | Y(-12px) + scale(0.97). Top-entering items.           |
+| `ANIMATE_BOUNCE_IN`       | `animate-bounce-in`       | Scale 0.3 → 1.08 → 1. 500ms bounce. Success states.   |
+| `ANIMATE_FADE_IN_UP`      | `animate-fade-in-up`      | Y(20px) + fade. **⚠ Sets `opacity:0` in CSS.**        |
+| `ANIMATE_FADE_IN_DOWN`    | `animate-fade-in-down`    | Y(-20px) + fade.                                      |
+| `ANIMATE_FADE_IN_LEFT`    | `animate-fade-in-left`    | X(20px) + fade.                                       |
+| `ANIMATE_FADE_IN_RIGHT`   | `animate-fade-in-right`   | X(-20px) + fade.                                      |
+| `ANIMATE_PAGE_ENTER`      | `animate-page-enter`      | Route enter: Y(10px) + scale(0.99). 350ms spring.     |
+| `ANIMATE_PAGE_EXIT`       | `animate-page-exit`       | Route exit: Y(-10px) + scale(0.99). 250ms accelerate. |
 
-> **Note on `animate-fade-in-*`:** These classes set `opacity: 0` in CSS as the initial
-> state so the element is invisible before the animation plays. This is intentional —
-> do **not** add `opacity-0` manually, it will double the effect.
+> **Note on `animate-fade-in-*`:** These classes set `opacity: 0` in CSS as initial state — element invisible before animation plays. Intentional — do **not** add `opacity-0` manually, doubles effect.
 
 ---
 
 ### 12.5 Loop / Ambient Animations
 
 ```jsx
-import {
-    ANIMATE_FLOAT, ANIMATE_FLOAT_SM, ANIMATE_FLOAT_LG,
-    ANIMATE_PULSE, ANIMATE_PULSE_SCALE, ANIMATE_PING,
-    ANIMATE_SPIN, ANIMATE_SPIN_SLOW, ANIMATE_SPIN_REVERSE,
-    ANIMATE_HEARTBEAT, ANIMATE_BOUNCE_SLOW,
-    ANIMATE_SHIMMER, ANIMATE_GRADIENT,
-} from "../../assets/styles/pre-set-styles";
+import { ANIMATE_FLOAT, ANIMATE_FLOAT_SM, ANIMATE_FLOAT_LG, ANIMATE_PULSE, ANIMATE_PULSE_SCALE, ANIMATE_PING, ANIMATE_SPIN, ANIMATE_SPIN_SLOW, ANIMATE_SPIN_REVERSE, ANIMATE_HEARTBEAT, ANIMATE_BOUNCE_SLOW, ANIMATE_SHIMMER, ANIMATE_GRADIENT } from "../../assets/styles/pre-set-styles";
 ```
 
-| Constant               | Class                   | Description                                           |
-| ---------------------- | ----------------------- | ----------------------------------------------------- |
-| `ANIMATE_FLOAT`        | `animate-float`         | Y ±8px loop, 3 s. Standard floating illustration.     |
-| `ANIMATE_FLOAT_SM`     | `animate-float-sm`      | Y ±4px loop, 2.5 s. Small icons, badges.              |
-| `ANIMATE_FLOAT_LG`     | `animate-float-lg`      | Y ±14px loop, 4 s. Large hero elements.               |
-| `ANIMATE_BOUNCE_SLOW`  | `animate-bounce-slow`   | Gentle bob 2 s loop. Buttons awaiting interaction.    |
-| `ANIMATE_HEARTBEAT`    | `animate-heartbeat`     | Double-beat scale pulse. Like buttons, health dots.   |
-| `ANIMATE_PULSE`        | `animate-pulse`         | Opacity 1↔0.5. Standard skeleton / loading.           |
-| `ANIMATE_PULSE_SCALE`  | `animate-pulse-scale`   | Scale 1↔1.05. "Breathing" CTA, active ring.           |
-| `ANIMATE_PING`         | `animate-ping`          | Scale → 2 + opacity 0. Ring behind dot indicators.    |
-| `ANIMATE_SPIN`         | `animate-spin`          | 360° at 0.75 s linear. Standard spinner.              |
-| `ANIMATE_SPIN_SLOW`    | `animate-spin-slow`     | 360° at 2 s linear. Slow decorative rotation.         |
-| `ANIMATE_SPIN_REVERSE` | `animate-spin-reverse`  | Counter-clockwise 1.2 s. Inner ring vs outer ring.    |
-| `ANIMATE_SHIMMER`      | `animate-shimmer`       | Moving gradient shimmer. Used by `.skeleton` class.   |
-| `ANIMATE_GRADIENT`     | `animate-gradient`      | bg-position shift. Combine with gradient background.  |
+| Constant               | Class                  | Description                                          |
+| ---------------------- | ---------------------- | ---------------------------------------------------- |
+| `ANIMATE_FLOAT`        | `animate-float`        | Y ±8px loop, 3 s. Standard floating illustration.    |
+| `ANIMATE_FLOAT_SM`     | `animate-float-sm`     | Y ±4px loop, 2.5 s. Small icons, badges.             |
+| `ANIMATE_FLOAT_LG`     | `animate-float-lg`     | Y ±14px loop, 4 s. Large hero elements.              |
+| `ANIMATE_BOUNCE_SLOW`  | `animate-bounce-slow`  | Gentle bob 2 s loop. Buttons awaiting interaction.   |
+| `ANIMATE_HEARTBEAT`    | `animate-heartbeat`    | Double-beat scale pulse. Like buttons, health dots.  |
+| `ANIMATE_PULSE`        | `animate-pulse`        | Opacity 1↔0.5. Standard skeleton / loading.          |
+| `ANIMATE_PULSE_SCALE`  | `animate-pulse-scale`  | Scale 1↔1.05. "Breathing" CTA, active ring.          |
+| `ANIMATE_PING`         | `animate-ping`         | Scale → 2 + opacity 0. Ring behind dot indicators.   |
+| `ANIMATE_SPIN`         | `animate-spin`         | 360° at 0.75 s linear. Standard spinner.             |
+| `ANIMATE_SPIN_SLOW`    | `animate-spin-slow`    | 360° at 2 s linear. Slow decorative rotation.        |
+| `ANIMATE_SPIN_REVERSE` | `animate-spin-reverse` | Counter-clockwise 1.2 s. Inner ring vs outer ring.   |
+| `ANIMATE_SHIMMER`      | `animate-shimmer`      | Moving gradient shimmer. Used by `.skeleton` class.  |
+| `ANIMATE_GRADIENT`     | `animate-gradient`     | bg-position shift. Combine with gradient background. |
 
 ---
 
 ### 12.6 Attention Seeker Animations (Validation)
 
 ```jsx
-import {
-    ANIMATE_SHAKE, ANIMATE_SHAKE_H,
-    ANIMATE_WOBBLE, ANIMATE_HEADSHAKE,
-} from "../../assets/styles/pre-set-styles";
+import { ANIMATE_SHAKE, ANIMATE_SHAKE_H, ANIMATE_WOBBLE, ANIMATE_HEADSHAKE } from "../../assets/styles/pre-set-styles";
 ```
 
-| Constant            | Class               | Description                                                |
-| ------------------- | ------------------- | ---------------------------------------------------------- |
+| Constant            | Class               | Description                                                                      |
+| ------------------- | ------------------- | -------------------------------------------------------------------------------- |
 | `ANIMATE_SHAKE`     | `animate-shake`     | Horizontal rapid shake + colour shift to danger. 250ms. For invalid form submit. |
-| `ANIMATE_SHAKE_H`   | `animate-shake-h`   | Horizontal shake, no colour shift. 500ms. General error. |
-| `ANIMATE_WOBBLE`    | `animate-wobble`    | ±5° rotation wobble. 600ms. Playful attention grab.       |
-| `ANIMATE_HEADSHAKE` | `animate-headshake` | translateX + rotateY "head shake". 500ms.                 |
+| `ANIMATE_SHAKE_H`   | `animate-shake-h`   | Horizontal shake, no colour shift. 500ms. General error.                         |
+| `ANIMATE_WOBBLE`    | `animate-wobble`    | ±5° rotation wobble. 600ms. Playful attention grab.                              |
+| `ANIMATE_HEADSHAKE` | `animate-headshake` | translateX + rotateY "head shake". 500ms.                                        |
 
 ```jsx
 // Standard invalid form shake pattern
@@ -783,52 +741,43 @@ const handleInvalidSubmit = () => {
     // Remove the class once animation finishes so it can re-trigger
 };
 
-<Card
-    className={shaking ? ANIMATE_SHAKE : ""}
-    onAnimationEnd={() => setShaking(false)}
->
+<Card className={shaking ? ANIMATE_SHAKE : ""} onAnimationEnd={() => setShaking(false)}>
     <form>...</form>
-</Card>
+</Card>;
 ```
 
 ---
 
 ### 12.7 Toast / Notification Animations
 
-These are applied by `toast.utils.js` and the ToastContainer automatically.
-Reference them if building a custom notification layer.
+Applied by `toast.utils.js` and ToastContainer automatically. Reference when building custom notification layer.
 
-| Constant                  | Class                     | Description                             |
-| ------------------------- | ------------------------- | --------------------------------------- |
-| `ANIMATE_TOAST_IN_RIGHT`  | `animate-toast-in-right`  | Slides in from right. 350ms spring.     |
-| `ANIMATE_TOAST_IN_LEFT`   | `animate-toast-in-left`   | Slides in from left.                    |
-| `ANIMATE_TOAST_IN_UP`     | `animate-toast-in-up`     | Slides up from 80px below.              |
-| `ANIMATE_TOAST_OUT`       | `animate-toast-out`       | Slides out right, collapses height.     |
+| Constant                 | Class                    | Description                         |
+| ------------------------ | ------------------------ | ----------------------------------- |
+| `ANIMATE_TOAST_IN_RIGHT` | `animate-toast-in-right` | Slides in from right. 350ms spring. |
+| `ANIMATE_TOAST_IN_LEFT`  | `animate-toast-in-left`  | Slides in from left.                |
+| `ANIMATE_TOAST_IN_UP`    | `animate-toast-in-up`    | Slides up from 80px below.          |
+| `ANIMATE_TOAST_OUT`      | `animate-toast-out`      | Slides out right, collapses height. |
 
 ---
 
 ### 12.8 Hover Patterns
 
 ```jsx
-import {
-    HOVER_LIFT, HOVER_LIFT_SM, HOVER_LIFT_LG,
-    HOVER_PRESS, HOVER_SCALE,
-    HOVER_GLOW_ORANGE, HOVER_GLOW_PURPLE,
-    HOVER_GLOW_BLUE, HOVER_GLOW_SUCCESS,
-} from "../../assets/styles/pre-set-styles";
+import { HOVER_LIFT, HOVER_LIFT_SM, HOVER_LIFT_LG, HOVER_PRESS, HOVER_SCALE, HOVER_GLOW_ORANGE, HOVER_GLOW_PURPLE, HOVER_GLOW_BLUE, HOVER_GLOW_SUCCESS } from "../../assets/styles/pre-set-styles";
 ```
 
-| Constant           | Class              | Description                                                |
-| ------------------ | ------------------ | ---------------------------------------------------------- |
-| `HOVER_LIFT`       | `hover-lift`       | translateY(-3px) + shadow-lg on hover, -1px active.        |
-| `HOVER_LIFT_SM`    | `hover-lift-sm`    | translateY(-2px) + shadow-md. Compact list items.          |
-| `HOVER_LIFT_LG`    | `hover-lift-lg`    | translateY(-6px) + shadow-xl. Featured hero cards.         |
-| `HOVER_PRESS`      | `hover-press`      | scale(1.02) hover, scale(0.97) active. 150ms snap.         |
-| `HOVER_SCALE`      | `scale-hover`      | scale(1.05) hover, scale(0.97) active. 250ms spring.       |
-| `HOVER_GLOW_ORANGE`| `hover-glow-orange`| Orange brand glow shadow on hover. CTAs, primary buttons.  |
-| `HOVER_GLOW_PURPLE`| `hover-glow-purple`| Purple glow. Accent/secondary buttons.                     |
-| `HOVER_GLOW_BLUE`  | `hover-glow-blue`  | Blue glow. Info items, links.                              |
-| `HOVER_GLOW_SUCCESS`| `hover-glow-success` | Green glow. Positive actions.                           |
+| Constant             | Class                | Description                                               |
+| -------------------- | -------------------- | --------------------------------------------------------- |
+| `HOVER_LIFT`         | `hover-lift`         | translateY(-3px) + shadow-lg on hover, -1px active.       |
+| `HOVER_LIFT_SM`      | `hover-lift-sm`      | translateY(-2px) + shadow-md. Compact list items.         |
+| `HOVER_LIFT_LG`      | `hover-lift-lg`      | translateY(-6px) + shadow-xl. Featured hero cards.        |
+| `HOVER_PRESS`        | `hover-press`        | scale(1.02) hover, scale(0.97) active. 150ms snap.        |
+| `HOVER_SCALE`        | `scale-hover`        | scale(1.05) hover, scale(0.97) active. 250ms spring.      |
+| `HOVER_GLOW_ORANGE`  | `hover-glow-orange`  | Orange brand glow shadow on hover. CTAs, primary buttons. |
+| `HOVER_GLOW_PURPLE`  | `hover-glow-purple`  | Purple glow. Accent/secondary buttons.                    |
+| `HOVER_GLOW_BLUE`    | `hover-glow-blue`    | Blue glow. Info items, links.                             |
+| `HOVER_GLOW_SUCCESS` | `hover-glow-success` | Green glow. Positive actions.                             |
 
 ```jsx
 // Card with lift + spring transition
@@ -865,45 +814,42 @@ import { staggerDelay, staggerDelayDense } from "../../assets/styles/pre-set-sty
 import { ANIMATE_FADE_IN_UP } from "../../assets/styles/pre-set-styles";
 
 // Standard stagger (0, 100, 200 … 500ms)
-{items.map((item, i) => (
-    <div key={item.id} className={`${ANIMATE_FADE_IN_UP} ${staggerDelay(i)}`}>
-        {item.name}
-    </div>
-))}
+{
+    items.map((item, i) => (
+        <div key={item.id} className={`${ANIMATE_FADE_IN_UP} ${staggerDelay(i)}`}>
+            {item.name}
+        </div>
+    ));
+}
 
 // Dense stagger (0, 50, 75, 100, 150, 200, 300ms) — nav items, menus
-{navItems.map((item, i) => (
-    <a key={item.href} className={`${ANIMATE_FADE_IN_RIGHT} ${staggerDelayDense(i)}`}>
-        {item.label}
-    </a>
-))}
+{
+    navItems.map((item, i) => (
+        <a key={item.href} className={`${ANIMATE_FADE_IN_RIGHT} ${staggerDelayDense(i)}`}>
+            {item.label}
+        </a>
+    ));
+}
 ```
 
 ---
 
 ### 12.11 Composed Constants
 
-Pre-built combos for the most common motion patterns.
+Pre-built combos for common motion patterns.
 
 ```jsx
-import {
-    CARD_ENTER,
-    BUTTON_SPRING,
-    MODAL_BACKDROP,
-    SKELETON_SURFACE,
-    RIPPLE_HOST,
-    FOCUS_RING,
-} from "../../assets/styles/pre-set-styles";
+import { CARD_ENTER, BUTTON_SPRING, MODAL_BACKDROP, SKELETON_SURFACE, RIPPLE_HOST, FOCUS_RING } from "../../assets/styles/pre-set-styles";
 ```
 
-| Constant          | Value                               | Description                                |
-| ----------------- | ----------------------------------- | ------------------------------------------ |
-| `CARD_ENTER`      | `animate-fade-in-up hover-lift`     | Standard card: enters from below + lifts.  |
-| `BUTTON_SPRING`   | `transition-spring hover-glow-orange` | Interactive button motion + glow.        |
-| `MODAL_BACKDROP`  | `animate-fade-in fixed inset-0 bg-black/50 backdrop-blur-sm` | Modal overlay. |
-| `SKELETON_SURFACE`| `skeleton`                          | Shimmer placeholder from index.css.        |
-| `RIPPLE_HOST`     | `ripple-host`                       | Container for JS-injected ripple elements. |
-| `FOCUS_RING`      | `focus-ring`                        | Accessible orange focus ring.              |
+| Constant           | Value                                                        | Description                                |
+| ------------------ | ------------------------------------------------------------ | ------------------------------------------ |
+| `CARD_ENTER`       | `animate-fade-in-up hover-lift`                              | Standard card: enters from below + lifts.  |
+| `BUTTON_SPRING`    | `transition-spring hover-glow-orange`                        | Interactive button motion + glow.          |
+| `MODAL_BACKDROP`   | `animate-fade-in fixed inset-0 bg-black/50 backdrop-blur-sm` | Modal overlay.                             |
+| `SKELETON_SURFACE` | `skeleton`                                                   | Shimmer placeholder from index.css.        |
+| `RIPPLE_HOST`      | `ripple-host`                                                | Container for JS-injected ripple elements. |
+| `FOCUS_RING`       | `focus-ring`                                                 | Accessible orange focus ring.              |
 
 ---
 
@@ -939,10 +885,7 @@ function ItemList({ items }) {
     return (
         <ul className="space-y-2">
             {items.map((item, i) => (
-                <li
-                    key={item.id}
-                    className={`${ANIMATE_ENTER_UP} ${staggerDelay(i)} ${TRANSITION_SMOOTH} ${HOVER_LIFT_SM}`}
-                >
+                <li key={item.id} className={`${ANIMATE_ENTER_UP} ${staggerDelay(i)} ${TRANSITION_SMOOTH} ${HOVER_LIFT_SM}`}>
                     {item.name}
                 </li>
             ))}
@@ -956,16 +899,13 @@ function ItemList({ items }) {
 ```jsx
 import { ANIMATE_SCALE_IN, MODAL_BACKDROP } from "../../assets/styles/pre-set-styles";
 
-// The Modal component already handles this internally.
-// When building a custom overlay from scratch:
+// Modal component handles this internally.
+// Building custom overlay from scratch:
 function CustomModal({ open, onClose, children }) {
     if (!open) return null;
     return (
         <div className={MODAL_BACKDROP} onClick={onClose}>
-            <div
-                className={`relative w-full max-w-md mx-auto mt-24 bg-white dark:bg-[#1a1030] rounded-2xl shadow-2xl ${ANIMATE_SCALE_IN}`}
-                onClick={(e) => e.stopPropagation()}
-            >
+            <div className={`relative w-full max-w-md mx-auto mt-24 bg-white dark:bg-[#1a1030] rounded-2xl shadow-2xl ${ANIMATE_SCALE_IN}`} onClick={(e) => e.stopPropagation()}>
                 {children}
             </div>
         </div>
@@ -978,9 +918,9 @@ function CustomModal({ open, onClose, children }) {
 ```jsx
 import { SKELETON_SURFACE } from "../../assets/styles/pre-set-styles";
 
-// The Skeleton component wraps this automatically.
-// When you need a raw shimmer surface:
-<div className={`${SKELETON_SURFACE} h-8 w-48 rounded-lg`} />
+// Skeleton component wraps this automatically.
+// Raw shimmer surface:
+<div className={`${SKELETON_SURFACE} h-8 w-48 rounded-lg`} />;
 ```
 
 #### Ambient floating icon
@@ -988,10 +928,10 @@ import { SKELETON_SURFACE } from "../../assets/styles/pre-set-styles";
 ```jsx
 import { ANIMATE_FLOAT_SM, ANIMATE_PULSE_SCALE } from "../../assets/styles/pre-set-styles";
 
-// An icon that gently floats and pulses to draw attention
+// Icon floats and pulses to draw attention
 <div className={`${ANIMATE_FLOAT_SM} ${ANIMATE_PULSE_SCALE}`}>
     <StarIcon className="w-8 h-8 text-orange-400" />
-</div>
+</div>;
 ```
 
 #### Click ripple host
@@ -999,7 +939,7 @@ import { ANIMATE_FLOAT_SM, ANIMATE_PULSE_SCALE } from "../../assets/styles/pre-s
 ```jsx
 import { RIPPLE_HOST } from "../../assets/styles/pre-set-styles";
 
-// Wrap any element and attach the ripple JS handler
+// Wrap element and attach ripple JS handler
 function RippleButton({ onClick, children }) {
     const handleClick = (e) => {
         const btn = e.currentTarget;
