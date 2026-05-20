@@ -15,18 +15,22 @@
  */
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronDownIcon, ChevronUpIcon, ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { useCallback, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-import { ANIMATE_SLIDE_LEFT, ANIMATE_SLIDE_RIGHT, TRANSITION_COLORS, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
+import { ANIMATE_SLIDE_LEFT, ANIMATE_SLIDE_RIGHT, HOVER_LIFT_SM, TRANSITION_COLORS, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
 import { useLayout } from "../../contexts/layout/LayoutContext";
+import { useTheme } from "../../contexts/theme/ThemeContext";
+import ProfileModal from "../feedback/ProfileModal";
 import { Avatar } from "../ui/Avatar";
 import { Badge } from "../ui/Badge";
 import Logo from "../ui/Logo";
-import { ThemeToggle } from "../ui/ThemeToggle";
 import { Tooltip } from "../ui/Tooltip";
-import { useNav } from "./useNav";
+import { useNav } from "./config/useNav";
+
+const THEME_ICONS = { system: ComputerDesktopIcon, light: SunIcon, dark: MoonIcon };
+const THEME_LABELS = { system: "System theme", light: "Light theme", dark: "Dark theme" };
 
 const APP_DISPLAY_NAME = import.meta.env.VITE_APP_NAME || null;
 const APP_SHORT_NAME = import.meta.env.VITE_APP_NAME_SHORT || null;
@@ -39,6 +43,7 @@ const GROUP_COLOR_MAP = {
         activeText: "text-orange-500 dark:text-orange-400",
         hoverBg: "hover:bg-orange-50  dark:hover:bg-orange-400/10",
         hoverText: "hover:text-orange-500 dark:hover:text-orange-400",
+        collapsedBg: "bg-orange-50/80 dark:bg-orange-400/[.07]",
     },
     purple: {
         dot: "bg-purple-400",
@@ -46,6 +51,7 @@ const GROUP_COLOR_MAP = {
         activeText: "text-purple-500 dark:text-purple-400",
         hoverBg: "hover:bg-purple-50  dark:hover:bg-purple-400/10",
         hoverText: "hover:text-purple-500 dark:hover:text-purple-400",
+        collapsedBg: "bg-purple-50/80 dark:bg-purple-400/[.07]",
     },
     blue: {
         dot: "bg-blue-400",
@@ -53,6 +59,7 @@ const GROUP_COLOR_MAP = {
         activeText: "text-blue-500 dark:text-blue-400",
         hoverBg: "hover:bg-blue-50    dark:hover:bg-blue-400/10",
         hoverText: "hover:text-blue-500 dark:hover:text-blue-400",
+        collapsedBg: "bg-blue-50/80 dark:bg-blue-400/[.07]",
     },
     success: {
         dot: "bg-success-400",
@@ -60,6 +67,7 @@ const GROUP_COLOR_MAP = {
         activeText: "text-success-500 dark:text-success-400",
         hoverBg: "hover:bg-success-50 dark:hover:bg-success-400/10",
         hoverText: "hover:text-success-500 dark:hover:text-success-400",
+        collapsedBg: "bg-success-50/80 dark:bg-success-400/[.07]",
     },
     danger: {
         dot: "bg-danger-400",
@@ -67,6 +75,7 @@ const GROUP_COLOR_MAP = {
         activeText: "text-danger-500 dark:text-danger-400",
         hoverBg: "hover:bg-danger-50  dark:hover:bg-danger-400/10",
         hoverText: "hover:text-danger-500 dark:hover:text-danger-400",
+        collapsedBg: "bg-danger-50/80 dark:bg-danger-400/[.07]",
     },
     warn: {
         dot: "bg-warn-500",
@@ -74,6 +83,7 @@ const GROUP_COLOR_MAP = {
         activeText: "text-warn-600 dark:text-warn-400",
         hoverBg: "hover:bg-warn-50    dark:hover:bg-warn-400/10",
         hoverText: "hover:text-warn-600 dark:hover:text-warn-400",
+        collapsedBg: "bg-warn-50/80 dark:bg-warn-400/[.07]",
     },
     grey: {
         dot: "bg-grey-400",
@@ -81,6 +91,7 @@ const GROUP_COLOR_MAP = {
         activeText: "text-grey-700 dark:text-grey-300",
         hoverBg: "hover:bg-grey-100 dark:hover:bg-[#251d3a]",
         hoverText: "hover:text-grey-700 dark:hover:text-grey-300",
+        collapsedBg: "bg-grey-100/80 dark:bg-grey-800/50",
     },
 };
 
@@ -89,14 +100,20 @@ const resolveColor = (key) => GROUP_COLOR_MAP[key] ?? DEFAULT_COL;
 
 // ── Role helpers ──────────────────────────────────────────────────────────────
 function resolveRoleLabel(role) {
-    if (role === "SuperAdmin") return "Super Admin";
-    if (role === "Admin") return "Admin";
-    return "User";
+    if (role === "SUPER_ADMIN") return "Super ADMIN";
+    if (role === "ADMIN") return "ADMIN";
+    if (role === "APPROVER") return "Approver";
+    if (role === "VIEWER") return "Viewer";
+    if (role === "ROBOT") return "Automation";
+    return "USER";
 }
 
 function resolveRoleBadgeVariant(role) {
-    if (role === "SuperAdmin") return "purple";
-    if (role === "Admin") return "orange";
+    if (role === "SUPER_ADMIN") return "purple";
+    if (role === "ADMIN") return "orange";
+    if (role === "APPROVER") return "blue";
+    if (role === "VIEWER") return "cyan";
+    if (role === "ROBOT") return "green";
     return "grey";
 }
 
@@ -120,31 +137,42 @@ function NavIcon({ icon, className = "w-4 h-4 shrink-0" }) {
 }
 
 // ── FlatNavItem ───────────────────────────────────────────────────────────────
+// Renders a NavLink for items with an href, or a <button> for action-only items
+// (e.g. "Your Profile" which opens a modal via onClick).
 function FlatNavItem({ item, collapsed, colorKey = "orange", danger = false }) {
     const col = resolveColor(colorKey);
     const { pathname } = useLocation();
-    const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"));
+    const isActive = item.href ? pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/")) : false;
+    const isActionOnly = !item.href || (item.onClick && !item.href);
 
-    const inner = (
+    const sharedClassName = `
+        flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio
+        ${TRANSITION_COLORS}
+        ${collapsed ? "justify-center px-0! w-10 h-10 mx-auto" : ""}
+        ${danger ? `text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10 ${collapsed ? GROUP_COLOR_MAP.danger.collapsedBg : ""}` : isActive ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-grey-600 dark:text-grey-400 ${col.hoverBg} ${col.hoverText} ${collapsed ? col.collapsedBg : ""}`}
+    `;
+
+    const content = (
+        <>
+            <span className={`shrink-0 flex items-center justify-center px-3 ${danger ? "text-danger-400" : isActive ? col.activeText : "text-grey-400 dark:text-grey-500"}`}>
+                <NavIcon icon={item.icon} />
+            </span>
+            {!collapsed && (
+                <>
+                    <span className="flex-1 truncate">{item.name}</span>
+                    {isActive && !danger && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${col.dot}`} />}
+                </>
+            )}
+        </>
+    );
+
+    const inner = isActionOnly ? (
+        <button type="button" onClick={item.onClick} className={`w-full text-left ${sharedClassName}`}>
+            {content}
+        </button>
+    ) : (
         <NavLink to={item.href} onClick={item.onClick}>
-            <div
-                className={`
-                    flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio
-                    ${TRANSITION_COLORS}
-                    ${collapsed ? "justify-center px-0! w-10 h-10 mx-auto" : ""}
-                    ${danger ? "text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10" : isActive ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-grey-600 dark:text-grey-400 ${col.hoverBg} ${col.hoverText}`}
-                `}
-            >
-                <span className={`shrink-0 flex items-center justify-center ${danger ? "text-danger-400" : isActive ? col.activeText : "text-grey-400 dark:text-grey-500"}`}>
-                    <NavIcon icon={item.icon} />
-                </span>
-                {!collapsed && (
-                    <>
-                        <span className="flex-1 truncate">{item.name}</span>
-                        {isActive && !danger && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${col.dot}`} />}
-                    </>
-                )}
-            </div>
+            <div className={sharedClassName}>{content}</div>
         </NavLink>
     );
 
@@ -168,15 +196,18 @@ function SidebarGroup({ group, collapsed, currentPath }) {
     if (collapsed) {
         return (
             <div className="flex flex-col items-center gap-0.5 py-1">
-                <Tooltip content={group.label} placement="right" delay={100}>
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-aumovio-bold uppercase cursor-default ${isGroupActive ? `${col.activeBg} ${col.activeText}` : "text-grey-400 dark:text-grey-500 hover:bg-grey-100 dark:hover:bg-[#251d3a]"}`}>{group.label.charAt(0)}</div>
-                </Tooltip>
+                {/* <Tooltip content={group.label} placement="right" delay={100}>
+                    <div className={`w-auto h-7 rounded-lg flex items-center justify-center text-xs font-aumovio-bold uppercase cursor-default p-2 ${isGroupActive ? `${col.activeBg} ${col.activeText}` : `text-grey-400 dark:text-grey-500 ${col.collapsedBg} ${col.hoverBg} ${col.hoverText}`}`}>
+                        
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isGroupActive ? col.activeText : col.dot}`} />
+                    </div>
+                </Tooltip> */}
                 {group.items.map((item) => {
                     const active = currentPath === item.href || (item.href !== "/" && currentPath.startsWith(item.href + "/"));
                     return (
                         <Tooltip key={item.name} content={item.name} placement="right" delay={100}>
                             <NavLink to={item.href}>
-                                <div className={`w-9 h-9 flex items-center justify-center rounded-xl ${TRANSITION_COLORS} ${active ? `${col.activeBg} ${col.activeText}` : `text-grey-400 dark:text-grey-500 ${col.hoverBg} ${col.hoverText}`}`}>
+                                <div className={`w-9 h-9 flex items-center justify-center rounded-xl ${TRANSITION_COLORS} ${active ? `${col.activeBg} ${col.activeText}` : `text-grey-400 dark:text-grey-500 ${col.collapsedBg} ${col.hoverBg} ${col.hoverText}`}`}>
                                     <span className={`flex items-center justify-center ${active ? col.activeText : ""}`}>
                                         <NavIcon icon={item.icon} />
                                     </span>
@@ -204,7 +235,7 @@ function SidebarGroup({ group, collapsed, currentPath }) {
                         return (
                             <NavLink key={item.name} to={item.href}>
                                 <div className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_COLORS} ${active ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-grey-600 dark:text-grey-400 ${col.hoverBg} ${col.hoverText}`}`}>
-                                    <span className={`shrink-0 flex items-center justify-center ${active ? col.activeText : "text-grey-400 dark:text-grey-500"}`}>
+                                    <span className={`shrink-0 flex items-center justify-center ${active ? col.activeText : ""}`}>
                                         <NavIcon icon={item.icon} />
                                     </span>
                                     <span className="flex-1 truncate">{item.name}</span>
@@ -220,7 +251,7 @@ function SidebarGroup({ group, collapsed, currentPath }) {
 }
 
 // ── UserCard ──────────────────────────────────────────────────────────────────
-function UserCard({ user, collapsed }) {
+function UserCard({ user, collapsed, onOpenProfile }) {
     const name = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
     const division = user?.segmentDesc ?? "";
     const role = resolveRoleLabel(user?.role);
@@ -228,19 +259,36 @@ function UserCard({ user, collapsed }) {
 
     if (collapsed) {
         return (
-            <div className="flex justify-center py-3 shrink-0 border-b border-grey-100 dark:border-grey-800">
-                <Tooltip content={`${name} · ${role}`} placement="right" delay={100}>
-                    <Avatar name={name} size="sm" bordered />
+            <div className="flex justify-center py-3 shrink-0">
+                <Tooltip content={`${name} · ${role} — View profile`} placement="right" delay={100}>
+                    <button
+                        type="button"
+                        onClick={onOpenProfile}
+                        aria-label="View your profile"
+                        className={`rounded-full ${TRANSITION_SPRING} ${HOVER_LIFT_SM} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50`}
+                    >
+                        <Avatar name={name} size="md" />
+                    </button>
                 </Tooltip>
             </div>
         );
     }
 
     return (
-        <div className="mx-3 mt-3 mb-1 p-3 rounded-xl shrink-0 bg-orange-50 dark:bg-orange-400/8 border border-orange-100 dark:border-orange-400/15 flex items-center gap-3">
+        <button
+            type="button"
+            onClick={onOpenProfile}
+            aria-label="View your profile"
+            className={`mx-3 mt-3 mb-1 p-3 rounded-xl shrink-0 w-[calc(100%-1.5rem)]
+                bg-orange-50 dark:bg-orange-400/8
+                border border-orange-100 dark:border-orange-400/15
+                flex items-center gap-3 text-left
+                ${TRANSITION_SPRING} ${HOVER_LIFT_SM}
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50`}
+        >
             <Avatar name={name} size="lg" />
             <div className="min-w-0 flex-1">
-                <p className="text-sm font-aumovio-bold text-black/85 dark:text-white/90 truncate leading-tight">{name || "User"}</p>
+                <p className="text-sm font-aumovio-bold text-black/85 dark:text-white/90 truncate leading-tight">{name || "USER"}</p>
                 {division && <p className="text-xs text-grey-500 dark:text-grey-400 truncate mt-0.5">{division}</p>}
                 <div className="mt-1.5">
                     <Badge variant={badgeVariant} size="xs" pill>
@@ -248,7 +296,7 @@ function UserCard({ user, collapsed }) {
                     </Badge>
                 </div>
             </div>
-        </div>
+        </button>
     );
 }
 
@@ -256,71 +304,102 @@ function UserCard({ user, collapsed }) {
 export default function Sidebar() {
     const { layout, sidebarOpen, toggleSidebar } = useLayout();
     const { pathname } = useLocation();
-    const { user, isLoading, navGroups, profileItems, publicLinks } = useNav();
+    const { mode: themeMode, toggle: toggleTheme } = useTheme();
+    const { user, isLoading, navGroups, profileItems, publicLinks, profileOpen, openProfile, closeProfile } = useNav();
 
     // Sidebar is only rendered in sidebar layout mode — guard AFTER all hooks
     if (layout !== "sidebar") return null;
 
     const isAuth = Boolean(user) && !isLoading;
     const collapsed = !sidebarOpen;
-    const sidebarProfileLinks = profileItems.filter((item) => !item.divider);
+    // Only Logout (and any future non-profile, non-divider items) remain in the footer.
+    // "Your Profile" is now accessible exclusively by clicking the UserCard.
+    const sidebarProfileLinks = profileItems.filter((item) => !item.divider && item.id !== "profile");
 
     return (
-        <aside className={["sticky top-0 z-40 h-screen self-start flex flex-col shrink-0", "bg-white dark:bg-[#0d0d14]", "border-r border-grey-100 dark:border-grey-800", "shadow-[1px_0_8px_0_rgba(0,0,0,0.04)] dark:shadow-none", sidebarOpen ? `${ANIMATE_SLIDE_RIGHT} w-auto` : `${ANIMATE_SLIDE_LEFT} w-16`].join(" ")}>
-            {/* Header: Logo + app title + collapse toggle */}
-            <div className={`flex shrink-0 border-b border-grey-100 dark:border-grey-800 ${sidebarOpen ? "flex-col px-4 py-3" : "flex-col items-center px-2 gap-1 py-3"}`}>
-                {sidebarOpen ? (
-                    <div className="flex items-start justify-between gap-2">
-                        <NavLink to="/" className="flex flex-col items-start min-w-0 overflow-hidden">
-                            <Logo className="w-auto h-16 md:h-20 lg:h-24" />
-                            {APP_DISPLAY_NAME && <span className="text-sm font-aumovio-bold text-black/80 dark:text-white/85 tracking-wide truncate mt-0.5">{APP_DISPLAY_NAME}</span>}
-                        </NavLink>
-                        <Tooltip content="Collapse" placement="right" delay={300}>
-                            <button onClick={toggleSidebar} aria-label="Collapse sidebar" className={["p-1.5 rounded-lg shrink-0 mt-1", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
-                                <ChevronDoubleLeftIcon className="w-4 h-4" />
-                            </button>
-                        </Tooltip>
-                    </div>
-                ) : (
-                    <>
-                        <Tooltip content={APP_DISPLAY_NAME ?? "Home"} placement="right" delay={100}>
-                            <NavLink to="/" className="flex flex-col items-center gap-0.5">
-                                {/* <Logo className="w-auto h-8" /> */}
-                                {/* {(APP_SHORT_NAME || APP_DISPLAY_NAME) && <span className="text-[9px] font-aumovio-bold text-grey-400 dark:text-grey-500 tracking-wider uppercase leading-none text-center">{APP_SHORT_NAME || APP_DISPLAY_NAME}</span>} */}
+        <>
+            <aside className={["sticky top-0 z-40 h-screen self-start flex flex-col shrink-0", "bg-white dark:bg-[#0d0d14]", "border-r border-grey-100 dark:border-grey-800", "shadow-[1px_0_8px_0_rgba(0,0,0,0.04)] dark:shadow-none", sidebarOpen ? `${ANIMATE_SLIDE_RIGHT} w-auto` : `${ANIMATE_SLIDE_LEFT} w-16`].join(" ")}>
+                {/* Header: Logo + app title + collapse toggle */}
+                <div className={`flex shrink-0 border-b border-grey-100 dark:border-grey-800 ${sidebarOpen ? "flex-col px-4 py-3" : "flex-col items-center px-2 gap-1 py-3"}`}>
+                    {sidebarOpen ? (
+                        <div className="flex items-start justify-between gap-2">
+                            <NavLink to="/" className="flex flex-col items-start min-w-0 overflow-hidden">
+                                <Logo className="h-8 md:h-10 lg:h-12 w-auto" />
+                                {APP_DISPLAY_NAME && <span className="text-sm font-aumovio-bold text-black/80 dark:text-white/85 tracking-wide truncate mt-0.5">{APP_DISPLAY_NAME}</span>}
                             </NavLink>
-                        </Tooltip>
-                        <Tooltip content="Expand" placement="right" delay={300}>
-                            <button onClick={toggleSidebar} aria-label="Expand sidebar" className={["p-1.5 rounded-lg shrink-0", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
-                                <ChevronDoubleRightIcon className="w-4 h-4" />
-                            </button>
-                        </Tooltip>
-                    </>
-                )}
-            </div>
-
-            {/* User card */}
-            {isAuth && <UserCard user={user} collapsed={collapsed} />}
-
-            {/* Navigation */}
-            <nav className="flex-1 overflow-y-auto hide-scrollbar px-2 py-3 space-y-0.5">
-                {!isAuth && publicLinks.map((item) => <FlatNavItem key={item.name} item={item} collapsed={collapsed} />)}
-                {isAuth && navGroups.map((group) => <SidebarGroup key={group.label} group={group} collapsed={collapsed} currentPath={pathname} />)}
-            </nav>
-
-            {/* Footer: theme toggle + account links */}
-            <div className="shrink-0 border-t border-grey-100 dark:border-grey-800 px-2 py-3 space-y-1">
-                <div className={`flex items-center px-2 py-1 ${sidebarOpen ? "justify-between" : "justify-center"}`}>
-                    {sidebarOpen && <span className="text-xs text-grey-400 dark:text-grey-500 font-aumovio">Appearance</span>}
-                    <Tooltip content="Toggle theme" placement="right" delay={200} disabled={sidebarOpen}>
-                        <ThemeToggle size="sm" variant="cycle" />
-                    </Tooltip>
+                            <Tooltip content="Collapse" placement="right" delay={300}>
+                                <button onClick={toggleSidebar} aria-label="Collapse sidebar" className={["p-1.5 rounded-lg shrink-0 mt-1", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
+                                    <ChevronDoubleLeftIcon className="w-4 h-4" />
+                                </button>
+                            </Tooltip>
+                        </div>
+                    ) : (
+                        <>
+                            <Tooltip content={APP_DISPLAY_NAME ?? "Home"} placement="right" delay={100}>
+                                <NavLink to="/" className="flex flex-col items-center gap-0.5">
+                                    {/* <Logo className="w-auto h-8" /> */}
+                                    {/* {(APP_SHORT_NAME || APP_DISPLAY_NAME) && <span className="text-[9px] font-aumovio-bold text-grey-400 dark:text-grey-500 tracking-wider uppercase leading-none text-center">{APP_SHORT_NAME || APP_DISPLAY_NAME}</span>} */}
+                                </NavLink>
+                            </Tooltip>
+                            <Tooltip content="Expand" placement="right" delay={300}>
+                                <button onClick={toggleSidebar} aria-label="Expand sidebar" className={["p-1.5 rounded-lg shrink-0", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
+                                    <ChevronDoubleRightIcon className="w-4 h-4" />
+                                </button>
+                            </Tooltip>
+                        </>
+                    )}
                 </div>
 
-                {sidebarOpen && isAuth && sidebarProfileLinks.length > 0 && <p className="px-3 pt-1 text-[10px] font-aumovio-bold uppercase tracking-widest text-grey-400 dark:text-grey-500">Account</p>}
-                {sidebarProfileLinks.map((item) => (
-                    <FlatNavItem key={item.id} item={item} collapsed={collapsed} danger={item.danger ?? false} />
-                ))}
-            </div>
-        </aside>
+                {/* USER card — clicking opens the Profile modal */}
+                {isAuth && <UserCard user={user} collapsed={collapsed} onOpenProfile={openProfile} />}
+
+                {/* Navigation */}
+                <nav className="flex-1 overflow-y-auto hide-scrollbar px-2 py-3 space-y-0.5">
+                    {!isAuth && publicLinks.map((item) => <FlatNavItem key={item.name} item={item} collapsed={collapsed} />)}
+                    {isAuth && navGroups.map((group) => <SidebarGroup key={group.label} group={group} collapsed={collapsed} currentPath={pathname} />)}
+                </nav>
+
+                {/* Footer: theme toggle + account links */}
+                <div className="shrink-0 border-t border-grey-100 dark:border-grey-800 px-2 py-3 space-y-1">
+                    {/* Appearance row — matches FlatNavItem shape in both collapsed and expanded states */}
+                    {(() => {
+                        const ThemeIcon = THEME_ICONS[themeMode];
+                        const themeLabel = THEME_LABELS[themeMode];
+                        const sharedBtnCls = `${TRANSITION_COLORS} text-grey-600 dark:text-grey-400 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-500 dark:hover:text-orange-400`;
+                        return collapsed ? (
+                            <Tooltip content="Appearance" placement="right" delay={100}>
+                                <button
+                                    type="button"
+                                    onClick={toggleTheme}
+                                    aria-label={themeLabel}
+                                    className={`w-10 h-10 mx-auto flex items-center justify-center rounded-xl bg-grey-100/80 dark:bg-orange-400/[.07] ${sharedBtnCls}`}
+                                >
+                                    <ThemeIcon className="w-4 h-4 shrink-0" />
+                                </button>
+                            </Tooltip>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={toggleTheme}
+                                aria-label={themeLabel}
+                                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio text-left ${sharedBtnCls}`}
+                            >
+                                <span className="shrink-0 flex items-center justify-center px-3 text-grey-400 dark:text-grey-500">
+                                    <ThemeIcon className="w-4 h-4" />
+                                </span>
+                                <span className="flex-1 truncate">Appearance</span>
+                            </button>
+                        );
+                    })()}
+
+                    {sidebarProfileLinks.map((item) => (
+                        <FlatNavItem key={item.id} item={item} collapsed={collapsed} danger={item.danger ?? false} />
+                    ))}
+                </div>
+            </aside>
+
+            {/* Profile modal — portalled to body */}
+            <ProfileModal open={profileOpen} onClose={closeProfile} user={user} />
+        </>
     );
 }

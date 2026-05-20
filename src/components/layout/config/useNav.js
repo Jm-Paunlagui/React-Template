@@ -17,14 +17,14 @@
 import { ArrowRightStartOnRectangleIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
-import { AuthMiddleware } from "../../middleware/authentication/AuthMiddleware";
+import { AuthMiddleware } from "../../../middleware/authentication/AuthMiddleware";
 import { AUTH_FLAT_LINKS, NAV_GROUPS, PUBLIC_LINKS } from "./nav.config";
 
 export function useNav() {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [profileOpen, setProfileOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -45,10 +45,13 @@ export function useNav() {
         navigate("/user/logout");
     }, [navigate]);
 
+    const openProfile = useCallback(() => setProfileOpen(true), []);
+    const closeProfile = useCallback(() => setProfileOpen(false), []);
+
     // Role-based groups from config — empty array when unauthenticated or loading
     const navGroups = useMemo(() => {
         if (isLoading || !user) return [];
-        return NAV_GROUPS[user.role] ?? NAV_GROUPS.User ?? [];
+        return NAV_GROUPS[user.role] ?? NAV_GROUPS.USER ?? [];
     }, [isLoading, user]);
 
     // Profile + sign-out items — icon is a component ref so NavIcon can apply className
@@ -59,9 +62,9 @@ export function useNav() {
                 id: "profile",
                 name: "Your Profile",
                 label: "Your Profile",
-                href: `/user/profile/${user.userId}`,
                 icon: UserCircleIcon,
                 danger: false,
+                onClick: openProfile,
             },
             { divider: true },
             {
@@ -74,7 +77,7 @@ export function useNav() {
                 onClick: logout,
             },
         ];
-    }, [user, logout]);
+    }, [user, logout, openProfile]);
 
     return {
         user,
@@ -84,5 +87,8 @@ export function useNav() {
         authFlatLinks: AUTH_FLAT_LINKS,
         publicLinks: PUBLIC_LINKS,
         logout,
+        profileOpen,
+        openProfile,
+        closeProfile,
     };
 }
