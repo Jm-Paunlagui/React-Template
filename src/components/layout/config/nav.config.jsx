@@ -14,7 +14,7 @@
  * Icon library: react-icons/md (primary) + react-icons/fa (gaps)
  */
 
-import { MdHelp, MdHistory, MdHome, MdLogin, MdSpaceDashboard } from "react-icons/md";
+import { MdHelp, MdHistory, MdHome, MdLogin, MdOutlineChangeHistory, MdSpaceDashboard } from "react-icons/md";
 
 const SIZE = 16;
 
@@ -40,7 +40,10 @@ export const NAV_GROUPS = {
         {
             label: "Other",
             color: "grey",
-            items: [{ name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> }],
+            items: [
+                { name: "Version History", href: "/other/changelog", icon: <MdOutlineChangeHistory size={SIZE} />, description: "What's changed in each release" },
+                { name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> },
+            ],
         },
     ],
 
@@ -53,7 +56,10 @@ export const NAV_GROUPS = {
         {
             label: "Other",
             color: "grey",
-            items: [{ name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> }],
+            items: [
+                { name: "Version History", href: "/other/changelog", icon: <MdOutlineChangeHistory size={SIZE} />, description: "What's changed in each release" },
+                { name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> },
+            ],
         },
     ],
 
@@ -66,7 +72,10 @@ export const NAV_GROUPS = {
         {
             label: "Other",
             color: "grey",
-            items: [{ name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> }],
+            items: [
+                { name: "Version History", href: "/other/changelog", icon: <MdOutlineChangeHistory size={SIZE} />, description: "What's changed in each release" },
+                { name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> },
+            ],
         },
     ],
 

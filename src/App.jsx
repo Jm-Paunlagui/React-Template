@@ -29,6 +29,9 @@ const ChangePasswordView = lazy(() => import("./features/auth/ChangePassword.vie
 
 const LoggingAndObservabilityView = lazy(() => import("./features/system/loggingnobservability/loggingnobservability.view"));
 
+// Other
+const ChangelogView = lazy(() => import("./features/other/changelog/Changelog.view"));
+
 
 // Role constants — must match the strings stored in T_EMP_MGMT_ADMIN.EMP_ROLE
 // and returned in the JWT payload as user.role.
@@ -128,6 +131,11 @@ function AppRoutes() {
 
             <Route element={<ProtectedRoute role={[ROLES.USER, ROLES.ADMIN, ROLES.SADMIN, ROLES.APPROVER, ROLES.VIEWER, ROLES.ROBOT]} />}>
                 <Route path="system/logging-observability" element={<LoggingAndObservabilityView />} />
+            </Route>
+
+            {/* Other — Version History (all authenticated roles) */}
+            <Route element={<ProtectedRoute role={[ROLES.USER, ROLES.ADMIN, ROLES.SADMIN, ROLES.APPROVER, ROLES.VIEWER, ROLES.ROBOT]} />}>
+                <Route path="other/changelog" element={<ChangelogView />} />
             </Route>
 
             {/* Error pages */}

@@ -1,0 +1,33 @@
+/**
+ * changelog.api.js
+ *
+ * HTTP calls for the Version History / Changelog feature.
+ * All requests are routed through HttpClient (CSRF auto-injected).
+ */
+
+import httpClient from "../../../middleware/HttpClient";
+
+export const changelogApi = {
+    /** @returns {Promise<import("axios").AxiosResponse>} */
+    list: () => httpClient.get("changelog"),
+
+    /**
+     * @param {{ displayDate: string, version: string, title: string, summary: string,
+     *           type: string, authors: string[], coAuthors: string[] }} data
+     * @returns {Promise<import("axios").AxiosResponse>}
+     */
+    create: (data) => httpClient.post("changelog", data),
+
+    /**
+     * @param {string} id
+     * @param {object} data
+     * @returns {Promise<import("axios").AxiosResponse>}
+     */
+    update: (id, data) => httpClient.put(`changelog/${id}`, data),
+
+    /**
+     * @param {string} id
+     * @returns {Promise<import("axios").AxiosResponse>}
+     */
+    delete: (id) => httpClient.delete(`changelog/${id}`),
+};
