@@ -6,14 +6,13 @@
  *
  * Responsibilities:
  *   - Form state (currentPassword, newPassword, confirmPassword)
- *   - Client-side validation: non-empty, passwords match, new ≠ current,
- *     new ≠ default password (VITE_ADMIN_DEFAULT_PASSWORD, if configured)
+ *   - Client-side validation: non-empty, passwords match, new ≠ current
  *   - Calls PATCH auth/change-password
  *   - On success: refreshes stored user, clears auth cache, navigates to /dashboard
  *   - Shake animation trigger (shaking / setShaking)
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../../components/ui/toast.utils";
 import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
@@ -36,7 +35,20 @@ export const useChangePassword = () => {
     const [error, setError] = useState("");
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [shaking, setShaking] = useState(false);
+    const [isDefaultPassword, setIsDefaultPassword] = useState(false);
     const navigate = useNavigate();
+
+    // Resolve isDefaultPassword from the server-verified user object (H-02).
+    // AuthMiddleware.isAuth() is async — never call it synchronously at render.
+    useEffect(() => {
+        let cancelled = false;
+        AuthMiddleware.isAuth().then((user) => {
+            if (!cancelled && user) {
+                setIsDefaultPassword(user.isDefaultPassword === true);
+            }
+        });
+        return () => { cancelled = true; };
+    }, []);
 
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
@@ -58,11 +70,9 @@ export const useChangePassword = () => {
         if (!isPasswordValid) return "Please ensure your new password meets all requirements.";
         if (form.currentPassword === form.newPassword) return "New password must be different from your current password.";
 
-        // Client-side default password check (server always enforces as well)
-        const defaultPw = import.meta.env.VITE_ADMIN_DEFAULT_PASSWORD;
-        if (defaultPw && form.newPassword === defaultPw) {
-            return "The new password cannot be the system default password.";
-        }
+        // Note: server enforces the default-password constraint authoritatively.
+        // No client-side check is needed here — it would require exposing the
+        // default password in the frontend bundle (CWE-312 / M-16).
 
         return "";
     }, [form, isPasswordValid]);
@@ -92,17 +102,15 @@ export const useChangePassword = () => {
 
                 const user = res.data?.data?.user;
                 if (user) {
-                    // Update localStorage user so isAuth() fast-path reflects new state
+                    // Update only the non-PII expiry hint — no user payload in localStorage (CWE-312)
                     const SESSION_TIMEOUT_MS = parseInt(import.meta.env.VITE_SESSION_TIMEOUT_MS ?? String(30 * 60 * 1000), 10);
-                    AuthMiddleware.setLocalStorage("user", {
-                        ...user,
-                        _sessionExpiresAt: Date.now() + SESSION_TIMEOUT_MS,
-                    });
+                    localStorage.setItem("session_exp", String(Date.now() + SESSION_TIMEOUT_MS));
                 }
 
                 AuthMiddleware.clearAuthCache();
                 toast.success(res.data?.message || "Password changed successfully!");
-                navigate(user?.role === "ROBOT" ? "/management/rfid-management" : "/dashboard");
+                const robotRedirect = import.meta.env.VITE_ROBOT_REDIRECT || "/dashboard";
+                navigate(user?.role === "ROBOT" ? robotRedirect : "/dashboard");
                 return true;
             } catch (err) {
                 const message = err.response?.data?.message || err.message || "Failed to change password.";
@@ -128,5 +136,6 @@ export const useChangePassword = () => {
         shaking,
         setShaking,
         handleSubmit,
+        isDefaultPassword,
     };
 };

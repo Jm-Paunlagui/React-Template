@@ -25,6 +25,7 @@
 
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import LoadingScreen from "../layout/LoadingScreen";
 import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
 
 export default function ProtectedRoute({ role = null, check = null, redirectTo = "/unauthorized" }) {
@@ -67,11 +68,7 @@ export default function ProtectedRoute({ role = null, check = null, redirectTo =
     }, [role, check]);
 
     if (status === "checking") {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="w-8 h-8 border-4 rounded-full animate-spin border-primary-400 border-t-transparent" />
-            </div>
-        );
+        return <LoadingScreen />;
     }
 
     if (status === "denied") {

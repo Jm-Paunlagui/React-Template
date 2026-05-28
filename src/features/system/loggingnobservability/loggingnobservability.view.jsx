@@ -6,12 +6,12 @@ import { ANIMATE_PAGE_ENTER, TRANSITION_COLORS } from "../../../assets/styles/pr
 import ErrorBoundary from "../../../components/feedback/ErrorBoundary";
 import Button from "../../../components/ui/Button";
 import { Tabs } from "../../../components/ui/Tabs";
-import AlertsTab from "../metrics/components/AlertsTab";
-import HealthTab from "../metrics/components/HealthTab";
-import OverviewTab from "../metrics/components/OverviewTab";
-import RedMetricsTab from "../metrics/components/RedMetricsTab";
-import SystemTab from "../metrics/components/SystemTab";
-import { useMetrics } from "../metrics/metrics.hook";
+import AlertsTab from "./components/AlertsTab";
+import HealthTab from "./components/HealthTab";
+import OverviewTab from "./components/OverviewTab";
+import RedMetricsTab from "./components/RedMetricsTab";
+import SystemTab from "./components/SystemTab";
+import { useMetrics } from "./metrics.hook";
 import AuditLogTable from "./components/AuditLogTable";
 import AuditStatsRow from "./components/AuditStatsRow";
 import DeleteLoggingTab from "./components/DeleteLoggingTab";

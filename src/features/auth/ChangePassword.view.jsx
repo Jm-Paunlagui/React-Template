@@ -28,7 +28,6 @@ import Logo from "../../components/ui/Logo";
 import Divider from "../../components/ui/typography/Divider";
 import { H4 } from "../../components/ui/typography/Heading";
 import Paragraph from "../../components/ui/typography/Paragraph";
-import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
 import { useChangePassword } from "./changePassword.hook";
 
 /**
@@ -37,9 +36,10 @@ import { useChangePassword } from "./changePassword.hook";
 function ChangePasswordView() {
     const hook = useChangePassword();
 
-    // Read isDefaultPassword from stored user for contextual subtitle
-    const storedUser = AuthMiddleware.isAuth();
-    const isDefaultPassword = storedUser?.isDefaultPassword === true;
+    // isDefaultPassword is derived from the hook's server-validated user data.
+    // The hook reads from the /auth/me endpoint response — not localStorage —
+    // so this is always accurate and avoids calling the async isAuth() at render (H-02).
+    const isDefaultPassword = hook.isDefaultPassword === true;
 
     const canSubmit = hook.isPasswordValid && hook.form.newPassword === hook.form.confirmPassword && hook.form.newPassword.length > 0 && !hook.loading;
 

@@ -261,43 +261,39 @@ class CsrfMiddleware {
         if (this._refreshPromise) return this._refreshPromise;
 
         this._refreshPromise = (async () => {
-            try {
-                const headers = { "Content-Type": "application/json" };
-                if (this._token) headers["x-csrf-token"] = this._token;
-                headers["X-Client-Username"] = this._getTraceabilityHeader();
+            const headers = { "Content-Type": "application/json" };
+            if (this._token) headers["x-csrf-token"] = this._token;
+            headers["X-Client-Username"] = this._getTraceabilityHeader();
 
-                const response = await fetch(`${API_BASE_URL}csrf/refresh`, {
-                    method: "POST",
-                    credentials: "include",
-                    headers,
-                });
+            const response = await fetch(`${API_BASE_URL}csrf/refresh`, {
+                method: "POST",
+                credentials: "include",
+                headers,
+            });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                const data = await response.json();
-                if (!data.success || !data.token) {
-                    throw new Error(data.message || "Refresh returned no token");
-                }
-
-                this._token = data.token;
-                this._lastFetchTime = Date.now();
-
-                if (data.expiresIn) this._tokenExpiry = Date.now() + data.expiresIn;
-                if (data.expiresAt) this._tokenExpiresAt = data.expiresAt;
-
-                if (data.refreshIn && data.refreshIn > 0) {
-                    this._scheduleRefresh(data.refreshIn);
-                } else if (data.expiresIn) {
-                    this._scheduleRefresh(Math.max(0, data.expiresIn - this._refreshBeforeExpiry));
-                }
-
-                this._notifyListeners();
-                return this._token;
-            } catch (err) {
-                throw err;
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
+
+            const data = await response.json();
+            if (!data.success || !data.token) {
+                throw new Error(data.message || "Refresh returned no token");
+            }
+
+            this._token = data.token;
+            this._lastFetchTime = Date.now();
+
+            if (data.expiresIn) this._tokenExpiry = Date.now() + data.expiresIn;
+            if (data.expiresAt) this._tokenExpiresAt = data.expiresAt;
+
+            if (data.refreshIn && data.refreshIn > 0) {
+                this._scheduleRefresh(data.refreshIn);
+            } else if (data.expiresIn) {
+                this._scheduleRefresh(Math.max(0, data.expiresIn - this._refreshBeforeExpiry));
+            }
+
+            this._notifyListeners();
+            return this._token;
         })();
 
         try {

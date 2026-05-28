@@ -111,6 +111,7 @@ class AuthMiddleware {
         AuthMiddleware.removeLocalStorage("user_session");
         AuthMiddleware.removeLocalStorage("user_display");
         AuthMiddleware.removeLocalStorage("user"); // remove legacy key from older sessions
+        localStorage.removeItem("session_exp"); // remove non-PII session expiry hint
     }
 
     /**

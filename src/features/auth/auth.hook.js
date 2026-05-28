@@ -32,7 +32,7 @@ export const useAuth = () => {
      * A non-PII session hint is written to localStorage for the isAuth() fast-path.
      */
     const login = useCallback(
-        async (credentials, redirectPath = "/system/logging-observability") => {
+        async (credentials, redirectPath = import.meta.env.VITE_DEFAULT_REDIRECT || "system/logging-observability") => {
             setLoading(true);
             setError(null);
             setIntegrityError(false);
@@ -45,15 +45,11 @@ export const useAuth = () => {
 
                 const user = response.data?.data?.user;
 
-                // Persist the user payload with a session-expiry timestamp so that
-                // useSessionWarning.schedule() can compute the warning delay correctly.
-                // Without this write, _sessionExpiresAt is undefined, delay becomes NaN,
-                // and setTimeout fires immediately — causing the modal to pop on login.
+                // Persist only the numeric ms expiry timestamp — no PII, no user payload
+                // (CWE-312). useSessionWarning reads this key to compute its warning delay.
                 if (user) {
-                    AuthMiddleware.setLocalStorage("user", {
-                        ...user,
-                        _sessionExpiresAt: Date.now() + SESSION_TIMEOUT_MS,
-                    });
+                    const expiresAt = Date.now() + SESSION_TIMEOUT_MS;
+                    localStorage.setItem("session_exp", String(expiresAt));
                 }
 
                 // Set the non-PII session hint, clear the stale cache, and write
@@ -69,7 +65,7 @@ export const useAuth = () => {
                     toast.info("Please change your password before continuing.");
                     navigate("/auth/change-password");
                 } else {
-                    const landingPath = user?.role === "ROBOT" ? "/management/rfid-management" : redirectPath;
+                    const landingPath = user?.role === "ROBOT" ? (import.meta.env.VITE_ROBOT_REDIRECT || redirectPath) : redirectPath;
                     navigate(landingPath);
                 }
                 toast.success(response.data?.message || "Welcome!");

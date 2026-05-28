@@ -74,12 +74,16 @@ export function useSessionWarning() {
         clearTimers();
         setVisible(false);
 
-        const user = AuthMiddleware.getLocalStorage("user");
-        if (!user?._sessionExpiresAt) return;
+        // Read the numeric ms expiry timestamp stored as a non-PII string (CWE-312).
+        // The full user payload is never written to localStorage.
+        const raw = localStorage.getItem("session_exp");
+        if (!raw) return;
+        const sessionExpiresAt = parseInt(raw, 10);
+        if (!Number.isFinite(sessionExpiresAt)) return;
 
-        const delay = user._sessionExpiresAt - Date.now() - WARNING_SECS * 1000;
+        const delay = sessionExpiresAt - Date.now() - WARNING_SECS * 1000;
 
-        // Guard against NaN (e.g. if _sessionExpiresAt is somehow non-numeric).
+        // Guard against NaN / negative values.
         // NaN causes setTimeout to fire immediately, popping the modal on login.
         if (!Number.isFinite(delay)) return;
 
@@ -92,13 +96,8 @@ export function useSessionWarning() {
         setExtending(true);
         try {
             await authApi.refresh();
-            const user = AuthMiddleware.getLocalStorage("user");
-            if (user) {
-                AuthMiddleware.setLocalStorage("user", {
-                    ...user,
-                    _sessionExpiresAt: Date.now() + SESSION_TIMEOUT_MS,
-                });
-            }
+            // Update only the non-PII expiry hint — no user payload in localStorage (CWE-312).
+            localStorage.setItem("session_exp", String(Date.now() + SESSION_TIMEOUT_MS));
             schedule();
         } catch {
             expireSession();
@@ -110,8 +109,9 @@ export function useSessionWarning() {
     // ── mount / unmount ────────────────────────────────────────────────────────
 
     useEffect(() => {
-        const user = AuthMiddleware.getLocalStorage("user");
-        if (!user) return;
+        // Check for the non-PII session expiry hint (CWE-312 — no user object in storage).
+        const raw = localStorage.getItem("session_exp");
+        if (!raw) return;
 
         schedule();
         return clearTimers;

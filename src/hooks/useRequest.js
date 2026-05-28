@@ -67,6 +67,13 @@ const IN_FLIGHT = new Map();
 /** @type {Map<string, { data: any, timestamp: number }>} Resolved cache */
 const CACHE = new Map();
 
+/**
+ * Maximum number of entries the CACHE map may hold at once.
+ * When exceeded, the oldest entry (first key in insertion order) is evicted.
+ * This prevents unbounded memory growth in long-running SPA sessions (L-01).
+ */
+const MAX_CACHE_SIZE = 200;
+
 // ─── Public cache utilities ───────────────────────────────────────────────────
 
 /**
@@ -85,13 +92,27 @@ export function invalidateCache(key) {
 }
 
 /**
+ * Internal helper — set a cache entry and evict the oldest if MAX_CACHE_SIZE is exceeded.
+ * @param {string} key
+ * @param {any}    value
+ */
+function _cacheSet(key, value) {
+    CACHE.set(key, value);
+    if (CACHE.size > MAX_CACHE_SIZE) {
+        // Map preserves insertion order — the first key is the oldest entry.
+        const oldest = CACHE.keys().next().value;
+        CACHE.delete(oldest);
+    }
+}
+
+/**
  * Seed the cache externally (e.g., from a form's POST response that returns
  * the updated resource — no need to refetch).
  * @param {string} key
  * @param {any}    data
  */
 export function seedCache(key, data) {
-    CACHE.set(key, { data, timestamp: Date.now() });
+    _cacheSet(key, { data, timestamp: Date.now() });
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
@@ -169,7 +190,7 @@ export function useRequest(key, fetcher, options = {}) {
                 // When it settles, remove it from the in-flight map and seed cache
                 promise
                     .then((data) => {
-                        CACHE.set(key, { data, timestamp: Date.now() });
+                        _cacheSet(key, { data, timestamp: Date.now() });
                         IN_FLIGHT.delete(key);
                     })
                     .catch(() => {
