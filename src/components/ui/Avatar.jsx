@@ -1,5 +1,5 @@
 /**
- * Avatar — User profile image or initials fallback.
+ * Avatar — USER profile image or initials fallback.
  *
  * Props:
  *   src       — image URL
@@ -22,10 +22,10 @@ const SIZES = {
 };
 
 const STATUS_DOT = {
-    online: "bg-success-400 ring-2 ring-white",
-    offline: "bg-grey-400 ring-2 ring-white",
-    busy: "bg-danger-400 ring-2 ring-white",
-    away: "bg-warn-400 ring-2 ring-white",
+    online: "bg-success-400 ring-2 ring-white dark:ring-[#1a1030]",
+    offline: "bg-grey-400 dark:bg-grey-500 ring-2 ring-white dark:ring-[#1a1030]",
+    busy: "bg-danger-400 ring-2 ring-white dark:ring-[#1a1030]",
+    away: "bg-warn-400 ring-2 ring-white dark:ring-[#1a1030]",
 };
 
 // Deterministic color from name string

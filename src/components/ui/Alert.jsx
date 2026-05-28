@@ -20,31 +20,31 @@ import { ANIMATE_FADE_IN, TRANSITION_COLORS } from "../../assets/styles/pre-set-
 const CONFIG = {
     info: {
         bg: "bg-purple-100/20 dark:bg-purple-400/10",
-        border: "border-purple-400/30",
+        border: "border-purple-400/30 dark:border-purple-400/25",
         text: "text-purple-500 dark:text-purple-300",
         icon: InformationCircleIcon,
     },
     success: {
         bg: "bg-success-100/40 dark:bg-success-400/10",
-        border: "border-success-400/30",
+        border: "border-success-400/30 dark:border-success-400/25",
         text: "text-success-500 dark:text-success-300",
         icon: CheckCircleIcon,
     },
     warning: {
         bg: "bg-warn-100/30 dark:bg-warn-400/10",
-        border: "border-warn-400/30",
-        text: "text-warn-500 dark:text-yellow-300",
+        border: "border-warn-400/30 dark:border-warn-400/25",
+        text: "text-warn-600 dark:text-warn-300",
         icon: ExclamationTriangleIcon,
     },
     danger: {
         bg: "bg-danger-100/40 dark:bg-danger-400/10",
-        border: "border-danger-400/30",
+        border: "border-danger-400/30 dark:border-danger-400/25",
         text: "text-danger-500 dark:text-danger-300",
         icon: XCircleIcon,
     },
 };
 
-export function Alert({ variant = "info", title, children, icon: CustomIcon, dismissible = false, onDismiss, actions = [], bordered = true, size = "md" }) {
+export function Alert({ variant = "info", title, children, icon: CustomIcon, dismissible = false, onDismiss, actions = [], bordered = true, size = "md", className = "" }) {
     const [visible, setVisible] = useState(true);
     const cfg = CONFIG[variant] ?? CONFIG.info;
     const Icon = CustomIcon ?? cfg.icon;
@@ -63,6 +63,7 @@ export function Alert({ variant = "info", title, children, icon: CustomIcon, dis
       flex gap-3 rounded-xl font-aumovio ${ANIMATE_FADE_IN}
       ${size === "sm" ? "p-3 text-xs" : "p-4 text-sm"}
       ${cfg.bg} ${bordered ? `border ${cfg.border}` : ""}
+      ${className}
     `}
         >
             <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${cfg.text}`} />

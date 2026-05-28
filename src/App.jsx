@@ -14,23 +14,36 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./assets/styles/index.css";
 
+import SessionWarningModal from "./components/feedback/SessionWarningModal";
 import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
 import Sidebar from "./components/layout/Sidebar";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 import Breadcrumb from "./components/ui/Breadcrumb";
 import { useLayout } from "./contexts/layout/LayoutContext";
-import { BadRequest, InvalidToken, LoginTimeOut, PageNotFound, ServiceUnavailable, Unauthorized } from "./views/errors/ClientErrorResponses";
+import { BadRequest, InvalidToken, LoginTimeOut, PageNotFound, ServiceUnavailable, SignatureMismatch, Unauthorized } from "./views/errors/ClientErrorResponses";
 
 const LoginView = lazy(() => import("./features/auth/Login.view"));
 const LogoutView = lazy(() => import("./features/auth/Logout.view"));
-const DashboardView = lazy(() => import("./features/dashboard/Dashboard.view"));
+const ChangePasswordView = lazy(() => import("./features/auth/ChangePassword.view"));
+
+const LoggingAndObservabilityView = lazy(() => import("./features/system/loggingnobservability/loggingnobservability.view"));
+
 
 // Role constants — must match the strings stored in T_EMP_MGMT_ADMIN.EMP_ROLE
-// and returned in the JWT payload as user.role
-const ROLES = { SADMIN: "SuperAdmin", ADMIN: "Admin", USER: "User" };
+// and returned in the JWT payload as user.role.
+// APPROVER and VIEWER are valid admin roles introduced in the Admin Management feature.
+// ROBOT is an RPA/automation account that accesses RFID Management and Subsidy Management Upload.
+const ROLES = {
+    SADMIN: "SUPER_ADMIN",
+    ADMIN: "ADMIN",
+    USER: "USER",
+    APPROVER: "APPROVER",
+    VIEWER: "VIEWER",
+    ROBOT: "ROBOT",
+};
 
-const BARE_ROUTES = ["/auth", "/sign-up", "/", "/user/logout", "/unauthorized", "/login-timeout", "/invalid-token", "/bad-request", "/page-not-found", "/service-is-currently-unavailable"];
+const BARE_ROUTES = ["/auth", "/", "/user/logout", "/unauthorized", "/login-timeout", "/invalid-token", "/bad-request", "/page-not-found", "/service-is-currently-unavailable", "/signature-mismatch", "/auth/change-password"];
 
 function isBareRoute(pathname) {
     return BARE_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/"));
@@ -94,6 +107,7 @@ function AppContent() {
                 </main>
                 <ConditionalFooter />
             </div>
+            {!bare && <SessionWarningModal />}
         </div>
     );
 }
@@ -106,19 +120,15 @@ function AppRoutes() {
             <Route path="auth" element={<LoginView />} />
             <Route path="user/logout" element={<LogoutView />} />
 
-            {/* Protected — role only */}
-            <Route element={<ProtectedRoute role={[ROLES.USER, ROLES.ADMIN, ROLES.SADMIN]} />}>
-                <Route path="dashboard" element={<DashboardView />} />
+            {/* Change password — accessible to all valid roles including APPROVER/VIEWER/ROBOT.
+                Listed in BARE_ROUTES so no navbar/sidebar renders during this flow. */}
+            <Route element={<ProtectedRoute role={[ROLES.USER, ROLES.ADMIN, ROLES.SADMIN, ROLES.APPROVER, ROLES.VIEWER, ROLES.ROBOT]} />}>
+                <Route path="auth/change-password" element={<ChangePasswordView />} />
             </Route>
 
-            {/* Protected — role + permission (uncomment and adapt)
-            <Route element={<ProtectedRoute
-                role={[ROLES.USER, ROLES.ADMIN, ROLES.SADMIN]}
-                check={(user) => user.area?.includes('INV_CON')}
-            />}>
-                <Route path="inventory" element={<InventoryView />} />
+            <Route element={<ProtectedRoute role={[ROLES.USER, ROLES.ADMIN, ROLES.SADMIN, ROLES.APPROVER, ROLES.VIEWER, ROLES.ROBOT]} />}>
+                <Route path="system/logging-observability" element={<LoggingAndObservabilityView />} />
             </Route>
-            */}
 
             {/* Error pages */}
             <Route path="unauthorized" element={<Unauthorized />} />
@@ -126,7 +136,8 @@ function AppRoutes() {
             <Route path="login-timeout" element={<LoginTimeOut />} />
             <Route path="invalid-token" element={<InvalidToken />} />
             <Route path="page-not-found" element={<PageNotFound />} />
-            <Route element={<ServiceUnavailable />} path="service-is-currently-unavailable" />
+            <Route path="service-is-currently-unavailable" element={<ServiceUnavailable />} />
+            <Route path="signature-mismatch" element={<SignatureMismatch />} />
             <Route path="*" element={<Navigate to="/page-not-found" replace />} />
         </Routes>
     );

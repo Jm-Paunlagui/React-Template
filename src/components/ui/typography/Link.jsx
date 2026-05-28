@@ -15,7 +15,7 @@ const V = {
     default: "text-orange-400 hover:text-orange-500",
     primary: "text-orange-500 font-aumovio-bold hover:text-orange-600",
     muted: "text-grey-500 hover:text-grey-700 dark:text-grey-400 dark:hover:text-grey-200",
-    danger: "text-danger-400 hover:text-danger-500",
+    danger: "text-danger-400 dark:text-danger-300 hover:text-danger-500 dark:hover:text-danger-200",
 };
 
 const UL = {

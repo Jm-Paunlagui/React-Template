@@ -39,9 +39,6 @@
  *   --duration-lazy     700ms     ambient, decorative motion
  */
 
-import { faWarning } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 // ============================================================================
 // BACKGROUNDS
 // ============================================================================
@@ -157,36 +154,36 @@ export const CONTRAST = `font-aumovio-bold tracking-wide text-orange-400 drop-sh
 // ============================================================================
 // STATUS BADGES
 // ============================================================================
-export const STATUS_GREEN = "font-aumovio-bold tracking-wide text-success-400 bg-success-100/60 dark:bg-success-400/15 border border-success-400/30 rounded-lg shadow-sm";
-export const STATUS_RED = "font-aumovio-bold tracking-wide text-danger-400  bg-danger-100 dark:bg-danger-400/15 border border-danger-400/30 rounded-lg shadow-sm";
-export const STATUS_WARNING = "font-aumovio-bold tracking-wide text-warn-400    bg-warn-100/20 dark:bg-warn-400/15 border border-warn-400/30 rounded-lg shadow-sm";
-export const STATUS_BLUE = "font-aumovio-bold tracking-wide text-blue-400    bg-blue-100/25 dark:bg-blue-400/15 border border-blue-400/30 rounded-lg shadow-sm";
-export const STATUS_PURPLE = "font-aumovio-bold tracking-wide text-purple-400  bg-purple-100/28 dark:bg-purple-400/15 border border-purple-400/35 rounded-lg shadow-sm";
-export const STATUS_CYAN = "font-aumovio-bold tracking-wide text-turquoise-400 bg-turquoise-100/22 dark:bg-turquoise-400/15 border border-turquoise-400/25 rounded-lg shadow-sm";
-export const STATUS_AMBER = "font-aumovio-bold tracking-wide text-yellow-400  bg-yellow-100 dark:bg-yellow-400/15 border border-yellow-400/30 rounded-lg shadow-sm";
+export const STATUS_GREEN = "font-aumovio-bold tracking-wide text-success-500 dark:text-success-300 bg-success-100/60 dark:bg-success-400/15 border border-success-400/30 dark:border-success-400/25 rounded-lg shadow-sm";
+export const STATUS_RED = "font-aumovio-bold tracking-wide text-danger-400 dark:text-danger-300 bg-danger-100 dark:bg-danger-400/15 border border-danger-400/30 dark:border-danger-400/25 rounded-lg shadow-sm";
+export const STATUS_WARNING = "font-aumovio-bold tracking-wide text-warn-600 dark:text-warn-300 bg-warn-100/20 dark:bg-warn-400/15 border border-warn-400/30 dark:border-warn-400/25 rounded-lg shadow-sm";
+export const STATUS_BLUE = "font-aumovio-bold tracking-wide text-blue-500 dark:text-blue-300 bg-blue-100/25 dark:bg-blue-400/15 border border-blue-400/30 dark:border-blue-400/25 rounded-lg shadow-sm";
+export const STATUS_PURPLE = "font-aumovio-bold tracking-wide text-purple-400 dark:text-purple-300 bg-purple-100/28 dark:bg-purple-400/15 border border-purple-400/35 dark:border-purple-400/25 rounded-lg shadow-sm";
+export const STATUS_CYAN = "font-aumovio-bold tracking-wide text-turquoise-500 dark:text-turquoise-300 bg-turquoise-100/22 dark:bg-turquoise-400/15 border border-turquoise-400/25 dark:border-turquoise-400/20 rounded-lg shadow-sm";
+export const STATUS_AMBER = "font-aumovio-bold tracking-wide text-yellow-600 dark:text-warn-300 bg-yellow-100 dark:bg-yellow-400/15 border border-yellow-400/30 dark:border-yellow-400/25 rounded-lg shadow-sm";
 
 // ============================================================================
 // HEALTH INDICATOR DOTS
 // ============================================================================
-export const STATUS_INDICATOR_ACTIVE = "w-2.5 h-2.5 bg-success-400 rounded-full flex-shrink-0 shadow-sm ring-2 ring-success-400/30 animate-pulse";
-export const STATUS_INDICATOR_INACTIVE = "w-2.5 h-2.5 bg-grey-500    rounded-full flex-shrink-0 shadow-sm";
-export const STATUS_INDICATOR_WARNING = "w-2.5 h-2.5 bg-warn-100/20 rounded-full flex-shrink-0 shadow-sm ring-2 ring-warn-400/30";
-export const STATUS_INDICATOR_ERROR = "w-2.5 h-2.5 bg-danger-400  rounded-full flex-shrink-0 shadow-sm ring-2 ring-danger-400/30 animate-pulse";
+export const STATUS_INDICATOR_ACTIVE = "w-2.5 h-2.5 bg-success-400 dark:bg-success-400 rounded-full flex-shrink-0 shadow-sm ring-2 ring-success-400/30 dark:ring-success-400/40 animate-pulse";
+export const STATUS_INDICATOR_INACTIVE = "w-2.5 h-2.5 bg-grey-400 dark:bg-grey-500 rounded-full flex-shrink-0 shadow-sm";
+export const STATUS_INDICATOR_WARNING = "w-2.5 h-2.5 bg-warn-400 dark:bg-warn-400 rounded-full flex-shrink-0 shadow-sm ring-2 ring-warn-400/30 dark:ring-warn-400/40";
+export const STATUS_INDICATOR_ERROR = "w-2.5 h-2.5 bg-danger-400 dark:bg-danger-400 rounded-full flex-shrink-0 shadow-sm ring-2 ring-danger-400/30 dark:ring-danger-400/40 animate-pulse";
 
 // ============================================================================
 // STATUS TEXT / BG / BORDER MAPS  (keyed by colour name)
 // ============================================================================
 export const STATUS_TEXT_COLORS = {
-    green: "text-success-400   font-aumovio-bold",
-    red: "text-danger-400    font-aumovio-bold",
-    warning: "text-warn-400      font-aumovio-bold",
-    blue: "text-blue-400      font-aumovio-bold",
-    purple: "text-purple-400    font-aumovio-bold",
-    cyan: "text-turquoise-400 font-aumovio-bold",
-    turquoise: "text-turquoise-400 font-aumovio-bold",
-    amber: "text-yellow-400    font-aumovio-bold",
-    grey: "text-grey-500      font-aumovio-bold",
-    orange: "text-orange-400    font-aumovio-bold",
+    green: "text-success-400 dark:text-success-300     font-aumovio-bold",
+    red: "text-danger-400 dark:text-danger-300       font-aumovio-bold",
+    warning: "text-warn-500 dark:text-warn-300         font-aumovio-bold",
+    blue: "text-blue-500 dark:text-blue-300          font-aumovio-bold",
+    purple: "text-purple-400 dark:text-purple-300      font-aumovio-bold",
+    cyan: "text-turquoise-500 dark:text-turquoise-300 font-aumovio-bold",
+    turquoise: "text-turquoise-500 dark:text-turquoise-300 font-aumovio-bold",
+    amber: "text-yellow-600 dark:text-warn-300         font-aumovio-bold",
+    grey: "text-grey-500 dark:text-grey-400           font-aumovio-bold",
+    orange: "text-orange-400 dark:text-orange-300     font-aumovio-bold",
 };
 
 export const STATUS_BG_COLORS = {
@@ -198,7 +195,7 @@ export const STATUS_BG_COLORS = {
     cyan: "bg-turquoise-100/22 dark:bg-turquoise-400/15 shadow-sm",
     turquoise: "bg-turquoise-100 dark:bg-turquoise-400/15 shadow-sm",
     amber: "bg-yellow-100 dark:bg-yellow-400/15 shadow-sm",
-    grey: "bg-grey-100 dark:bg-grey-800 shadow-sm",
+    grey: "bg-grey-100 dark:bg-[#251d3a] shadow-sm",
     orange: "bg-orange-100/20 dark:bg-orange-400/15 shadow-sm",
 };
 
@@ -219,10 +216,10 @@ export const STATUS_BORDER_COLORS = {
 // SYSTEM HEALTH STATUS COLORS
 // ============================================================================
 export const HEALTH_STATUS_COLORS = {
-    healthy: "text-success-400 drop-shadow-sm",
-    warning: "text-warn-400    drop-shadow-sm",
-    error: "text-danger-400  drop-shadow-sm",
-    unknown: "text-grey-500    drop-shadow-sm",
+    healthy: "text-success-400 dark:text-success-300 drop-shadow-sm",
+    warning: "text-warn-500 dark:text-warn-300       drop-shadow-sm",
+    error: "text-danger-400 dark:text-danger-300   drop-shadow-sm",
+    unknown: "text-grey-500 dark:text-grey-400      drop-shadow-sm",
 };
 
 // ============================================================================
@@ -549,17 +546,17 @@ export const HOVER_GLOW_SUCCESS = "hover-glow-success";
 // ANIMATION DELAY HELPERS — append to any animate-* class
 // ============================================================================
 
-export const ANIM_DELAY_0    = "delay-0";
-export const ANIM_DELAY_50   = "delay-50";
-export const ANIM_DELAY_75   = "delay-75";
-export const ANIM_DELAY_100  = "delay-100";
-export const ANIM_DELAY_150  = "delay-150";
-export const ANIM_DELAY_200  = "delay-200";
-export const ANIM_DELAY_300  = "delay-300";
-export const ANIM_DELAY_400  = "delay-400";
-export const ANIM_DELAY_500  = "delay-500";
-export const ANIM_DELAY_600  = "delay-600";
-export const ANIM_DELAY_700  = "delay-700";
+export const ANIM_DELAY_0 = "delay-0";
+export const ANIM_DELAY_50 = "delay-50";
+export const ANIM_DELAY_75 = "delay-75";
+export const ANIM_DELAY_100 = "delay-100";
+export const ANIM_DELAY_150 = "delay-150";
+export const ANIM_DELAY_200 = "delay-200";
+export const ANIM_DELAY_300 = "delay-300";
+export const ANIM_DELAY_400 = "delay-400";
+export const ANIM_DELAY_500 = "delay-500";
+export const ANIM_DELAY_600 = "delay-600";
+export const ANIM_DELAY_700 = "delay-700";
 export const ANIM_DELAY_1000 = "delay-1000";
 
 // ============================================================================
@@ -639,17 +636,9 @@ export const RIPPLE_HOST = "ripple-host";
 export const FOCUS_RING = "focus-ring";
 
 // ============================================================================
-// UTILITY — Email not set
+// UTILITY — Email not set (re-exported for backward-compatible import paths)
 // ============================================================================
-/**
- * Warning banner displayed when a secondary email has not been configured.
- * @param {string} [email_type=''] - Optional label, e.g. "Recovery".
- */
-export function EMAIL_NOT_SET(email_type = "") {
-    return (
-        <div className="flex flex-row justify-start px-5 py-2 pl-4 text-white rounded-lg cursor-default bg-warn-100/20">
-            <FontAwesomeIcon className={ICON_PLACE_SELF_CENTER} icon={faWarning} />
-            {email_type} email not set up yet for this account.
-        </div>
-    );
-}
+// The `EMAIL_NOT_SET` component lives in `pre-set-styles.components.jsx` so
+// that this file remains constants-only (required by react-refresh/only-export-components).
+// All existing call sites can keep importing { EMAIL_NOT_SET } from "./pre-set-styles".
+export { EMAIL_NOT_SET } from "./pre-set-styles.components";

@@ -4,6 +4,8 @@
  * Props: src, alt, caption, aspect ('square'|'video'|'wide'|'auto'),
  *   rounded, shadow, hover, fullWidth
  */
+import { TRANSITION_SMOOTH } from "../../../assets/styles/pre-set-styles";
+
 const ASPECT = {
     square: "aspect-square",
     video: "aspect-video",
@@ -31,7 +33,7 @@ export function Image({ src, alt = "", caption, aspect = "auto", rounded = "md",
                     loading="lazy"
                     decoding="async"
                     className={`${ASPECT[aspect] ? "w-full h-full object-cover" : "max-w-full h-auto"}
-                    ${hover ? require("../../../assets/styles/pre-set-styles").TRANSITION_SMOOTH + " hover:scale-105" : ""}
+                    ${hover ? TRANSITION_SMOOTH + " hover:scale-105" : ""}
                     ${className}`}
                 />
             </div>

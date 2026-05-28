@@ -46,8 +46,8 @@ export function ChatBubble({ message, sender, timestamp, position = "left", stat
                         {reactions.map((r, i) => (
                             <span
                                 key={i}
-                                className="text-xs bg-white dark:bg-[#251d3a] border border-grey-200
-                dark:border-grey-700 rounded-full px-1.5 py-0.5 shadow-sm"
+                                className="text-xs text-black/80 dark:text-white/80 bg-white dark:bg-[#251d3a] border border-grey-200
+                dark:border-grey-600 rounded-full px-1.5 py-0.5 shadow-sm dark:shadow-black/30"
                             >
                                 {r.emoji} {r.count}
                             </span>

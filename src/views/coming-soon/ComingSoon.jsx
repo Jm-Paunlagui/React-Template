@@ -61,7 +61,7 @@ import {
     TRANSITION_SPRING,
     staggerDelay,
 } from "../../assets/styles/pre-set-styles";
-import Button from "../ui/Button";
+import Button from "../../components/ui/Button";
 
 /* ─── Internal keyframe injection (construction-specific) ─────────────────── */
 const KEYFRAMES = `
@@ -96,24 +96,14 @@ function ScaffoldIllustration({ feature = "" }) {
     return (
         <div className="relative flex items-end justify-center select-none" style={{ width: 320, height: 260 }}>
             {/* Back poles */}
-            <svg
-                viewBox="0 0 320 260"
-                width="320"
-                height="260"
-                fill="none"
-                className="absolute inset-0"
-                style={{ zIndex: 0 }}
-            >
+            <svg viewBox="0 0 320 260" width="320" height="260" fill="none" className="absolute inset-0" style={{ zIndex: 0 }}>
                 {/* Ground shadow */}
                 <ellipse cx="160" cy="252" rx="120" ry="8" fill="currentColor" className="text-black/5 dark:text-white/5" />
 
                 {/* Scaffold frame */}
-                <rect x="40" y="20" width="8" height="230" rx="4" fill="#FF4208" opacity="0.7"
-                    style={{ animation: "cs-scaffold 3s ease-in-out infinite" }} />
-                <rect x="272" y="20" width="8" height="230" rx="4" fill="#FF4208" opacity="0.7"
-                    style={{ animation: "cs-scaffold 3s 0.4s ease-in-out infinite" }} />
-                <rect x="140" y="20" width="8" height="230" rx="4" fill="#FF4208" opacity="0.5"
-                    style={{ animation: "cs-scaffold 3s 0.8s ease-in-out infinite" }} />
+                <rect x="40" y="20" width="8" height="230" rx="4" fill="#FF4208" opacity="0.7" style={{ animation: "cs-scaffold 3s ease-in-out infinite" }} />
+                <rect x="272" y="20" width="8" height="230" rx="4" fill="#FF4208" opacity="0.7" style={{ animation: "cs-scaffold 3s 0.4s ease-in-out infinite" }} />
+                <rect x="140" y="20" width="8" height="230" rx="4" fill="#FF4208" opacity="0.5" style={{ animation: "cs-scaffold 3s 0.8s ease-in-out infinite" }} />
 
                 {/* Horizontal planks */}
                 <rect x="36" y="70" width="248" height="10" rx="3" fill="#c2440a" opacity="0.5" />
@@ -127,7 +117,12 @@ function ScaffoldIllustration({ feature = "" }) {
                 <path d="M276 130 L148 190" stroke="#FF4208" strokeWidth="3" strokeLinecap="round" opacity="0.3" />
 
                 {/* Warning stripe tape across base */}
-                <rect x="36" y="236" width="248" height="12" rx="3"
+                <rect
+                    x="36"
+                    y="236"
+                    width="248"
+                    height="12"
+                    rx="3"
                     style={{
                         fill: "transparent",
                         backgroundImage: "repeating-linear-gradient(90deg,#FF4208 0,#FF4208 20px,#1a1a1a 20px,#1a1a1a 40px)",
@@ -138,16 +133,7 @@ function ScaffoldIllustration({ feature = "" }) {
                 {/* SVG can't do bg-image, so overlay the tape via foreignObject pattern instead:
                     just draw alternating rects manually */}
                 {Array.from({ length: 7 }, (_, i) => (
-                    <rect
-                        key={i}
-                        x={36 + i * 36}
-                        y="236"
-                        width="18"
-                        height="12"
-                        rx={i === 0 ? "3 0 0 3" : i === 6 ? "0 3 3 0" : "0"}
-                        fill="#FF4208"
-                        opacity="0.85"
-                    />
+                    <rect key={i} x={36 + i * 36} y="236" width="18" height="12" rx={i === 0 ? "3 0 0 3" : i === 6 ? "0 3 3 0" : "0"} fill="#FF4208" opacity="0.85" />
                 ))}
 
                 {/* Bricks being laid (animated stacking) */}
@@ -203,10 +189,7 @@ function ScaffoldIllustration({ feature = "" }) {
                     </svg>
                     {/* Feature label on hat */}
                     {feature && (
-                        <div
-                            className="absolute bottom-4 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded text-white font-aumovio-bold whitespace-nowrap"
-                            style={{ fontSize: 9, background: "rgba(0,0,0,0.35)", letterSpacing: "0.08em" }}
-                        >
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded text-white font-aumovio-bold whitespace-nowrap" style={{ fontSize: 9, background: "rgba(0,0,0,0.35)", letterSpacing: "0.08em" }}>
                             {feature.length > 14 ? feature.slice(0, 13) + "…" : feature}
                         </div>
                     )}
@@ -217,7 +200,8 @@ function ScaffoldIllustration({ feature = "" }) {
             <div
                 className="absolute"
                 style={{
-                    left: 10, bottom: 60,
+                    left: 10,
+                    bottom: 60,
                     animation: "cs-gear-a 8s linear infinite",
                     zIndex: 5,
                 }}
@@ -226,12 +210,7 @@ function ScaffoldIllustration({ feature = "" }) {
                     <circle cx="22" cy="22" r="10" fill="#4827AF" opacity="0.5" />
                     <circle cx="22" cy="22" r="6" fill="#4827AF" opacity="0.8" />
                     {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-                        <rect
-                            key={deg}
-                            x="20" y="2" width="4" height="8" rx="2"
-                            fill="#4827AF" opacity="0.7"
-                            transform={`rotate(${deg} 22 22)`}
-                        />
+                        <rect key={deg} x="20" y="2" width="4" height="8" rx="2" fill="#4827AF" opacity="0.7" transform={`rotate(${deg} 22 22)`} />
                     ))}
                 </svg>
             </div>
@@ -240,7 +219,8 @@ function ScaffoldIllustration({ feature = "" }) {
             <div
                 className="absolute"
                 style={{
-                    right: 12, bottom: 56,
+                    right: 12,
+                    bottom: 56,
                     animation: "cs-gear-b 6s linear infinite",
                     zIndex: 5,
                 }}
@@ -249,12 +229,7 @@ function ScaffoldIllustration({ feature = "" }) {
                     <circle cx="18" cy="18" r="8" fill="#FF4208" opacity="0.5" />
                     <circle cx="18" cy="18" r="5" fill="#FF4208" opacity="0.8" />
                     {[0, 60, 120, 180, 240, 300].map((deg) => (
-                        <rect
-                            key={deg}
-                            x="16" y="1" width="4" height="7" rx="2"
-                            fill="#FF4208" opacity="0.7"
-                            transform={`rotate(${deg} 18 18)`}
-                        />
+                        <rect key={deg} x="16" y="1" width="4" height="7" rx="2" fill="#FF4208" opacity="0.7" transform={`rotate(${deg} 18 18)`} />
                     ))}
                 </svg>
             </div>
@@ -263,7 +238,8 @@ function ScaffoldIllustration({ feature = "" }) {
             <div
                 className="absolute"
                 style={{
-                    right: 50, top: 60,
+                    right: 50,
+                    top: 60,
                     transformOrigin: "bottom left",
                     animation: "cs-hammer 1.4s ease-in-out infinite",
                     zIndex: 8,
@@ -285,16 +261,8 @@ function ScaffoldIllustration({ feature = "" }) {
 function LoadingDots() {
     return (
         <div className="flex items-center gap-1.5">
-            {[
-                { anim: "cs-dot-1" },
-                { anim: "cs-dot-2" },
-                { anim: "cs-dot-3" },
-            ].map(({ anim }, i) => (
-                <span
-                    key={i}
-                    className="w-2 h-2 rounded-full bg-orange-400"
-                    style={{ display: "inline-block", animation: `${anim} 1.2s ease-in-out infinite` }}
-                />
+            {[{ anim: "cs-dot-1" }, { anim: "cs-dot-2" }, { anim: "cs-dot-3" }].map(({ anim }, i) => (
+                <span key={i} className="w-2 h-2 rounded-full bg-orange-400" style={{ display: "inline-block", animation: `${anim} 1.2s ease-in-out infinite` }} />
             ))}
         </div>
     );
@@ -313,8 +281,7 @@ function ConstructionBar({ progress = 0 }) {
                 <div
                     className="absolute inset-0 opacity-20"
                     style={{
-                        backgroundImage:
-                            "repeating-linear-gradient(-45deg, #FF4208 0, #FF4208 10px, transparent 10px, transparent 20px)",
+                        backgroundImage: "repeating-linear-gradient(-45deg, #FF4208 0, #FF4208 10px, transparent 10px, transparent 20px)",
                         backgroundSize: "28.28px 28.28px",
                         animation: "cs-stripe 0.8s linear infinite",
                     }}
@@ -329,10 +296,7 @@ function ConstructionBar({ progress = 0 }) {
                     }}
                 >
                     {/* Shine sweep */}
-                    <div
-                        className="absolute inset-y-0 w-8 bg-white/30 skew-x-12"
-                        style={{ animation: "cs-sweep 2s ease-in-out infinite" }}
-                    />
+                    <div className="absolute inset-y-0 w-8 bg-white/30 skew-x-12" style={{ animation: "cs-sweep 2s ease-in-out infinite" }} />
                 </div>
             </div>
         </div>
@@ -346,10 +310,13 @@ function TerminalLine({ text = "Building something great..." }) {
 
     useEffect(() => {
         if (idx >= text.length) return;
-        const t = setTimeout(() => {
-            setDisplayed((d) => d + text[idx]);
-            setIdx((i) => i + 1);
-        }, 38 + Math.random() * 22);
+        const t = setTimeout(
+            () => {
+                setDisplayed((d) => d + text[idx]);
+                setIdx((i) => i + 1);
+            },
+            38 + Math.random() * 22,
+        );
         return () => clearTimeout(t);
     }, [idx, text]);
 
@@ -357,27 +324,13 @@ function TerminalLine({ text = "Building something great..." }) {
         <div className="flex items-center gap-2 font-mono text-sm text-black/50 dark:text-white/40">
             <span className="text-orange-400 select-none">$</span>
             <span>{displayed}</span>
-            <span
-                className="inline-block w-2 h-4 bg-orange-400 align-middle"
-                style={{ animation: "cs-cursor 1s step-end infinite" }}
-            />
+            <span className="inline-block w-2 h-4 bg-orange-400 align-middle" style={{ animation: "cs-cursor 1s step-end infinite" }} />
         </div>
     );
 }
 
 /* ─── Main component ──────────────────────────────────────────────────────── */
-export function ComingSoon({
-    title = "Coming Soon",
-    subtitle = "We're laying the groundwork for something great. This page is currently under construction.",
-    eta = "",
-    feature = "",
-    variant = "page",
-    showProgress = false,
-    progress = 0,
-    onBack = null,
-    backLabel = "Go back",
-    className = "",
-}) {
+export function ComingSoon({ title = "Coming Soon", subtitle = "We're laying the groundwork for something great. This page is currently under construction.", eta = "", feature = "", variant = "page", showProgress = false, progress = 0, onBack = null, backLabel = "Go back", className = "" }) {
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -385,34 +338,24 @@ export function ComingSoon({
     }, []);
 
     /* ── Wrapper classes per variant ── */
-    const wrapperCls = {
-        page: "min-h-screen w-full flex flex-col items-center justify-center px-6 py-16",
-        overlay: "fixed inset-0 z-50 flex flex-col items-center justify-center px-6 py-16 backdrop-blur-sm",
-        inline: "relative w-full flex flex-col items-center justify-center px-6 py-20",
-    }[variant] ?? "min-h-screen w-full flex flex-col items-center justify-center px-6 py-16";
+    const wrapperCls =
+        {
+            page: "min-h-screen w-full flex flex-col items-center justify-center px-6 py-16",
+            overlay: "fixed inset-0 z-50 flex flex-col items-center justify-center px-6 py-16 backdrop-blur-sm",
+            inline: "relative w-full flex flex-col items-center justify-center px-6 py-20",
+        }[variant] ?? "min-h-screen w-full flex flex-col items-center justify-center px-6 py-16";
 
-    const bgCls =
-        variant === "overlay"
-            ? "bg-white/90 dark:bg-[#0D0D14]/92"
-            : "bg-white dark:bg-[#0D0D14]";
+    const bgCls = variant === "overlay" ? "bg-white/90 dark:bg-[#0D0D14]/92" : "bg-white dark:bg-[#0D0D14]";
 
     return (
-        <div
-            ref={containerRef}
-            className={`${wrapperCls} ${bgCls} ${ANIMATE_PAGE_ENTER} ${className} font-aumovio overflow-hidden`}
-        >
+        <div ref={containerRef} className={`${wrapperCls} ${bgCls} ${ANIMATE_PAGE_ENTER} ${className} font-aumovio overflow-hidden`}>
             {/* Background decoration — faint grid */}
-            <div
-                className="absolute inset-0 pointer-events-none select-none"
-                aria-hidden="true"
-                style={{ zIndex: 0 }}
-            >
+            <div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true" style={{ zIndex: 0 }}>
                 {/* Corner tape strips */}
                 <div
                     className="absolute top-0 left-0 w-full h-2"
                     style={{
-                        backgroundImage:
-                            "repeating-linear-gradient(90deg,#FF4208 0,#FF4208 20px,#1a1a1a 20px,#1a1a1a 40px)",
+                        backgroundImage: "repeating-linear-gradient(90deg,#FF4208 0,#FF4208 20px,#1a1a1a 20px,#1a1a1a 40px)",
                         backgroundSize: "40px 100%",
                         animation: "cs-tape 1s linear infinite",
                         opacity: 0.7,
@@ -421,8 +364,7 @@ export function ComingSoon({
                 <div
                     className="absolute bottom-0 left-0 w-full h-2"
                     style={{
-                        backgroundImage:
-                            "repeating-linear-gradient(90deg,#FF4208 0,#FF4208 20px,#1a1a1a 20px,#1a1a1a 40px)",
+                        backgroundImage: "repeating-linear-gradient(90deg,#FF4208 0,#FF4208 20px,#1a1a1a 20px,#1a1a1a 40px)",
                         backgroundSize: "40px 100%",
                         animation: "cs-tape 1s linear infinite reverse",
                         opacity: 0.7,
@@ -432,8 +374,7 @@ export function ComingSoon({
                 <div
                     className="absolute inset-0 opacity-30 dark:opacity-15"
                     style={{
-                        backgroundImage:
-                            "radial-gradient(circle, #FF4208 1px, transparent 1px)",
+                        backgroundImage: "radial-gradient(circle, #FF4208 1px, transparent 1px)",
                         backgroundSize: "40px 40px",
                     }}
                 />
@@ -441,59 +382,38 @@ export function ComingSoon({
                 <div
                     className="absolute inset-0"
                     style={{
-                        background:
-                            "radial-gradient(ellipse 80% 60% at 50% 50%, transparent 40%, rgba(255,255,255,0.6) 100%)",
+                        background: "radial-gradient(ellipse 80% 60% at 50% 50%, transparent 40%, rgba(255,255,255,0.6) 100%)",
                     }}
                 />
                 <div
                     className="absolute inset-0 dark:block hidden"
                     style={{
-                        background:
-                            "radial-gradient(ellipse 80% 60% at 50% 50%, transparent 40%, rgba(13,13,20,0.7) 100%)",
+                        background: "radial-gradient(ellipse 80% 60% at 50% 50%, transparent 40%, rgba(13,13,20,0.7) 100%)",
                     }}
                 />
 
                 {/* Floating left gear ambient */}
-                <div
-                    className="absolute top-1/4 left-8 opacity-5 dark:opacity-10"
-                    style={{ animation: "cs-gear-a 20s linear infinite" }}
-                >
+                <div className="absolute top-1/4 left-8 opacity-5 dark:opacity-10" style={{ animation: "cs-gear-a 20s linear infinite" }}>
                     <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
                         <circle cx="60" cy="60" r="28" fill="#FF4208" />
                         {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
-                            <rect
-                                key={deg}
-                                x="56" y="4" width="8" height="18" rx="4"
-                                fill="#FF4208"
-                                transform={`rotate(${deg} 60 60)`}
-                            />
+                            <rect key={deg} x="56" y="4" width="8" height="18" rx="4" fill="#FF4208" transform={`rotate(${deg} 60 60)`} />
                         ))}
                     </svg>
                 </div>
                 {/* Floating right gear ambient */}
-                <div
-                    className="absolute bottom-1/4 right-8 opacity-5 dark:opacity-10"
-                    style={{ animation: "cs-gear-b 15s linear infinite" }}
-                >
+                <div className="absolute bottom-1/4 right-8 opacity-5 dark:opacity-10" style={{ animation: "cs-gear-b 15s linear infinite" }}>
                     <svg width="90" height="90" viewBox="0 0 90 90" fill="none">
                         <circle cx="45" cy="45" r="20" fill="#4827AF" />
                         {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-                            <rect
-                                key={deg}
-                                x="42" y="3" width="6" height="14" rx="3"
-                                fill="#4827AF"
-                                transform={`rotate(${deg} 45 45)`}
-                            />
+                            <rect key={deg} x="42" y="3" width="6" height="14" rx="3" fill="#4827AF" transform={`rotate(${deg} 45 45)`} />
                         ))}
                     </svg>
                 </div>
             </div>
 
             {/* ── Content ── */}
-            <div
-                className="relative flex flex-col items-center gap-6 w-full max-w-lg text-center"
-                style={{ zIndex: 1 }}
-            >
+            <div className="relative flex flex-col items-center gap-6 w-full max-w-lg text-center" style={{ zIndex: 1 }}>
                 {/* Illustration */}
                 <div className={`${ANIMATE_FADE_IN_UP} ${ANIM_DELAY_100}`}>
                     <ScaffoldIllustration feature={feature || title} />
@@ -515,10 +435,7 @@ export function ComingSoon({
 
                 {/* Title */}
                 <div className={`${ANIMATE_FADE_IN_UP} ${ANIM_DELAY_300}`}>
-                    <h1
-                        className="font-aumovio-bold tracking-tight leading-tight text-black dark:text-white"
-                        style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)" }}
-                    >
+                    <h1 className="font-aumovio-bold tracking-tight leading-tight text-black dark:text-white" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)" }}>
                         {title}
                     </h1>
                 </div>
@@ -533,13 +450,7 @@ export function ComingSoon({
 
                 {/* Terminal line */}
                 <div className={`${ANIMATE_FADE_IN_UP} ${ANIM_DELAY_500}`}>
-                    <TerminalLine
-                        text={
-                            feature
-                                ? `npm run build -- --feature="${feature}"`
-                                : "npm run build -- --env=production"
-                        }
-                    />
+                    <TerminalLine text={feature ? `npm run build -- --feature="${feature}"` : "npm run build -- --env=production"} />
                 </div>
 
                 {/* Progress bar */}

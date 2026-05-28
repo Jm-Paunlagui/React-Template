@@ -5,6 +5,7 @@
  */
 
 import { useEffect, useRef } from "react";
+import { ErrorBoundary } from "../../components/feedback/ErrorBoundary";
 import { Spinner } from "../../components/ui/Spinner";
 import { useAuth } from "./auth.hook";
 
@@ -18,5 +19,9 @@ export default function LogoutView() {
         logout();
     }, [logout]);
 
-    return <Spinner fullPage size="lg" label="Signing out…" />;
+    return (
+        <ErrorBoundary>
+            <Spinner fullPage size="lg" label="Signing out…" />
+        </ErrorBoundary>
+    );
 }

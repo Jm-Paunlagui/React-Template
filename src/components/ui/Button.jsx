@@ -25,8 +25,8 @@ const BASE = [
 
 const VARIANTS = {
     primary: "text-orange-400 bg-orange-400/10 dark:bg-orange-400/20 border-orange-400/25 dark:border-orange-400/40 hover:bg-orange-400 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-orange-400/30 dark:hover:shadow-orange-400/50 focus-visible:ring-orange-400",
-    accent: "text-purple-400 bg-purple-400/10 dark:bg-purple-400/20 border-purple-400/20 dark:border-purple-400/35 hover:bg-purple-400 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-purple-400/30 dark:hover:shadow-purple-400/50 focus-visible:ring-purple-400",
-    danger: "text-danger-400 bg-danger-100 dark:bg-danger-400/15 border-danger-400/20 dark:border-danger-400/35 hover:bg-danger-400 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-danger-400/30 dark:hover:shadow-danger-400/50 focus-visible:ring-danger-400",
+    accent: "text-purple-400 dark:text-purple-300 bg-purple-400/10 dark:bg-purple-400/20 border-purple-400/20 dark:border-purple-400/35 hover:bg-purple-400 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-purple-400/30 dark:hover:shadow-purple-400/50 focus-visible:ring-purple-400",
+    danger: "text-danger-400 dark:text-danger-300 bg-danger-100 dark:bg-danger-400/15 border-danger-400/20 dark:border-danger-400/35 hover:bg-danger-400 hover:text-white hover:border-transparent hover:shadow-xl hover:shadow-danger-400/30 dark:hover:shadow-danger-400/50 focus-visible:ring-danger-400",
     warning: "text-warn-600 dark:text-warn-400 bg-warn-100/30 dark:bg-warn-400/15 border-warn-400/30 hover:bg-warn-400 hover:text-black hover:border-transparent hover:shadow-xl hover:shadow-warn-400/30 dark:hover:shadow-warn-400/50 focus-visible:ring-warn-400",
     ghost: "text-grey-600 dark:text-grey-300 bg-transparent border-grey-200 dark:border-grey-700 hover:bg-grey-100 dark:hover:bg-[#251d3a] hover:text-black dark:hover:text-white focus-visible:ring-grey-400",
     outline: "text-orange-400 bg-transparent border-orange-400 hover:bg-orange-400 hover:text-white hover:shadow-lg hover:shadow-orange-400/30 dark:hover:shadow-orange-400/50 focus-visible:ring-orange-400",

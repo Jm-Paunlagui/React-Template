@@ -7,6 +7,8 @@
  *   color    — 'orange'|'success'|'purple'|'danger'
  *   labelPosition — 'right'|'left'
  */
+import { TRANSITION_COLORS, TRANSITION_TRANSFORM_SPRING } from "../../assets/styles/pre-set-styles";
+
 const SIZES = {
     sm: { track: "w-8 h-4", thumb: "w-3 h-3", translate: "translate-x-4" },
     md: { track: "w-11 h-6", thumb: "w-4 h-4", translate: "translate-x-5" },
@@ -24,8 +26,6 @@ export function Toggle({ checked = false, onChange, label, description, disabled
     const sz = SIZES[size] ?? SIZES.md;
     const col = COLORS[color] ?? COLORS.orange;
 
-    // Import transition constants
-    const { TRANSITION_COLORS, TRANSITION_TRANSFORM_SPRING } = require("../../assets/styles/pre-set-styles");
     const track = (
         <button
             type="button"

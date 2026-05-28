@@ -8,6 +8,7 @@
 import { LockClosedIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ErrorBoundary } from "../../components/feedback/ErrorBoundary";
 
 import aumovio from "../../assets/img/aumovio.jpeg";
 import Input from "../../components/forms/Input";
@@ -67,7 +68,7 @@ export default function LoginView() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (countdown > 0) return;
+        if (loading || countdown > 0) return;
 
         if (!form.username.trim()) {
             setLocalError("Username is required");
@@ -87,6 +88,7 @@ export default function LoginView() {
     const displayError = localError || error;
 
     return (
+        <ErrorBoundary>
         <div className="fixed flex items-center w-full h-full min-h-screen font-aumovio">
             {/* Background image */}
             <div className="absolute inset-0 -z-10">
@@ -130,7 +132,7 @@ export default function LoginView() {
 
                                     {/* Form */}
                                     <form className="mt-8 space-y-5 animate-fade-in-up" style={{ animationDelay: "0.2s" }} onSubmit={handleSubmit}>
-                                        <Input label="Username" name="username" type="text" placeholder="Username or User ID" value={form.username} onChange={handleChange} autoComplete="username" leftIcon={UserIcon} error={errorEffect && localError === "Username is required" ? localError : undefined} />
+                                        <Input label="Username" name="username" type="text" placeholder="Username or USER ID" value={form.username} onChange={handleChange} autoComplete="username" leftIcon={UserIcon} error={errorEffect && localError === "Username is required" ? localError : undefined} />
 
                                         <Input label="Password" name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} autoComplete="current-password" leftIcon={LockClosedIcon} error={errorEffect && localError === "Password is required" ? localError : undefined} />
 
@@ -156,7 +158,7 @@ export default function LoginView() {
                                         )}
 
                                         {/* Server error (non-rate-limit, non-integrity) */}
-                                        {!integrityError && displayError && localError !== displayError && countdown === 0 && (
+                                        {!integrityError && !accountLocked && displayError && localError !== displayError && countdown === 0 && (
                                             <Alert variant="danger" size="sm" dismissible>
                                                 {displayError}
                                             </Alert>
@@ -167,7 +169,7 @@ export default function LoginView() {
                                             <Text variant="italic" align="center">
                                                 Use your HRIS or eFeedback credentials to log in.
                                             </Text>
-                                            <Button type="submit" variant="gradient" size="lg" fullWidth loading={loading} disabled={countdown > 0 || accountLocked}>
+                                            <Button type="submit" variant="gradient" size="lg" fullWidth loading={loading} disabled={loading || countdown > 0 || accountLocked}>
                                                 {loading ? "Signing In…" : countdown > 0 ? `Locked out — ${formatCountdown(countdown)}` : accountLocked ? "Account Locked" : "Sign In"}
                                             </Button>
                                         </div>
@@ -179,5 +181,6 @@ export default function LoginView() {
                 </div>
             </div>
         </div>
+        </ErrorBoundary>
     );
 }

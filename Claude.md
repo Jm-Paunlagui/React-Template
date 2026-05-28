@@ -427,18 +427,25 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 ## 6. Routing & Access Control
 
 ```jsx
-// App.jsx role constants — define ALL roles here
-const ROLES = { SADMIN: 3, ADMIN: 2, USER: 1 };
+// App.jsx role constants — must match T_EMP_MGMT_ADMIN.EMP_ROLE strings in the DB
+const ROLES = {
+    ROBOT: "ROBOT",
+    USER: "USER",
+    ADMIN: "ADMIN",
+    SUPER_ADMIN: "SUPER_ADMIN",
+    VIEWER: "VIEWER",
+    APPROVER: "APPROVER",
+};
 
 // Role-only guard
-<Route element={<ProtectedRoute role={[ROLES.USER, ROLES.ADMIN]} />}>
+<Route element={<ProtectedRoute role={[ROLES.USER, ROLES.ADMIN, ROLES.VIEWER, ROLES.APPROVER]} />}>
   <Route path="dashboard" element={<DashboardView />} />
 </Route>
 
 // Role + fine-grained permission
 <Route element={
   <ProtectedRoute
-    role={[ROLES.ADMIN, ROLES.SADMIN]}
+    role={[ROLES.ADMIN, ROLES.SUPER_ADMIN]}
     check={(user) => user.area?.includes('FINANCE')}
   />
 }>

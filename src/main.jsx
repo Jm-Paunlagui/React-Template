@@ -20,7 +20,7 @@ import { ThemeProvider } from "./contexts/theme/ThemeContext";
 
 // Minimum time (ms) the LoadingScreen stays visible, regardless of how fast
 // the CSRF token resolves. Keeps the screen from flickering on fast backends.
-const MIN_LOADING_MS = 3500;
+const MIN_LOADING_MS = 0;
 
 // ─── CsrfGate ────────────────────────────────────────────────────────────────
 function CsrfGate({ children }) {

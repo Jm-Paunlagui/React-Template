@@ -27,6 +27,7 @@ export function FileInput({ label, name, accept, multiple = false, disabled = fa
     const removeFile = (i) => {
         const next = files.filter((_, fi) => fi !== i);
         setFiles(next);
+        onChange?.(next);
     };
 
     if (!dropzone)

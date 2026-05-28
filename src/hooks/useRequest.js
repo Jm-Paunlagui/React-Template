@@ -131,9 +131,11 @@ export function useRequest(key, fetcher, options = {}) {
     const fetcherRef = useRef(fetcher);
     const onErrorRef = useRef(onError);
     const onSuccessRef = useRef(onSuccess);
-    fetcherRef.current = fetcher;
-    onErrorRef.current = onError;
-    onSuccessRef.current = onSuccess;
+    useEffect(() => {
+        fetcherRef.current = fetcher;
+        onErrorRef.current = onError;
+        onSuccessRef.current = onSuccess;
+    });
 
     const isMounted = useRef(true);
     useEffect(() => {

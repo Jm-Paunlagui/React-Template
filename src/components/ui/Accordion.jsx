@@ -75,7 +75,7 @@ export function Accordion({ items = [], defaultOpen = null, multiple = false, va
                             className={`overflow-hidden ${TRANSITION_SMOOTH}
                 ${isOpen ? "max-h-500 opacity-100" : "max-h-0 opacity-0"}`}
                         >
-                            <div className={`text-black/70 dark:text-white/60 leading-relaxed ${sz.body}`}>{item.content}</div>
+                            <div className={`text-black/70 dark:text-white/70 leading-relaxed ${sz.body}`}>{item.content}</div>
                         </div>
                     </div>
                 );

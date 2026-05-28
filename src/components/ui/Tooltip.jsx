@@ -41,7 +41,7 @@ export function Tooltip({ children, content, placement = "top", delay = 300, siz
                     className={`absolute z-50 pointer-events-none ${ANIMATE_FADE_IN} whitespace-nowrap
           ${PL[placement] ?? PL.top}
           ${size === "sm" ? "px-2.5 py-1 text-xs rounded-lg" : "px-3 py-1.5 text-sm rounded-xl"}
-          bg-grey-900 dark:bg-[#251d3a] text-white font-aumovio shadow-xl`}
+          bg-grey-900 dark:bg-[#251d3a] dark:border dark:border-white/10 text-white font-aumovio shadow-xl dark:shadow-black/50`}
                 >
                     {content}
                 </div>

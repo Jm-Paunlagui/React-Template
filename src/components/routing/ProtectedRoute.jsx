@@ -29,6 +29,7 @@ import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
 
 export default function ProtectedRoute({ role = null, check = null, redirectTo = "/unauthorized" }) {
     const [status, setStatus] = useState("checking"); // 'checking' | 'allowed' | 'denied'
+    const [serverError, setServerError] = useState(null);
 
     useEffect(() => {
         let cancelled = false;
@@ -39,11 +40,12 @@ export default function ProtectedRoute({ role = null, check = null, redirectTo =
             if (cancelled) return;
 
             if (!user) {
+                setServerError(AuthMiddleware.consumeLastError());
                 setStatus("denied");
                 return;
             }
 
-            // Role check — user.role is a string: "SuperAdmin" | "Admin" | "User"
+            // Role check — user.role is a string: "SUPER_ADMIN" | "ADMIN" | "USER"
             if (role && !role.includes(user.role)) {
                 setStatus("denied");
                 return;
@@ -73,7 +75,7 @@ export default function ProtectedRoute({ role = null, check = null, redirectTo =
     }
 
     if (status === "denied") {
-        return <Navigate to={redirectTo} replace />;
+        return <Navigate to={redirectTo} replace state={serverError ? { _serverError: serverError } : undefined} />;
     }
 
     return <Outlet />;

@@ -9,13 +9,13 @@
 import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 const COLORS = {
-    orange: "bg-orange-400  ring-orange-400/30",
-    purple: "bg-purple-400  ring-purple-400/30",
-    success: "bg-success-400 ring-success-400/30",
-    danger: "bg-danger-400  ring-danger-400/30",
-    warn: "bg-warn-400    ring-warn-400/30",
-    blue: "bg-blue-400    ring-blue-400/30",
-    grey: "bg-grey-400    ring-grey-400/30",
+    orange: "bg-orange-400  ring-orange-400/30 dark:ring-orange-400/40",
+    purple: "bg-purple-400  ring-purple-400/30 dark:ring-purple-300/40",
+    success: "bg-success-400 ring-success-400/30 dark:ring-success-400/40",
+    danger: "bg-danger-400  ring-danger-400/30 dark:ring-danger-400/40",
+    warn: "bg-warn-400    ring-warn-400/30 dark:ring-warn-400/40",
+    blue: "bg-blue-400    ring-blue-400/30 dark:ring-blue-400/40",
+    grey: "bg-grey-400 dark:bg-grey-500 ring-grey-400/30 dark:ring-grey-500/40",
 };
 
 export function Timeline({ items = [], variant = "left", connect = true }) {

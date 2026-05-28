@@ -25,8 +25,8 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api
 // CSRF is not required for these endpoints (they ARE the CSRF endpoints)
 const CSRF_EXEMPT = ["csrf/token", "csrf/refresh", "csrf/status"];
 
-// These endpoints do not need X-Client-Username (no user context yet)
-const TRACEABILITY_EXEMPT = ["csrf/token", "csrf/refresh"];
+// csrf/token is pre-auth (no user context yet); csrf/refresh is protected and should send identity
+const TRACEABILITY_EXEMPT = ["csrf/token"];
 
 class HttpClient {
     constructor() {
@@ -54,15 +54,20 @@ class HttpClient {
     _setupRequestInterceptor() {
         this._client.interceptors.request.use(
             async (config) => {
+                // Let Axios auto-set Content-Type (with boundary) for FormData
+                if (config.data instanceof FormData) {
+                    delete config.headers["Content-Type"];
+                }
+
                 const isExemptAuth = TRACEABILITY_EXEMPT.some((p) => config.url?.includes(p));
                 const isExemptCsrf = CSRF_EXEMPT.some((p) => config.url?.includes(p));
                 const isMutating = ["POST", "PUT", "DELETE", "PATCH"].includes(config.method?.toUpperCase());
 
                 // Client identity for server traceability
                 if (!isExemptAuth) {
-                    const user = AuthMiddleware.getLocalStorage("user");
-                    const displayName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || user?.userId;
-                    config.headers["X-Client-Username"] = displayName ? `${displayName}@${user.userId}` : "anonymous@unknown";
+                    const userDisplay = AuthMiddleware.getLocalStorage("user_display");
+                    const displayName = [userDisplay?.firstName, userDisplay?.lastName].filter(Boolean).join(" ") || userDisplay?.userId;
+                    config.headers["X-Client-Username"] = displayName ? `${displayName}@${userDisplay.userId}` : "anonymous@unknown";
                 }
 
                 // CSRF header
@@ -86,8 +91,18 @@ class HttpClient {
         this._client.interceptors.response.use(
             (response) => response,
             async (error) => {
-                // 498 — Session expired. Redirect to /invalid-token immediately.
-                // This must run BEFORE the CSRF retry block so an expired token
+                // 440 — Session timed out (JWT expired, normal lifecycle).
+                // The SessionWarningModal handles the proactive case; this
+                // is the fallback when a request is made after expiry.
+                if (error.response?.status === 440) {
+                    AuthMiddleware.signout();
+                    CsrfMiddleware.clearToken();
+                    window.location.replace("/login-timeout");
+                    return Promise.reject(error);
+                }
+
+                // 498 — Invalid token (malformed / tampered). Redirect to /invalid-token.
+                // This must run BEFORE the CSRF retry block so a bad token
                 // is never mistaken for a CSRF failure.
                 if (error.response?.status === 498) {
                     AuthMiddleware.signout();

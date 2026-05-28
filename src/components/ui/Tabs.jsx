@@ -9,7 +9,8 @@
  *   fullWidth — boolean
  */
 import { useState } from "react";
-const { TRANSITION_COLORS } = require("../../assets/styles/pre-set-styles");
+import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
+
 
 const SZ = {
     sm: "px-3 py-1.5 text-xs",
@@ -17,7 +18,7 @@ const SZ = {
     lg: "px-5 py-3 text-base",
 };
 
-export function Tabs({ tabs = [], defaultTab, variant = "underline", size = "md", fullWidth = false }) {
+export function Tabs({ tabs = [], defaultTab, variant = "underline", size = "md", fullWidth = false, onChange }) {
     const [active, setActive] = useState(defaultTab ?? tabs[0]?.id);
     const activeTab = tabs.find((t) => t.id === active);
     const sz = SZ[size] ?? SZ.md;
@@ -47,7 +48,7 @@ export function Tabs({ tabs = [], defaultTab, variant = "underline", size = "md"
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
-                        onClick={() => !tab.disabled && setActive(tab.id)}
+                        onClick={() => { if (!tab.disabled && tab.id !== active) { setActive(tab.id); onChange?.(tab.id); } }}
                         disabled={tab.disabled}
                         className={`flex items-center gap-1.5 whitespace-nowrap
               disabled:opacity-40 disabled:cursor-not-allowed
@@ -60,7 +61,7 @@ export function Tabs({ tabs = [], defaultTab, variant = "underline", size = "md"
                         {tab.badge !== undefined && (
                             <span
                                 className={`text-[10px] px-1.5 py-0.5 rounded-full font-aumovio-bold
-                ${tab.id === active ? "bg-white/20 text-white" : "bg-orange-400/10 text-orange-400"}`}
+                ${tab.id === active ? "bg-white/20 text-white" : "bg-orange-400/10 dark:bg-orange-400/20 text-orange-400 dark:text-orange-300"}`}
                             >
                                 {tab.badge}
                             </span>

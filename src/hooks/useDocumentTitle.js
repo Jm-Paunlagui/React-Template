@@ -2,7 +2,7 @@
  * useDocumentTitle.js — Set document.title dynamically.
  *
  * Usage:
- *   useDocumentTitle('User Management');              // "User Management — App"
+ *   useDocumentTitle('Admin Management');              // "Admin Management — App"
  *   useDocumentTitle('Dashboard', 'MyApp');           // "Dashboard — MyApp"
  *   useDocumentTitle('Report', undefined, true);      // keep title on unmount
  */

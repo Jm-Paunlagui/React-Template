@@ -79,6 +79,7 @@ export function useDebounce(value, delay = 300, options = {}) {
         }
     }, [applyValue]);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- value-to-state sync: applies debounced value via timers; setIsPending tracks in-flight state
     useEffect(() => {
         pendingValue.current = value;
 

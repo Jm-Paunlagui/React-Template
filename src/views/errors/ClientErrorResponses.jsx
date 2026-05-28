@@ -13,7 +13,7 @@
  */
 
 import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import Button from "../../components/ui/Button";
 import Divider from "../../components/ui/typography/Divider";
 import { H2 } from "../../components/ui/typography/Heading";
@@ -67,6 +67,20 @@ function injectKeyframes() {
     const s = document.createElement("style");
     s.textContent = KEYFRAMES;
     document.head.appendChild(s);
+}
+
+/* ─── Dynamic override resolution ───────────────────────────────────────────
+ * Priority (highest → lowest):
+ *   1. location.state.title / location.state.subtitle  — explicit caller override
+ *   2. location.state._serverError.message             — server message via nav state
+ *   3. titleProp / subtitleProp                        — route-level prop override
+ *   4. defaultTitle / defaultSubtitle                  — component hardcoded copy
+ */
+function useErrorOverrides(defaultTitle, defaultSubtitle, titleProp, subtitleProp) {
+    const { state } = useLocation();
+    const title = state?.title ?? state?._serverError?.title ?? titleProp ?? defaultTitle;
+    const subtitle = state?.subtitle ?? state?._serverError?.message ?? subtitleProp ?? defaultSubtitle;
+    return { title, subtitle };
 }
 
 /* ─── Shared layout wrapper ──────────────────────────────────────────────────── */
@@ -2667,21 +2681,9 @@ function ServerRightDecor() {
 /* ══════════════════════════════════════════════════════════════════════════════
    400 — Bad Request
    ══════════════════════════════════════════════════════════════════════════════ */
-export function BadRequest() {
-    return (
-        <ErrorLayout
-            code="400"
-            title="You said what now?"
-            subtitle="The request arrived garbled beyond comprehension. Even the server looked twice."
-            linkTo="/"
-            linkLabel="Start fresh"
-            accentClass="text-warn-500 dark:text-warn-400"
-            bgClass="bg-gradient-to-br from-white via-warn-50/30 to-yellow-50/20 dark:from-[#0D0D14] dark:via-[#1a1030] dark:to-[#0D0D14]"
-            illustration={<BadRequestIllustration />}
-            leftDecor={<TerminalLeftDecor />}
-            rightDecor={<TerminalRightDecor />}
-        />
-    );
+export function BadRequest({ title: titleProp, subtitle: subtitleProp } = {}) {
+    const { title, subtitle } = useErrorOverrides("You said what now?", "The request arrived garbled beyond comprehension. Even the server looked twice.", titleProp, subtitleProp);
+    return <ErrorLayout code="400" title={title} subtitle={subtitle} linkTo="/" linkLabel="Start fresh" accentClass="text-warn-500 dark:text-warn-400" bgClass="bg-gradient-to-br from-white via-warn-50/30 to-yellow-50/20 dark:from-[#0D0D14] dark:via-[#1a1030] dark:to-[#0D0D14]" illustration={<BadRequestIllustration />} leftDecor={<TerminalLeftDecor />} rightDecor={<TerminalRightDecor />} />;
 }
 
 function BadRequestIllustration() {
@@ -2741,21 +2743,9 @@ function BadRequestIllustration() {
 /* ══════════════════════════════════════════════════════════════════════════════
    401 — Unauthorized
    ══════════════════════════════════════════════════════════════════════════════ */
-export function Unauthorized() {
-    return (
-        <ErrorLayout
-            code="401"
-            title="Access denied."
-            subtitle="You don't have clearance for this zone. Credentials, please."
-            linkTo="/"
-            linkLabel="Return to safety"
-            accentClass="text-purple-400"
-            bgClass="bg-gradient-to-br from-white via-purple-50/20 to-white dark:from-[#0D0D14] dark:via-purple-950/30 dark:to-[#0D0D14]"
-            illustration={<UnauthorizedIllustration />}
-            leftDecor={<VaultLeftDecor />}
-            rightDecor={<VaultRightDecor />}
-        />
-    );
+export function Unauthorized({ title: titleProp, subtitle: subtitleProp } = {}) {
+    const { title, subtitle } = useErrorOverrides("Access denied.", "You don't have clearance for this zone. Credentials, please.", titleProp, subtitleProp);
+    return <ErrorLayout code="401" title={title} subtitle={subtitle} linkTo="/" linkLabel="Return to safety" accentClass="text-purple-400" bgClass="bg-gradient-to-br from-white via-purple-50/20 to-white dark:from-[#0D0D14] dark:via-purple-950/30 dark:to-[#0D0D14]" illustration={<UnauthorizedIllustration />} leftDecor={<VaultLeftDecor />} rightDecor={<VaultRightDecor />} />;
 }
 
 function UnauthorizedIllustration() {
@@ -2827,21 +2817,9 @@ function UnauthorizedIllustration() {
 /* ══════════════════════════════════════════════════════════════════════════════
    404 — Page Not Found
    ══════════════════════════════════════════════════════════════════════════════ */
-export function PageNotFound() {
-    return (
-        <ErrorLayout
-            code="404"
-            title="Lost in the void."
-            subtitle="This page packed its bags and went exploring. We have no idea where it ended up."
-            linkTo="/"
-            linkLabel="Beam me home"
-            accentClass="text-blue-400"
-            bgClass="bg-gradient-to-br from-white via-blue-50/20 to-white dark:from-[#06080F] dark:via-[#0a1020] dark:to-[#06080F]"
-            illustration={<PageNotFoundIllustration />}
-            leftDecor={<SpaceLeftDecor />}
-            rightDecor={<SpaceRightDecor />}
-        />
-    );
+export function PageNotFound({ title: titleProp, subtitle: subtitleProp } = {}) {
+    const { title, subtitle } = useErrorOverrides("Lost in the void.", "This page packed its bags and went exploring. We have no idea where it ended up.", titleProp, subtitleProp);
+    return <ErrorLayout code="404" title={title} subtitle={subtitle} linkTo="/" linkLabel="Beam me home" accentClass="text-blue-400" bgClass="bg-gradient-to-br from-white via-blue-50/20 to-white dark:from-[#06080F] dark:via-[#0a1020] dark:to-[#06080F]" illustration={<PageNotFoundIllustration />} leftDecor={<SpaceLeftDecor />} rightDecor={<SpaceRightDecor />} />;
 }
 
 function PageNotFoundIllustration() {
@@ -2914,26 +2892,15 @@ function PageNotFoundIllustration() {
 /* ══════════════════════════════════════════════════════════════════════════════
    440 — Login Timeout
    ══════════════════════════════════════════════════════════════════════════════ */
-export function LoginTimeOut() {
+export function LoginTimeOut({ title: titleProp, subtitle: subtitleProp } = {}) {
+    const { title, subtitle } = useErrorOverrides("Time stole your session.", "You were gone a little too long. Your session slipped away while you were distracted.", titleProp, subtitleProp);
+
     useEffect(() => {
         import.meta.env.VITE_ENV === "development" ? "" : AuthMiddleware.signout();
         CsrfMiddleware.clearToken();
     }, []);
 
-    return (
-        <ErrorLayout
-            code="440"
-            title="Time stole your session."
-            subtitle="You were gone a little too long. Your session slipped away while you were distracted."
-            linkTo="/auth"
-            linkLabel="Sign in again"
-            accentClass="text-orange-400"
-            bgClass="bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[#0D0D14] dark:via-[#180a00] dark:to-[#0D0D14]"
-            illustration={<LoginTimeOutIllustration />}
-            leftDecor={<TimeLeftDecor />}
-            rightDecor={<TimeRightDecor />}
-        />
-    );
+    return <ErrorLayout code="440" title={title} subtitle={subtitle} linkTo="/auth" linkLabel="Sign in again" accentClass="text-orange-400" bgClass="bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[#0D0D14] dark:via-[#180a00] dark:to-[#0D0D14]" illustration={<LoginTimeOutIllustration />} leftDecor={<TimeLeftDecor />} rightDecor={<TimeRightDecor />} />;
 }
 
 function LoginTimeOutIllustration() {
@@ -3017,26 +2984,15 @@ function LoginTimeOutIllustration() {
 /* ══════════════════════════════════════════════════════════════════════════════
    498 — Invalid Token
    ══════════════════════════════════════════════════════════════════════════════ */
-export function InvalidToken() {
+export function InvalidToken({ title: titleProp, subtitle: subtitleProp } = {}) {
+    const { title, subtitle } = useErrorOverrides("Token corrupted.", "Your access token arrived in pieces. Someone's been tampering — or time ate it.", titleProp, subtitleProp);
+
     useEffect(() => {
         import.meta.env.VITE_ENV === "development" ? "" : AuthMiddleware.signout();
         CsrfMiddleware.clearToken();
     }, []);
 
-    return (
-        <ErrorLayout
-            code="498"
-            title="Token corrupted."
-            subtitle="Your access token arrived in pieces. Someone's been tampering — or time ate it."
-            linkTo="/auth"
-            linkLabel="Get a fresh token"
-            accentClass="text-danger-400"
-            bgClass="bg-gradient-to-br from-white via-danger-50/20 to-white dark:from-[#0D0D14] dark:via-[#160606] dark:to-[#0D0D14]"
-            illustration={<InvalidTokenIllustration />}
-            leftDecor={<CircuitLeftDecor />}
-            rightDecor={<CircuitRightDecor />}
-        />
-    );
+    return <ErrorLayout code="498" title={title} subtitle={subtitle} linkTo="/auth" linkLabel="Get a fresh token" accentClass="text-danger-400" bgClass="bg-gradient-to-br from-white via-danger-50/20 to-white dark:from-[#0D0D14] dark:via-[#160606] dark:to-[#0D0D14]" illustration={<InvalidTokenIllustration />} leftDecor={<CircuitLeftDecor />} rightDecor={<CircuitRightDecor />} />;
 }
 
 function InvalidTokenIllustration() {
@@ -3121,20 +3077,10 @@ function InvalidTokenIllustration() {
 /* ══════════════════════════════════════════════════════════════════════════════
    523 — Service Unavailable
    ══════════════════════════════════════════════════════════════════════════════ */
-export function ServiceUnavailable() {
+export function ServiceUnavailable({ title: titleProp, subtitle: subtitleProp } = {}) {
+    const { title, subtitle } = useErrorOverrides("The server is napping.", "This is usually caused by a temporary network issue, server restart, or the application service being unavailable.", titleProp, subtitleProp);
     return (
-        <ErrorLayout
-            code="523"
-            title="The server is napping."
-            subtitle="This is usually caused by a temporary network issue, server restart, or the application service being unavailable."
-            linkTo="/"
-            linkLabel="Try the home page"
-            accentClass="text-purple-400 dark:text-purple-300"
-            bgClass="bg-gradient-to-br from-white via-purple-50/20 to-white dark:from-[#0D0D14] dark:via-[#120a1e] dark:to-[#0D0D14]"
-            illustration={<ServiceUnavailableIllustration />}
-            leftDecor={<ServerLeftDecor />}
-            rightDecor={<ServerRightDecor />}
-        >
+        <ErrorLayout code="523" title={title} subtitle={subtitle} linkTo="/" linkLabel="Try the home page" accentClass="text-purple-400 dark:text-purple-300" bgClass="bg-gradient-to-br from-white via-purple-50/20 to-white dark:from-[#0D0D14] dark:via-[#120a1e] dark:to-[#0D0D14]" illustration={<ServiceUnavailableIllustration />} leftDecor={<ServerLeftDecor />} rightDecor={<ServerRightDecor />}>
             <div className="p-4 mt-4 text-sm text-left border bg-white/60 dark:bg-white/5 border-purple-400/20 rounded-xl text-grey-600 dark:text-grey-400 font-aumovio">
                 <p className="mb-2 font-aumovio-bold text-black/70 dark:text-white/70">If this keeps happening, note:</p>
                 <ul className="space-y-1 list-disc list-inside">

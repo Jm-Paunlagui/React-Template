@@ -10,134 +10,65 @@
  *      • description  → subtitle string       (shown in Navbar dropdown; ignored by Sidebar)
  *
  * Both Navbar and Sidebar import from here — change once, both update.
+ *
+ * Icon library: react-icons/md (primary) + react-icons/fa (gaps)
  */
 
-import { faHome, faQuestionCircle, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BsCalendarCheck, BsQuestionCircleFill } from "react-icons/bs";
-import { FaFileAlt, FaFileInvoiceDollar, FaMoneyBillAlt, FaUserAlt } from "react-icons/fa";
-import { HiDocumentReport } from "react-icons/hi";
-import { MdAutorenew, MdContactless, MdDataUsage, MdHistory, MdQrCode2, MdSpaceDashboard, MdThumbUp } from "react-icons/md";
-import { RiCoupon3Fill } from "react-icons/ri";
+import { MdHelp, MdHistory, MdHome, MdLogin, MdSpaceDashboard } from "react-icons/md";
+
+const SIZE = 16;
 
 // ── Unauthenticated flat links ────────────────────────────────────────────────
 export const PUBLIC_LINKS = [
-    { name: "Home", href: "/", icon: <FontAwesomeIcon icon={faHome} /> },
-    { name: "Help", href: "/help", icon: <FontAwesomeIcon icon={faQuestionCircle} /> },
-    { name: "Sign In", href: "/auth", icon: <FontAwesomeIcon icon={faSignInAlt} /> },
+    { name: "Home", href: "/", icon: <MdHome size={SIZE} /> },
+    { name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> },
+    { name: "Sign In", href: "/auth", icon: <MdLogin size={SIZE} /> },
 ];
 
 // ── Authenticated flat links (shown above groups in both layouts) ──────────────
-export const AUTH_FLAT_LINKS = [{ name: "Dashboard", href: "/dashboard", icon: <MdSpaceDashboard size={16} /> }];
+export const AUTH_FLAT_LINKS = [{ name: "Dashboard", href: "/dashboard", icon: <MdSpaceDashboard size={SIZE} /> }];
 
 // ── Role-based nav groups ─────────────────────────────────────────────────────
 // Add or remove roles here to match your backend's role strings.
 export const NAV_GROUPS = {
-    User: [
+    USER: [
         {
-            label: "Operations",
-            color: "orange",
-            items: [
-                { name: "Consumption / QR", href: "/meal/consumption", icon: <MdDataUsage size={16} />, description: "Scan and record QR consumption" },
-                { name: "Consumption 1", href: "/meal/consumption-1", icon: <MdDataUsage size={16} /> },
-                { name: "Consumption 2", href: "/meal/consumption-2", icon: <MdDataUsage size={16} /> },
-                { name: "QR Renewal", href: "/meal/qr-renewal", icon: <MdAutorenew size={16} />, description: "Renew expired QR stubs" },
-            ],
-        },
-        {
-            label: "Records",
-            color: "danger",
-            items: [{ name: "Prev Bal Request", href: "/meal/prev-bal-request", icon: <FaFileAlt size={16} />, description: "Submit previous balance requests" }],
+            label: "System",
+            color: "purple",
+            items: [{ name: "Logging & Observability", href: "/management/logging-observability", icon: <MdHistory size={SIZE} />, description: "Audit and activity logs" }],
         },
         {
             label: "Other",
             color: "grey",
-            items: [{ name: "Help", href: "/help", icon: <BsQuestionCircleFill size={16} /> }],
+            items: [{ name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> }],
         },
     ],
 
-    Admin: [
+    ADMIN: [
         {
-            label: "Operations",
-            color: "orange",
-            items: [
-                { name: "Consumption / QR", href: "/meal/consumption", icon: <MdDataUsage size={16} />, description: "Scan and record QR consumption" },
-                { name: "QR Renewal", href: "/meal/qr-renewal", icon: <MdAutorenew size={16} />, description: "Renew expired QR stubs" },
-                { name: "QR Approval", href: "/meal/qr-approval", icon: <MdQrCode2 size={16} />, description: "Approve pending QR requests" },
-            ],
-        },
-        {
-            label: "Finance",
-            color: "warn",
-            items: [
-                { name: "Subsidy", href: "/meal/subsidies", icon: <FaMoneyBillAlt size={16} />, description: "Manage meal subsidies" },
-                { name: "Billing", href: "/meal/billing", icon: <FaFileInvoiceDollar size={16} />, description: "Invoice and billing records" },
-            ],
-        },
-        {
-            label: "Records",
-            color: "danger",
-            items: [
-                { name: "Stub Issuance", href: "/meal/stub-issuance", icon: <RiCoupon3Fill size={16} />, description: "Issue meal stubs" },
-                { name: "Stub Report", href: "/meal/stub-report", icon: <HiDocumentReport size={16} />, description: "Stub usage reports" },
-                { name: "Prev Bal Request", href: "/meal/prev-bal-request", icon: <FaFileAlt size={16} /> },
-                { name: "Prev Bal Approval", href: "/meal/prev-bal-approval", icon: <MdThumbUp size={16} />, description: "Approve previous balance requests" },
-            ],
-        },
-        {
-            label: "Management",
+            label: "System",
             color: "purple",
-            items: [{ name: "Pay Period", href: "/meal/pay-period", icon: <BsCalendarCheck size={16} />, description: "Configure payroll pay periods" }],
+            items: [{ name: "Logging & Observability", href: "/management/logging-observability", icon: <MdHistory size={SIZE} />, description: "Audit and activity logs" }],
         },
         {
             label: "Other",
             color: "grey",
-            items: [{ name: "Help", href: "/help", icon: <BsQuestionCircleFill size={16} /> }],
+            items: [{ name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> }],
         },
     ],
 
-    SuperAdmin: [
+    SUPER_ADMIN: [
         {
-            label: "Operations",
-            color: "orange",
-            items: [
-                { name: "Consumption / QR", href: "/meal/consumption", icon: <MdDataUsage size={16} />, description: "Scan and record QR consumption" },
-                { name: "QR Renewal", href: "/meal/qr-renewal", icon: <MdAutorenew size={16} />, description: "Renew expired QR stubs" },
-                { name: "QR Approval", href: "/meal/qr-approval", icon: <MdQrCode2 size={16} />, description: "Approve pending QR requests" },
-            ],
-        },
-        {
-            label: "Finance",
-            color: "warn",
-            items: [
-                { name: "Subsidy", href: "/meal/subsidies", icon: <FaMoneyBillAlt size={16} />, description: "Manage meal subsidies" },
-                { name: "Billing", href: "/meal/billing", icon: <FaFileInvoiceDollar size={16} />, description: "Invoice and billing records" },
-            ],
-        },
-        {
-            label: "Records",
-            color: "danger",
-            items: [
-                { name: "Stub Issuance", href: "/meal/stub-issuance", icon: <RiCoupon3Fill size={16} />, description: "Issue meal stubs" },
-                { name: "Stub Report", href: "/meal/stub-report", icon: <HiDocumentReport size={16} />, description: "Stub usage reports" },
-                { name: "Prev Bal Request", href: "/meal/prev-bal-request", icon: <FaFileAlt size={16} /> },
-                { name: "Prev Bal Approval", href: "/meal/prev-bal-approval", icon: <MdThumbUp size={16} />, description: "Approve previous balance requests" },
-            ],
-        },
-        {
-            label: "Management",
+            label: "System",
             color: "purple",
-            items: [
-                { name: "Pay Period", href: "/meal/pay-period", icon: <BsCalendarCheck size={16} />, description: "Configure payroll pay periods" },
-                { name: "RFID Management", href: "/meal/rfid-management", icon: <MdContactless size={16} />, description: "Manage RFID cards and readers" },
-                { name: "Logs Management", href: "/meal/logs-management", icon: <MdHistory size={16} />, description: "Audit and activity logs" },
-                { name: "User Management", href: "/meal/user-management", icon: <FaUserAlt size={16} />, description: "Create and manage user accounts" },
-            ],
+            items: [{ name: "Logging & Observability", href: "/management/logging-observability", icon: <MdHistory size={SIZE} />, description: "Audit and activity logs" }],
         },
         {
             label: "Other",
             color: "grey",
-            items: [{ name: "Help", href: "/help", icon: <BsQuestionCircleFill size={16} /> }],
+            items: [{ name: "Help", href: "/help", icon: <MdHelp size={SIZE} /> }],
         },
     ],
+
+    ROBOT: [],
 };

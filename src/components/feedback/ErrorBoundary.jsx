@@ -10,6 +10,7 @@
  */
 
 import { Component } from "react";
+import clientLogger from "../../utils/clientLogger";
 
 export class ErrorBoundary extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ export class ErrorBoundary extends Component {
     }
 
     componentDidCatch(error, info) {
-        console.error("[ErrorBoundary]", error, info);
+        clientLogger.error(error, info);
     }
 
     handleReset() {

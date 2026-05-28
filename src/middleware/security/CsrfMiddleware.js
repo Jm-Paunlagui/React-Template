@@ -37,8 +37,8 @@ class CsrfMiddleware {
         // Refresh buffer — refresh 10s before expiry
         this._refreshBeforeExpiry = 10 * 1000;
 
-        // Token TTL (matches backend default)
-        this._tokenMaxAge = 3600000;
+        // Token TTL — 5 minutes, matching the backend CSRF token lifetime
+        this._tokenMaxAge = 300000;
 
         // Event listeners
         this._listeners = new Set();
@@ -245,6 +245,18 @@ class CsrfMiddleware {
         }
     }
 
+    _getTraceabilityHeader() {
+        try {
+            const raw = localStorage.getItem("user_display");
+            if (!raw) return "anonymous@unknown";
+            const u = JSON.parse(raw);
+            const name = [u?.firstName, u?.lastName].filter(Boolean).join(" ") || u?.userId;
+            return name ? `${name}@${u.userId}` : "anonymous@unknown";
+        } catch {
+            return "anonymous@unknown";
+        }
+    }
+
     async _refreshToken() {
         if (this._refreshPromise) return this._refreshPromise;
 
@@ -252,6 +264,7 @@ class CsrfMiddleware {
             try {
                 const headers = { "Content-Type": "application/json" };
                 if (this._token) headers["x-csrf-token"] = this._token;
+                headers["X-Client-Username"] = this._getTraceabilityHeader();
 
                 const response = await fetch(`${API_BASE_URL}csrf/refresh`, {
                     method: "POST",

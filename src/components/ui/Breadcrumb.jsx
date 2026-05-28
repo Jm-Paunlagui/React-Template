@@ -38,7 +38,7 @@ const BAR_SEPARATORS = {
 
 /**
  * Capitalise a URL segment into a human-friendly label.
- * Handles kebab-case and camelCase: "user-settings" → "User Settings"
+ * Handles kebab-case and camelCase: "user-settings" → "USER Settings"
  */
 function humanise(segment) {
     return segment
@@ -70,7 +70,9 @@ function buildAutoItems(pathname, labels = {}, exclude = []) {
 }
 
 export function Breadcrumb({ items, auto = false, separator = "chevron", size = "md", homeIcon = true, variant = "inline", labels = {}, exclude = [] }) {
-    const location = auto ? useLocation() : null;
+    // Hooks must be called unconditionally — call useLocation always and only
+    // consume the pathname when auto-derivation is requested.
+    const location = useLocation();
     const resolvedItems = auto ? buildAutoItems(location.pathname, labels, exclude) : (items ?? []);
 
     const textSz = size === "sm" ? "text-sm" : "text-base";
@@ -111,7 +113,7 @@ export function Breadcrumb({ items, auto = false, separator = "chevron", size = 
     if (isBar) {
         return (
             <div className={`${MAIN_STRONG_COLOR_BG} dark:bg-[#1a1030] dark:shadow-none dark:border-b dark:border-orange-400/15 shadow`}>
-                <div className="px-4 max-w-7xl mx-auto">
+                <div className="px-4  mx-auto">
                     <div className="flex items-center w-full py-3">{crumbs}</div>
                 </div>
             </div>

@@ -12,6 +12,8 @@ import AuthMiddleware from "../../middleware/authentication/AuthMiddleware";
 import CsrfMiddleware from "../../middleware/security/CsrfMiddleware";
 import { authApi } from "./auth.api";
 
+const SESSION_TIMEOUT_MS = parseInt(import.meta.env.VITE_SESSION_TIMEOUT_MS ?? String(30 * 60 * 1000), 10);
+
 export const useAuth = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -27,10 +29,10 @@ export const useAuth = () => {
      * We map it to "userId" here to match the backend contract.
      *
      * The server sets the HTTP-only signed token + refreshToken cookies.
-     * We only store the user payload in localStorage for isAuth() fast-path.
+     * A non-PII session hint is written to localStorage for the isAuth() fast-path.
      */
     const login = useCallback(
-        async (credentials, redirectPath = "/dashboard") => {
+        async (credentials, redirectPath = "/system/logging-observability") => {
             setLoading(true);
             setError(null);
             setIntegrityError(false);
@@ -42,15 +44,34 @@ export const useAuth = () => {
                 });
 
                 const user = response.data?.data?.user;
+
+                // Persist the user payload with a session-expiry timestamp so that
+                // useSessionWarning.schedule() can compute the warning delay correctly.
+                // Without this write, _sessionExpiresAt is undefined, delay becomes NaN,
+                // and setTimeout fires immediately — causing the modal to pop on login.
                 if (user) {
                     AuthMiddleware.setLocalStorage("user", {
                         ...user,
-                        _lastVerified: Date.now(),
+                        _sessionExpiresAt: Date.now() + SESSION_TIMEOUT_MS,
                     });
                 }
 
-                AuthMiddleware.clearAuthCache();
-                navigate(redirectPath);
+                // Set the non-PII session hint, clear the stale cache, and write
+                // the minimal traceability identity for X-Client-Username headers.
+                AuthMiddleware.authenticate(
+                    user ? { firstName: user.firstName, lastName: user.lastName, userId: user.userId } : null,
+                );
+
+                // Redirect to change-password flow when the account is using
+                // the system default password or when the server explicitly
+                // requires a password change on this session.
+                if (user?.requiresPasswordChange) {
+                    toast.info("Please change your password before continuing.");
+                    navigate("/auth/change-password");
+                } else {
+                    const landingPath = user?.role === "ROBOT" ? "/management/rfid-management" : redirectPath;
+                    navigate(landingPath);
+                }
                 toast.success(response.data?.message || "Welcome!");
                 return true;
             } catch (err) {
@@ -78,7 +99,7 @@ export const useAuth = () => {
 
     /**
      * Log out — calls server to clear HTTP-only cookies, then clears local state.
-     * Server failure is non-critical: local state is cleared regardless.
+     * Server failure is non-CRITICAL: local state is cleared regardless.
      */
     const logout = useCallback(async () => {
         try {
