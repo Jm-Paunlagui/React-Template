@@ -35,7 +35,7 @@ export const NAV_GROUPS = {
         {
             label: "System",
             color: "purple",
-            items: [{ name: "Logging & Observability", href: "/management/logging-observability", icon: <MdHistory size={SIZE} />, description: "Audit and activity logs" }],
+            items: [{ name: "Logging & Observability", href: "/system/logging-observability", icon: <MdHistory size={SIZE} />, description: "Audit and activity logs" }],
         },
         {
             label: "Other",
@@ -51,7 +51,7 @@ export const NAV_GROUPS = {
         {
             label: "System",
             color: "purple",
-            items: [{ name: "Logging & Observability", href: "/management/logging-observability", icon: <MdHistory size={SIZE} />, description: "Audit and activity logs" }],
+            items: [{ name: "Logging & Observability", href: "/system/logging-observability", icon: <MdHistory size={SIZE} />, description: "Audit and activity logs" }],
         },
         {
             label: "Other",
@@ -67,7 +67,7 @@ export const NAV_GROUPS = {
         {
             label: "System",
             color: "purple",
-            items: [{ name: "Logging & Observability", href: "/management/logging-observability", icon: <MdHistory size={SIZE} />, description: "Audit and activity logs" }],
+            items: [{ name: "Logging & Observability", href: "/system/logging-observability", icon: <MdHistory size={SIZE} />, description: "Audit and activity logs" }],
         },
         {
             label: "Other",

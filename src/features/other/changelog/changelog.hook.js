@@ -5,37 +5,88 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import { AuthMiddleware } from "../../../middleware/authentication/AuthMiddleware";
 import { toast } from "../../../components/ui/toast.utils";
+import { AuthMiddleware } from "../../../middleware/authentication/AuthMiddleware";
 import { changelogApi } from "./changelog.api";
 
 const EMPTY_FORM = {
     displayDate: "",
-    version:     "",
-    title:       "",
-    summary:     "",
-    type:        "feat",
-    authors:     "",
-    coAuthors:   "",
+    version: "",
+    title: "",
+    summary: "",
+    type: "feat",
+    authors: "",
+    coAuthors: "",
 };
+
+// ── Version auto-suggest helpers ──────────────────────────────────────────────
+
+// Semantic Versioning bump rules (MAJOR.MINOR.PATCH):
+//   feat     → MINOR  (new backward-compatible capability)
+//   security → PATCH  (vulnerability fix — no new API surface)
+//   fix      → PATCH  (bug fix)
+//   perf     → PATCH  (performance improvement, no API change)
+//   refactor → PATCH  (internal restructure, no behaviour change)
+//   docs     → PATCH  (documentation only)
+//   chore    → PATCH  (tooling, deps, config — no user-facing change)
+// MAJOR bumps (breaking changes) must be entered manually — no type maps to them.
+const TYPE_BUMP = {
+    feat: "minor",
+    security: "patch",
+    fix: "patch",
+    perf: "patch",
+    refactor: "patch",
+    docs: "patch",
+    chore: "patch",
+};
+
+function parseVersion(v) {
+    const parts = (v ?? "0.0.0").split(".").map(Number);
+    return [parts[0] ?? 0, parts[1] ?? 0, parts[2] ?? 0];
+}
+
+/**
+ * Derives the next suggested version from the newest existing entry and the
+ * selected change type, following Semantic Versioning (SemVer) rules:
+ *
+ *   feat                                  → MINOR bump  (*.+1.0)
+ *   security / fix / perf / refactor /
+ *   docs / chore                          → PATCH bump  (*.*.+1)
+ *
+ *   MAJOR bumps (breaking changes, removed endpoints, schema changes)
+ *   require a manual override — no form type maps to them automatically.
+ *   When bumping MINOR, PATCH resets to 0. When bumping MAJOR, both reset.
+ *
+ * @param {object[]} entries - sorted newest-first
+ * @param {string}   type    - one of the TYPE_BUMP keys
+ * @returns {string} e.g. "1.16.0"
+ */
+function suggestNextVersion(entries, type) {
+    const latest = entries[0]?.version ?? "0.0.0";
+    const [major, minor, patch] = parseVersion(latest);
+    const bump = TYPE_BUMP[type] ?? "patch";
+    if (bump === "major") return `${major + 1}.0.0`;
+    if (bump === "minor") return `${major}.${minor + 1}.0`;
+    return `${major}.${minor}.${patch + 1}`;
+}
 
 /**
  * @returns {object} hook
  */
 export function useChangelog() {
-    const [entries, setEntries]         = useState([]);
-    const [loading, setLoading]         = useState(true);
-    const [user, setUser]               = useState(null);
+    const [entries, setEntries] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(null);
 
     // Modal state
-    const [createOpen, setCreateOpen]   = useState(false);
-    const [editTarget, setEditTarget]   = useState(null);   // entry being edited
+    const [createOpen, setCreateOpen] = useState(false);
+    const [editTarget, setEditTarget] = useState(null); // entry being edited
     const [deleteTarget, setDeleteTarget] = useState(null); // entry pending delete
 
     // Form state (shared for create / edit)
-    const [form, setForm]               = useState(EMPTY_FORM);
-    const [saving, setSaving]           = useState(false);
-    const [deleting, setDeleting]       = useState(false);
+    const [form, setForm] = useState(EMPTY_FORM);
+    const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     // ── Auth ─────────────────────────────────────────────────────────────────
     useEffect(() => {
@@ -44,7 +95,9 @@ export function useChangelog() {
             const u = await AuthMiddleware.isAuth();
             if (!cancelled) setUser(u || null);
         })();
-        return () => { cancelled = true; };
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     const isSuperAdmin = user?.role === "SUPER_ADMIN";
@@ -62,13 +115,15 @@ export function useChangelog() {
         }
     }, []);
 
-    useEffect(() => { fetchEntries(); }, [fetchEntries]);
+    useEffect(() => {
+        fetchEntries();
+    }, [fetchEntries]);
 
     // ── Create ────────────────────────────────────────────────────────────────
     const openCreate = useCallback(() => {
-        setForm(EMPTY_FORM);
+        setForm({ ...EMPTY_FORM, version: suggestNextVersion(entries, EMPTY_FORM.type) });
         setCreateOpen(true);
-    }, []);
+    }, [entries]);
 
     const closeCreate = useCallback(() => {
         setCreateOpen(false);
@@ -95,12 +150,12 @@ export function useChangelog() {
         setEditTarget(entry);
         setForm({
             displayDate: entry.displayDate ?? "",
-            version:     entry.version     ?? "",
-            title:       entry.title       ?? "",
-            summary:     entry.summary     ?? "",
-            type:        entry.type        ?? "feat",
-            authors:     (entry.authors    ?? []).join(", "),
-            coAuthors:   (entry.coAuthors  ?? []).join(", "),
+            version: entry.version ?? "",
+            title: entry.title ?? "",
+            summary: entry.summary ?? "",
+            type: entry.type ?? "feat",
+            authors: (entry.authors ?? []).join(", "),
+            coAuthors: (entry.coAuthors ?? []).join(", "),
         });
     }, []);
 
@@ -145,9 +200,20 @@ export function useChangelog() {
     }, [deleteTarget, fetchEntries, closeDelete]);
 
     // ── Form helpers ──────────────────────────────────────────────────────────
-    const handleFormChange = useCallback((field, value) => {
-        setForm((prev) => ({ ...prev, [field]: value }));
-    }, []);
+    const handleFormChange = useCallback(
+        (field, value) => {
+            // When type changes in create mode, auto-suggest a new version so the
+            // user always sees the correct SemVer bump for the type they selected.
+            // In edit mode the version is intentionally left unchanged.
+            if (field === "type" && createOpen && !editTarget) {
+                const suggested = suggestNextVersion(entries, value);
+                setForm((prev) => ({ ...prev, [field]: value, version: suggested }));
+            } else {
+                setForm((prev) => ({ ...prev, [field]: value }));
+            }
+        },
+        [createOpen, editTarget, entries],
+    );
 
     return {
         entries,
@@ -186,15 +252,21 @@ export function useChangelog() {
 function buildPayload(form) {
     return {
         displayDate: form.displayDate.trim(),
-        version:     form.version.trim(),
-        title:       form.title.trim(),
-        summary:     form.summary.trim(),
-        type:        form.type,
-        authors:     form.authors
-            ? form.authors.split(",").map((a) => a.trim()).filter(Boolean)
+        version: form.version.trim(),
+        title: form.title.trim(),
+        summary: form.summary.trim(),
+        type: form.type,
+        authors: form.authors
+            ? form.authors
+                  .split(",")
+                  .map((a) => a.trim())
+                  .filter(Boolean)
             : [],
         coAuthors: form.coAuthors
-            ? form.coAuthors.split(",").map((a) => a.trim()).filter(Boolean)
+            ? form.coAuthors
+                  .split(",")
+                  .map((a) => a.trim())
+                  .filter(Boolean)
             : [],
     };
 }
