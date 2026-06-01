@@ -22,14 +22,16 @@ import { Badge } from "../ui/Badge";
 import { Modal } from "../ui/Modal";
 
 /* ── Colour palette — must stay in sync with Avatar.jsx ────────────────── */
+// All entries use palette-responsive CSS variable families so they shift
+// when the user picks a different accent in Personalize.
 const PALETTE = [
-    { bg: "bg-orange-400", text: "text-white" },
-    { bg: "bg-purple-400", text: "text-white" },
-    { bg: "bg-blue-400", text: "text-white" },
-    { bg: "bg-turquoise-400", text: "text-white" },
-    { bg: "bg-danger-400", text: "text-white" },
-    { bg: "bg-success-500", text: "text-white" },
-    { bg: "bg-yellow-500", text: "text-black" },
+    { bg: "bg-orange-400",    text: "text-white" },
+    { bg: "bg-purple-400",    text: "text-white" },
+    { bg: "bg-blue-400",      text: "text-white" },
+    { bg: "bg-turquoise-500", text: "text-white" },
+    { bg: "bg-yellow-600",    text: "text-white" },
+    { bg: "bg-orange-600",    text: "text-white" },
+    { bg: "bg-purple-600",    text: "text-white" },
 ];
 
 /** Deterministic colour from a name string (same hash as Avatar.jsx). */

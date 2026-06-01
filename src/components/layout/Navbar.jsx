@@ -11,17 +11,17 @@
  */
 
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, PaintBrushIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 import { ACCENT_COLOR_BORDER, ANIMATE_SCALE_IN, ANIMATE_SCALE_OUT, ANIMATE_SLIDE_DOWN, BASE_COLOR_TEXT, DELAY_1, MAIN_FOREGROUND_COLOR_TEXT, MAIN_OVERLAY_COLOR_BG, MAIN_PULSE_COLOR_BG, SECONDARY_COLOR_TEXT, SUBTITLE_COLOR_TEXT, TITLE_COLOR_TEXT, TRANSITION_COLORS, TRANSITION_SNAP, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
 
+import PersonalizeModal from "../../features/personalize/PersonalizeModal";
 import ProfileModal from "../feedback/ProfileModal";
 import { Avatar } from "../ui/Avatar";
 import { Badge } from "../ui/Badge";
 import Logo from "../ui/Logo";
-import { ThemeToggle } from "../ui/ThemeToggle";
 import { useNav } from "./config/useNav";
 
 const APP_DISPLAY_NAME = import.meta.env.VITE_APP_NAME || null;
@@ -124,6 +124,7 @@ function DropdownGroup({ group, isLoading }) {
 // ── Main Navbar ───────────────────────────────────────────────────────────────
 export default function Navbar() {
     const { user, isLoading, navGroups, profileItems, authFlatLinks, publicLinks, profileOpen, closeProfile } = useNav();
+    const [personalizeOpen, setPersonalizeOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const { pathname } = useLocation();
 
@@ -195,9 +196,16 @@ export default function Navbar() {
                                     </div>
                                 </div>
 
-                                {/* Right rail: ThemeToggle + Avatar + Burger */}
+                                {/* Right rail: Personalize + Avatar + Burger */}
                                 <div className="flex items-center gap-2">
-                                    <ThemeToggle size="sm" variant="cycle" />
+                                    <button
+                                        onClick={() => setPersonalizeOpen(true)}
+                                        aria-label="Personalize"
+                                        title="Personalize"
+                                        className={`p-2 border border-transparent rounded-lg text-grey-500 dark:text-grey-400 hover:text-orange-400 hover:bg-orange-400/10 hover:border-orange-400/20 ${TRANSITION_COLORS}`}
+                                    >
+                                        <PaintBrushIcon className="w-4 h-4" />
+                                    </button>
 
                                     {/* Profile dropdown (desktop) */}
                                     {(user || isLoading) && (
@@ -373,12 +381,15 @@ export default function Navbar() {
                                     </div>
                                 )}
 
-                                {/* Mobile theme toggle */}
+                                {/* Mobile personalize */}
                                 <div className="pt-3 border-t border-grey-100 dark:border-grey-800">
-                                    <div className="flex items-center justify-between px-3 py-1">
-                                        <span className="text-xs text-grey-400 font-aumovio">Appearance</span>
-                                        <ThemeToggle size="sm" variant="segmented" />
-                                    </div>
+                                    <button
+                                        onClick={() => setPersonalizeOpen(true)}
+                                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio text-left ${TRANSITION_COLORS} text-grey-600 dark:text-grey-400 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-500 dark:hover:text-orange-400`}
+                                    >
+                                        <PaintBrushIcon className="w-4 h-4 shrink-0" />
+                                        Personalize
+                                    </button>
                                 </div>
                             </div>
                         </Transition>
@@ -388,6 +399,9 @@ export default function Navbar() {
 
             {/* Profile modal — portalled to body */}
             <ProfileModal open={profileOpen} onClose={closeProfile} user={user} />
+
+            {/* Personalize modal — portalled to body */}
+            <PersonalizeModal open={personalizeOpen} onClose={() => setPersonalizeOpen(false)} />
         </>
     );
 }

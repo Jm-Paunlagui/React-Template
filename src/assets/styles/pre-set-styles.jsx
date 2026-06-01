@@ -42,12 +42,12 @@
 // ============================================================================
 // BACKGROUNDS
 // ============================================================================
-export const BASE_COLOR_BG = "bg-white bg-gradient-to-br from-white to-grey-100 dark:from-[#0D0D14] dark:to-[#1a1030]";
+export const BASE_COLOR_BG = "bg-[var(--bg-surface)] bg-gradient-to-br from-[var(--bg-surface)] to-[var(--bg-surface-2)]";
 export const MAIN_FOREGROUND_COLOR_BG = "bg-orange-400";
 export const MAIN_STRONG_COLOR_BG = "bg-orange-400 shadow-lg shadow-orange-400/25";
-export const MAIN_OVERLAY_COLOR_BG = "bg-white/95 dark:bg-[#0D0D14]/95 backdrop-blur-sm";
+export const MAIN_OVERLAY_COLOR_BG = "bg-[var(--bg-surface)]/95 backdrop-blur-sm";
 export const MAIN_PULSE_COLOR_BG = "bg-orange-400/15 animate-pulse";
-export const GRADIENT_COLOR_BG = "bg-gradient-to-br from-[#ff850a] via-orange-400 to-purple-400 dark:from-[#e63a06] dark:via-orange-500 dark:to-purple-500";
+export const GRADIENT_COLOR_BG = "bg-gradient-to-br from-orange-300 via-orange-400 to-purple-400 dark:from-orange-500 dark:via-orange-500 dark:to-purple-500";
 
 // ============================================================================
 // TEXT

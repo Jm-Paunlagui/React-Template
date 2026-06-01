@@ -15,22 +15,19 @@
  */
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronDownIcon, ChevronUpIcon, ComputerDesktopIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronDownIcon, ChevronUpIcon, PaintBrushIcon } from "@heroicons/react/24/outline";
 import { useCallback, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 import { ANIMATE_SLIDE_LEFT, ANIMATE_SLIDE_RIGHT, HOVER_LIFT_SM, TRANSITION_COLORS, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
 import { useLayout } from "../../contexts/layout/LayoutContext";
-import { useTheme } from "../../contexts/theme/ThemeContext";
+import PersonalizeModal from "../../features/personalize/PersonalizeModal";
 import ProfileModal from "../feedback/ProfileModal";
 import { Avatar } from "../ui/Avatar";
 import { Badge } from "../ui/Badge";
 import Logo from "../ui/Logo";
 import { Tooltip } from "../ui/Tooltip";
 import { useNav } from "./config/useNav";
-
-const THEME_ICONS = { system: ComputerDesktopIcon, light: SunIcon, dark: MoonIcon };
-const THEME_LABELS = { system: "System theme", light: "Light theme", dark: "Dark theme" };
 
 const APP_DISPLAY_NAME = import.meta.env.VITE_APP_NAME || null;
 const APP_SHORT_NAME = import.meta.env.VITE_APP_NAME_SHORT || null;
@@ -84,6 +81,25 @@ const GROUP_COLOR_MAP = {
         hoverBg: "hover:bg-warn-50    dark:hover:bg-warn-400/10",
         hoverText: "hover:text-warn-600 dark:hover:text-warn-400",
         collapsedBg: "bg-warn-50/80 dark:bg-warn-400/[.07]",
+    },
+    // yellow + turquoise follow the CSS variable families we override via the
+    // palette system, so sidebar groups using these keys shift colour with the
+    // user's chosen accent palette.
+    yellow: {
+        dot: "bg-yellow-400",
+        activeBg: "bg-yellow-50  dark:bg-yellow-400/10",
+        activeText: "text-yellow-600 dark:text-yellow-400",
+        hoverBg: "hover:bg-yellow-50  dark:hover:bg-yellow-400/10",
+        hoverText: "hover:text-yellow-600 dark:hover:text-yellow-400",
+        collapsedBg: "bg-yellow-50/80 dark:bg-yellow-400/[.07]",
+    },
+    turquoise: {
+        dot: "bg-turquoise-400",
+        activeBg: "bg-turquoise-50  dark:bg-turquoise-400/10",
+        activeText: "text-turquoise-600 dark:text-turquoise-400",
+        hoverBg: "hover:bg-turquoise-50  dark:hover:bg-turquoise-400/10",
+        hoverText: "hover:text-turquoise-600 dark:hover:text-turquoise-400",
+        collapsedBg: "bg-turquoise-50/80 dark:bg-turquoise-400/[.07]",
     },
     grey: {
         dot: "bg-grey-400",
@@ -304,7 +320,7 @@ function UserCard({ user, collapsed, onOpenProfile }) {
 export default function Sidebar() {
     const { layout, sidebarOpen, toggleSidebar } = useLayout();
     const { pathname } = useLocation();
-    const { mode: themeMode, toggle: toggleTheme } = useTheme();
+    const [personalizeOpen, setPersonalizeOpen] = useState(false);
     const { user, isLoading, navGroups, profileItems, publicLinks, profileOpen, openProfile, closeProfile } = useNav();
 
     // Sidebar is only rendered in sidebar layout mode — guard AFTER all hooks
@@ -361,36 +377,31 @@ export default function Sidebar() {
 
                 {/* Footer: theme toggle + account links */}
                 <div className="shrink-0 border-t border-grey-100 dark:border-grey-800 px-2 py-3 space-y-1">
-                    {/* Appearance row — matches FlatNavItem shape in both collapsed and expanded states */}
-                    {(() => {
-                        const ThemeIcon = THEME_ICONS[themeMode];
-                        const themeLabel = THEME_LABELS[themeMode];
-                        const sharedBtnCls = `${TRANSITION_COLORS} text-grey-600 dark:text-grey-400 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-500 dark:hover:text-orange-400`;
-                        return collapsed ? (
-                            <Tooltip content="Appearance" placement="right" delay={100}>
-                                <button
-                                    type="button"
-                                    onClick={toggleTheme}
-                                    aria-label={themeLabel}
-                                    className={`w-10 h-10 mx-auto flex items-center justify-center rounded-xl bg-grey-100/80 dark:bg-orange-400/[.07] ${sharedBtnCls}`}
-                                >
-                                    <ThemeIcon className="w-4 h-4 shrink-0" />
-                                </button>
-                            </Tooltip>
-                        ) : (
+                    {/* Personalize row */}
+                    {collapsed ? (
+                        <Tooltip content="Personalize" placement="right" delay={100}>
                             <button
                                 type="button"
-                                onClick={toggleTheme}
-                                aria-label={themeLabel}
-                                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio text-left ${sharedBtnCls}`}
+                                onClick={() => setPersonalizeOpen(true)}
+                                aria-label="Personalize"
+                                className={`w-10 h-10 mx-auto flex items-center justify-center rounded-xl bg-grey-100/80 dark:bg-orange-400/[.07] ${TRANSITION_COLORS} text-grey-600 dark:text-grey-400 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-500 dark:hover:text-orange-400`}
                             >
-                                <span className="shrink-0 flex items-center justify-center px-3 text-grey-400 dark:text-grey-500">
-                                    <ThemeIcon className="w-4 h-4" />
-                                </span>
-                                <span className="flex-1 truncate">Appearance</span>
+                                <PaintBrushIcon className="w-4 h-4 shrink-0" />
                             </button>
-                        );
-                    })()}
+                        </Tooltip>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => setPersonalizeOpen(true)}
+                            aria-label="Personalize"
+                            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio text-left ${TRANSITION_COLORS} text-grey-600 dark:text-grey-400 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-500 dark:hover:text-orange-400`}
+                        >
+                            <span className="shrink-0 flex items-center justify-center px-3 text-grey-400 dark:text-grey-500">
+                                <PaintBrushIcon className="w-4 h-4" />
+                            </span>
+                            <span className="flex-1 truncate">Personalize</span>
+                        </button>
+                    )}
 
                     {sidebarProfileLinks.map((item) => (
                         <FlatNavItem key={item.id} item={item} collapsed={collapsed} danger={item.danger ?? false} />
@@ -400,6 +411,9 @@ export default function Sidebar() {
 
             {/* Profile modal — portalled to body */}
             <ProfileModal open={profileOpen} onClose={closeProfile} user={user} />
+
+            {/* Personalize modal — portalled to body */}
+            <PersonalizeModal open={personalizeOpen} onClose={() => setPersonalizeOpen(false)} />
         </>
     );
 }

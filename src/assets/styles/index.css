@@ -160,9 +160,9 @@
 
 /* ─── CSS Custom Properties (runtime, not @theme) ──────────────────────── */
 :root {
-    --bg-surface: #ffffff;
-    --bg-surface-2: #fafafa;
-    --bg-surface-3: #f0f0f0;
+    --bg-surface: var(--palette-surface-light, #ffffff);
+    --bg-surface-2: var(--palette-surface-2-light, #fafafa);
+    --bg-surface-3: var(--palette-surface-3-light, #f0f0f0);
     --text-primary: #1a1a1a;
     --text-secondary: #484848;
     --text-muted: #787878;
@@ -213,9 +213,9 @@
 }
 
 [data-theme="dark"] {
-    --bg-surface: #0d0d14;
-    --bg-surface-2: #1a1030;
-    --bg-surface-3: #251d3a;
+    --bg-surface: var(--palette-surface-dark, #0d0d14);
+    --bg-surface-2: var(--palette-surface-2-dark, #1a1030);
+    --bg-surface-3: var(--palette-surface-3-dark, #251d3a);
     --text-primary: #f0f0f0;
     --text-secondary: #c8c8c8;
     --text-muted: #787878;
@@ -1392,14 +1392,14 @@
     width: var(--spinner-size, 1.25rem);
     height: var(--spinner-size, 1.25rem);
     border-radius: 50%;
-    border: 2px solid rgba(255, 66, 8, 0.25);
-    border-top-color: #ff4208;
+    border: 2px solid color-mix(in srgb, var(--color-orange-400) 25%, transparent);
+    border-top-color: var(--color-orange-400);
     animation: spin var(--spinner-speed, 0.65s) linear infinite;
 }
 
 [data-theme="dark"] .spinner {
-    border-color: rgba(255, 66, 8, 0.20);
-    border-top-color: #ff4208;
+    border-color: color-mix(in srgb, var(--color-orange-400) 20%, transparent);
+    border-top-color: var(--color-orange-400);
 }
 .spinner-sm {
     --spinner-size: 1rem;
@@ -1425,7 +1425,7 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #ff4208;
+    background: var(--color-orange-400);
     animation: dot-pulse 0.9s var(--ease-standard) infinite;
 }
 .loader-dots span:nth-child(2) {
@@ -1446,7 +1446,7 @@
     display: block;
     width: 4px;
     border-radius: 3px;
-    background: #ff4208;
+    background: var(--color-orange-400);
     transform-origin: bottom;
     animation: bar-grow 0.9s var(--ease-standard) infinite;
 }
@@ -1489,7 +1489,7 @@
 .focus-ring:focus-visible {
     box-shadow:
         0 0 0 2px var(--bg-surface),
-        0 0 0 4px rgba(255, 66, 8, 0.55);
+        0 0 0 4px color-mix(in srgb, var(--color-orange-400) 55%, transparent);
 }
 
 /* Checkbox check-draw animation */

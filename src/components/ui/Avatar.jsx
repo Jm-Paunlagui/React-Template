@@ -28,8 +28,18 @@ const STATUS_DOT = {
     away: "bg-warn-400 ring-2 ring-white dark:ring-[#1a1030]",
 };
 
-// Deterministic color from name string
-const PALETTE = ["bg-orange-400 text-white", "bg-purple-400 text-white", "bg-blue-400 text-white", "bg-turquoise-400 text-white", "bg-danger-400 text-white", "bg-success-500 text-white", "bg-yellow-500 text-black"];
+// Deterministic colour from name — all entries use palette-responsive CSS variable
+// families (orange, purple, blue, turquoise, yellow) so they shift when the user
+// picks a different accent palette in Personalize.
+const PALETTE = [
+    "bg-orange-400 text-white",
+    "bg-purple-400 text-white",
+    "bg-blue-400 text-white",
+    "bg-turquoise-500 text-white",
+    "bg-yellow-600 text-white",
+    "bg-orange-600 text-white",
+    "bg-purple-600 text-white",
+];
 
 function getInitials(name = "") {
     const parts = name.trim().split(" ").filter(Boolean);
