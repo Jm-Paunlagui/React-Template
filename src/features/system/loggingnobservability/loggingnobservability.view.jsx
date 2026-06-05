@@ -180,7 +180,7 @@ function ObservabilityTab({ logsHook, metricsHook }) {
 
 // ─── View ─────────────────────────────────────────────────────────────────────
 
-function LogsManagementView() {
+function LoggingAndObservabilityView() {
     const logsHook = useLogsManagement();
     const metricsHook = useMetrics();
 
