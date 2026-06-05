@@ -12,7 +12,8 @@ export const changelogApi = {
     list: () => httpClient.get("changelog"),
 
     /**
-     * @param {{ displayDate: string, version: string, title: string, summary: string,
+     * @param {{ displayDate: string, version: string, title: string, message: string,
+     *           whatChanged: Array<{ text: string, items?: string[] }>,
      *           type: string, authors: string[], coAuthors: string[] }} data
      * @returns {Promise<import("axios").AxiosResponse>}
      */

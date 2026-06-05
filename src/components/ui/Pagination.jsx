@@ -14,8 +14,8 @@
  *   onPageSizeChange — (size: number) => void (optional)
  */
 
-import { useEffect, useRef, useState } from "react";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useEffect, useRef, useState } from "react";
 import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 
 function buildRange(start, end) {
@@ -41,9 +41,9 @@ const SZ = {
     lg: { btn: "w-10 h-10 text-base", sel: "h-10 text-base" },
 };
 
-const DEFAULT_CLS = "bg-white dark:bg-[#1a1030] border-grey-200 dark:border-grey-700 text-black/70 dark:text-white/70 hover:border-orange-400 hover:text-orange-400 dark:hover:border-orange-400";
-const ACTIVE_CLS  = "bg-orange-400 text-white border-orange-400 shadow-lg shadow-orange-400/30";
-const GHOST_CLS   = "bg-transparent border-transparent text-grey-400 cursor-default pointer-events-none";
+const DEFAULT_CLS = "bg-(--bg-surface) dark:bg-(--bg-surface-2) border-grey-200 dark:border-grey-700 text-black/70 dark:text-white/70 hover:border-orange-400 hover:text-orange-400 dark:hover:border-orange-400";
+const ACTIVE_CLS = "bg-orange-400 text-white border-orange-400 shadow-lg shadow-orange-400/30";
+const GHOST_CLS = "bg-transparent border-transparent text-grey-400 cursor-default pointer-events-none";
 
 // ─── Custom per-page dropdown ─────────────────────────────────────────────────
 
@@ -53,7 +53,9 @@ function PageSizeSelect({ value, options, onChange, selSz, radius }) {
 
     useEffect(() => {
         if (!open) return;
-        const onDown = (e) => { if (!ref.current?.contains(e.target)) setOpen(false); };
+        const onDown = (e) => {
+            if (!ref.current?.contains(e.target)) setOpen(false);
+        };
         document.addEventListener("mousedown", onDown);
         return () => document.removeEventListener("mousedown", onDown);
     }, [open]);
@@ -74,7 +76,7 @@ function PageSizeSelect({ value, options, onChange, selSz, radius }) {
             {open && (
                 <ul
                     className="absolute bottom-full mb-1.5 left-0 z-50 min-w-full max-h-52 overflow-y-auto overflow-x-hidden
-                        bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700
+                        bg-(--bg-surface) dark:bg-(--bg-surface-2) border border-grey-200 dark:border-grey-700
                         rounded-lg shadow-xl shadow-black/10 dark:shadow-black/40 py-1 font-aumovio
                         [&::-webkit-scrollbar]:hidden"
                     style={{ scrollbarWidth: "none" }}
@@ -82,12 +84,12 @@ function PageSizeSelect({ value, options, onChange, selSz, radius }) {
                     {options.map((n) => (
                         <li
                             key={n}
-                            onClick={() => { onChange(n); setOpen(false); }}
+                            onClick={() => {
+                                onChange(n);
+                                setOpen(false);
+                            }}
                             className={`flex items-center px-3 py-1.5 cursor-pointer font-aumovio-bold ${TRANSITION_COLORS}
-                                ${n === value
-                                    ? "bg-orange-400 text-white"
-                                    : "text-black/70 dark:text-white/70 hover:bg-orange-400/10 dark:hover:bg-orange-400/10 hover:text-orange-400"
-                                }`}
+                                ${n === value ? "bg-orange-400 text-white" : "text-black/70 dark:text-white/70 hover:bg-orange-400/10 dark:hover:bg-orange-400/10 hover:text-orange-400"}`}
                         >
                             {n.toLocaleString()}
                         </li>
@@ -101,7 +103,7 @@ function PageSizeSelect({ value, options, onChange, selSz, radius }) {
 // ─── Pagination ───────────────────────────────────────────────────────────────
 
 export function Pagination({ page, totalPages, onChange, siblingCount = 1, showEnds = true, size = "md", variant = "default", pageSize, pageSizeOptions, onPageSizeChange }) {
-    const hasNav     = totalPages > 1;
+    const hasNav = totalPages > 1;
     const hasPerPage = pageSizeOptions?.length > 0 && onPageSizeChange != null;
 
     if (!hasNav && !hasPerPage) return null;
@@ -109,7 +111,7 @@ export function Pagination({ page, totalPages, onChange, siblingCount = 1, showE
     const { btn: btnSz, sel: selSz } = SZ[size] ?? SZ.md;
     const radius = variant === "rounded" ? "rounded-full" : "rounded-lg";
     const shared = `border font-aumovio-bold shrink-0 ${TRANSITION_COLORS} ${radius}`;
-    const pages  = hasNav ? getPages(page, totalPages, siblingCount) : [];
+    const pages = hasNav ? getPages(page, totalPages, siblingCount) : [];
 
     const btn = (label, target, disabled, icon) => (
         <button
@@ -130,13 +132,7 @@ export function Pagination({ page, totalPages, onChange, siblingCount = 1, showE
         <nav aria-label="Pagination" className="flex flex-wrap items-center gap-1 font-aumovio">
             {hasPerPage && (
                 <>
-                    <PageSizeSelect
-                        value={pageSize}
-                        options={pageSizeOptions}
-                        onChange={onPageSizeChange}
-                        selSz={selSz}
-                        radius={radius}
-                    />
+                    <PageSizeSelect value={pageSize} options={pageSizeOptions} onChange={onPageSizeChange} selSz={selSz} radius={radius} />
                     {hasNav && <span className="w-px h-4 bg-grey-200 dark:bg-grey-700 mx-0.5 shrink-0" />}
                 </>
             )}

@@ -22,31 +22,12 @@
  *   wrapperClassName — string  — extra classes appended to the outer wrapper div
  */
 
-import { Fragment } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import { Fragment } from "react";
 import { TRANSITION_COLORS } from "../../assets/styles/pre-set-styles";
 import Skeleton from "./Skeleton";
 
-export function Table({
-    columns = [],
-    data = [],
-    loading = false,
-    selectable = false,
-    selectedIds = new Set(),
-    onSelect,
-    onSelectAll,
-    sortKey,
-    sortDir = "asc",
-    onSort,
-    emptyText = "No records found.",
-    stickyHeader = false,
-    striped = false,
-    compact = false,
-    rowClassName,
-    rowTitle,
-    expandRow,
-    wrapperClassName = "",
-}) {
+export function Table({ columns = [], data = [], loading = false, selectable = false, selectedIds = new Set(), onSelect, onSelectAll, sortKey, sortDir = "asc", onSort, emptyText = "No records found.", stickyHeader = false, striped = false, compact = false, rowClassName, rowTitle, expandRow, wrapperClassName = "" }) {
     const allSelected = data.length > 0 && data.every((r) => selectedIds.has(r.id));
     const someSelected = data.some((r) => selectedIds.has(r.id));
     const cellPad = compact ? "px-4 py-2" : "px-5 py-3.5";
@@ -56,7 +37,7 @@ export function Table({
             <table className="w-full text-sm">
                 <thead
                     className={`${stickyHeader ? "sticky top-0 z-10" : ""}
-          bg-grey-50 dark:bg-[#251d3a] border-b border-grey-200 dark:border-grey-700`}
+          bg-grey-50 dark:bg-(--bg-surface-3) border-b border-grey-200 dark:border-grey-700`}
                 >
                     <tr>
                         {selectable && (
@@ -97,7 +78,7 @@ export function Table({
                 <tbody className="divide-y divide-grey-100 dark:divide-grey-800">
                     {loading ? (
                         Array.from({ length: 5 }, (_, i) => (
-                            <tr key={i} className="bg-white dark:bg-[#1a1030]">
+                            <tr key={i} className="bg-(--bg-surface) dark:bg-(--bg-surface-2)">
                                 {selectable && (
                                     <td className={cellPad}>
                                         <Skeleton variant="rect" width="1rem" height="1rem" />
@@ -125,12 +106,14 @@ export function Table({
                                 <Fragment key={row.id ?? ri}>
                                     <tr
                                         title={title}
-                                        className={customCls
-                                            ? `${TRANSITION_COLORS} ${customCls}`
-                                            : `${TRANSITION_COLORS}
-                                               ${striped && ri % 2 === 1 ? "bg-grey-50/50 dark:bg-white/3" : "bg-white dark:bg-[#1a1030]"}
+                                        className={
+                                            customCls
+                                                ? `${TRANSITION_COLORS} ${customCls}`
+                                                : `${TRANSITION_COLORS}
+                                               ${striped && ri % 2 === 1 ? "bg-grey-50/50 dark:bg-white/3" : "bg-(--bg-surface) dark:bg-(--bg-surface-2)"}
                                                ${isSelected ? "bg-orange-50 dark:bg-orange-400/5" : ""}
-                                               hover:bg-orange-50/60 dark:hover:bg-orange-400/5`}
+                                               hover:bg-orange-50/60 dark:hover:bg-orange-400/5`
+                                        }
                                     >
                                         {selectable && (
                                             <td className={cellPad}>

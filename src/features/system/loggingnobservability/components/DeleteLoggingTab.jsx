@@ -41,7 +41,7 @@ function StepSelectExport({ hook }) {
             </div>
 
             {/* Date range pickers */}
-            <div className={`p-6 rounded-xl bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700 shadow-sm relative z-10 ${ANIMATE_ENTER_UP} ${staggerDelay(1)}`}>
+            <div className={`p-6 rounded-xl bg-(--bg-surface) dark:bg-(--bg-surface-2) border border-grey-200 dark:border-grey-700 shadow-sm relative z-10 ${ANIMATE_ENTER_UP} ${staggerDelay(1)}`}>
                 <p className="text-sm font-medium text-black/70 dark:text-white/70 mb-4">Select the date range to export and delete</p>
                 <div className="flex flex-wrap gap-4">
                     <div className="flex flex-col gap-1">
@@ -56,7 +56,7 @@ function StepSelectExport({ hook }) {
             </div>
 
             {/* Export actions */}
-            <Card className={`p-6 bg-white dark:bg-[#1a1030] ${ANIMATE_ENTER_UP} ${staggerDelay(2)}`}>
+            <Card className={`p-6 bg-(--bg-surface) dark:bg-(--bg-surface-2) ${ANIMATE_ENTER_UP} ${staggerDelay(2)}`}>
                 <p className="text-sm font-medium text-black/70 dark:text-white/70 mb-4">Step 1: Download a backup of your data before proceeding</p>
                 <div className="flex flex-wrap gap-3">
                     <Button variant="primary" onClick={handleExportDeleteExcel} disabled={!canContinue}>

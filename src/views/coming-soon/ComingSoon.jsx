@@ -35,32 +35,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import {
-    ANIMATE_BOUNCE_IN,
-    ANIMATE_FADE_IN,
-    ANIMATE_FADE_IN_UP,
-    ANIMATE_FLOAT,
-    ANIMATE_FLOAT_LG,
-    ANIMATE_FLOAT_SM,
-    ANIMATE_PAGE_ENTER,
-    ANIMATE_PING,
-    ANIMATE_PULSE,
-    ANIMATE_PULSE_SCALE,
-    ANIMATE_SHAKE,
-    ANIMATE_SPIN_SLOW,
-    ANIM_DELAY_100,
-    ANIM_DELAY_200,
-    ANIM_DELAY_300,
-    ANIM_DELAY_400,
-    ANIM_DELAY_500,
-    HOVER_GLOW_ORANGE,
-    HOVER_LIFT,
-    SKELETON_SURFACE,
-    TRANSITION_BUTTON,
-    TRANSITION_SMOOTH,
-    TRANSITION_SPRING,
-    staggerDelay,
-} from "../../assets/styles/pre-set-styles";
+import { ANIMATE_FADE_IN_UP, ANIMATE_PAGE_ENTER, ANIMATE_PING, ANIM_DELAY_100, ANIM_DELAY_200, ANIM_DELAY_300, ANIM_DELAY_400, ANIM_DELAY_500 } from "../../assets/styles/pre-set-styles";
 import Button from "../../components/ui/Button";
 
 /* ─── Internal keyframe injection (construction-specific) ─────────────────── */
@@ -276,7 +251,7 @@ function ConstructionBar({ progress = 0 }) {
                 <span>Construction progress</span>
                 <span className="text-orange-400">{progress}%</span>
             </div>
-            <div className="relative h-3 rounded-full overflow-hidden bg-grey-200 dark:bg-[#251d3a]">
+            <div className="relative h-3 rounded-full overflow-hidden bg-grey-200 dark:bg-(--bg-surface-3)">
                 {/* Stripe layer */}
                 <div
                     className="absolute inset-0 opacity-20"
@@ -345,7 +320,7 @@ export function ComingSoon({ title = "Coming Soon", subtitle = "We're laying the
             inline: "relative w-full flex flex-col items-center justify-center px-6 py-20",
         }[variant] ?? "min-h-screen w-full flex flex-col items-center justify-center px-6 py-16";
 
-    const bgCls = variant === "overlay" ? "bg-white/90 dark:bg-[#0D0D14]/92" : "bg-white dark:bg-[#0D0D14]";
+    const bgCls = variant === "overlay" ? "bg-white/90 dark:bg-(--bg-surface)/92" : "bg-(--bg-surface)";
 
     return (
         <div ref={containerRef} className={`${wrapperCls} ${bgCls} ${ANIMATE_PAGE_ENTER} ${className} font-aumovio overflow-hidden`}>

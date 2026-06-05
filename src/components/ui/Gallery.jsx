@@ -30,7 +30,7 @@ export function Gallery({ images = [], columns = 3, gap = "md", lightbox = true 
                     <div
                         key={i}
                         onClick={() => lightbox && setSelected(i)}
-                        className={`overflow-hidden rounded-xl bg-grey-100 dark:bg-[#251d3a]
+                        className={`overflow-hidden rounded-xl bg-grey-100 dark:bg-(--bg-surface-3)
               ${lightbox ? "cursor-zoom-in" : ""} group`}
                     >
                         <img src={img.src} alt={img.alt ?? ""} className={`object-cover w-full h-48 ${TRANSITION_SMOOTH} ${HOVER_SCALE}`} />

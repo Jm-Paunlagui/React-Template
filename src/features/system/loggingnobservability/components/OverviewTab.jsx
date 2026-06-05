@@ -3,32 +3,16 @@
  * Receives the full hook object and accesses only what it needs.
  */
 
-import {
-    faBolt,
-    faCircleExclamation,
-    faClockRotateLeft,
-    faServer,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBolt, faCircleExclamation, faClockRotateLeft, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    ANIMATE_ENTER_UP,
-    HOVER_LIFT,
-    TRANSITION_SPRING,
-    staggerDelay,
-} from "../../../../assets/styles/pre-set-styles";
+import { ANIMATE_ENTER_UP, HOVER_LIFT, TRANSITION_SPRING, staggerDelay } from "../../../../assets/styles/pre-set-styles";
 import Badge from "../../../../components/ui/Badge";
-import {
-    PILL_BASE,
-    badgeCls,
-    getErrorRateStyle,
-    getLagStyle,
-    textCls,
-} from "../metricsStyles";
+import { PILL_BASE, badgeCls, getErrorRateStyle, getLagStyle, textCls } from "../metricsStyles";
 
 // ─── Fixed-colour badge classes (mirrors MetricCards.jsx COLOR map) ───────────
 
 const BADGE = {
-    blue:   "bg-blue-400/10 border-blue-400/20 dark:bg-blue-400/5 dark:border-blue-400/15",
+    blue: "bg-blue-400/10 border-blue-400/20 dark:bg-blue-400/5 dark:border-blue-400/15",
     purple: "bg-purple-400/10 border-purple-400/20 dark:bg-purple-400/5 dark:border-purple-400/15",
 };
 
@@ -42,10 +26,7 @@ export default function OverviewTab({ hook }) {
         return (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mt-6">
                 {Array.from({ length: 4 }).map((_, i) => (
-                    <div
-                        key={i}
-                        className={`rounded-xl p-4 bg-white dark:bg-[#1a1030] border border-grey-200/40 dark:border-white/10 shadow-sm flex items-start gap-3 ${staggerDelay(i)}`}
-                    >
+                    <div key={i} className={`rounded-xl p-4 bg-(--bg-surface) dark:bg-(--bg-surface-2) border border-(--color-card-surface-border) dark:border-white/10 shadow-sm flex items-start gap-3 ${staggerDelay(i)}`}>
                         <div className="w-9 h-9 rounded-xl skeleton shrink-0" />
                         <div className="flex-1 space-y-2 pt-1">
                             <div className="h-2.5 rounded skeleton w-3/4" />
@@ -58,97 +39,84 @@ export default function OverviewTab({ hook }) {
         );
     }
 
-    const totalReqs     = summary?.totals?.requestsTotal ?? 0;
-    const errorRate     = summary?.totals?.errorRate ?? 0;
-    const alertCount    = summary?.alertCount ?? alerts.length;
-    const elLag         = summary?.system?.eventLoopLag ?? 0;
-    const uptime        = summary?.uptime ?? 0;
+    const totalReqs = summary?.totals?.requestsTotal ?? 0;
+    const errorRate = summary?.totals?.errorRate ?? 0;
+    const alertCount = summary?.alertCount ?? alerts.length;
+    const elLag = summary?.system?.eventLoopLag ?? 0;
+    const uptime = summary?.uptime ?? 0;
 
-    const hasHard       = alerts.some((a) => a.severity === "critical" || a.severity === "emergency");
-    const hasSoft       = alerts.some((a) => a.severity === "warning");
-    const healthLabel   = hasHard ? "Degraded" : hasSoft ? "Warning" : "Healthy";
+    const hasHard = alerts.some((a) => a.severity === "critical" || a.severity === "emergency");
+    const hasSoft = alerts.some((a) => a.severity === "warning");
+    const healthLabel = hasHard ? "Degraded" : hasSoft ? "Warning" : "Healthy";
     const healthVariant = hasHard ? "red" : hasSoft ? "warning" : "green";
 
     const errorRateStyle = getErrorRateStyle(errorRate);
-    const lagStyle       = getLagStyle(elLag);
+    const lagStyle = getLagStyle(elLag);
 
     const statCards = [
         {
-            label:    "Total Requests",
-            value:    totalReqs.toLocaleString(),
-            sub:      "since process start",
-            icon:     faServer,
+            label: "Total Requests",
+            value: totalReqs.toLocaleString(),
+            sub: "since process start",
+            icon: faServer,
             badgeCls: BADGE.blue,
-            iconCls:  "text-blue-400",
-            accent:   "text-blue-400",
-            subCls:   "text-grey-400 dark:text-white/40",
+            iconCls: "text-blue-400",
+            accent: "text-blue-400",
+            subCls: "text-grey-400 dark:text-white/40",
         },
         {
-            label:    "Global Error Rate",
-            value:    formatPct(errorRate),
-            sub:      errorRate >= 0.05 ? "Above threshold (5%)" : "Within normal range",
-            icon:     faCircleExclamation,
+            label: "Global Error Rate",
+            value: formatPct(errorRate),
+            sub: errorRate >= 0.05 ? "Above threshold (5%)" : "Within normal range",
+            icon: faCircleExclamation,
             badgeCls: badgeCls(errorRateStyle),
-            iconCls:  textCls(errorRateStyle),
-            accent:   textCls(errorRateStyle),
-            subCls:   textCls(errorRateStyle),
+            iconCls: textCls(errorRateStyle),
+            accent: textCls(errorRateStyle),
+            subCls: textCls(errorRateStyle),
         },
         {
-            label:    "Event-Loop Lag",
-            value:    `${elLag}ms`,
-            sub:      elLag >= 100 ? "Elevated — check blocking ops" : elLag >= 10 ? "Moderate" : "Normal",
-            icon:     faBolt,
+            label: "Event-Loop Lag",
+            value: `${elLag}ms`,
+            sub: elLag >= 100 ? "Elevated — check blocking ops" : elLag >= 10 ? "Moderate" : "Normal",
+            icon: faBolt,
             badgeCls: badgeCls(lagStyle),
-            iconCls:  textCls(lagStyle),
-            accent:   textCls(lagStyle),
-            subCls:   textCls(lagStyle),
+            iconCls: textCls(lagStyle),
+            accent: textCls(lagStyle),
+            subCls: textCls(lagStyle),
         },
         {
-            label:    "Uptime",
-            value:    formatUptime(uptime),
-            sub:      "process running since start",
-            icon:     faClockRotateLeft,
+            label: "Uptime",
+            value: formatUptime(uptime),
+            sub: "process running since start",
+            icon: faClockRotateLeft,
             badgeCls: BADGE.purple,
-            iconCls:  "text-purple-400",
-            accent:   "text-purple-400",
-            subCls:   "text-grey-400 dark:text-white/40",
+            iconCls: "text-purple-400",
+            accent: "text-purple-400",
+            subCls: "text-grey-400 dark:text-white/40",
         },
     ];
 
     return (
         <div className="space-y-6 mt-4">
             {/* System health banner */}
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-grey-50 dark:bg-[#1a1030] border border-grey-200 dark:border-white/10">
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-grey-50 dark:bg-(--bg-surface-2) border border-grey-200 dark:border-white/10">
                 <Badge variant={healthVariant} size="lg">
                     {healthLabel}
                 </Badge>
-                <span className="text-sm text-grey-600 dark:text-grey-300">
-                    {alertCount === 0
-                        ? "All systems nominal — no active alerts."
-                        : `${alertCount} active alert${alertCount > 1 ? "s" : ""}. Check the Alerts tab for details.`}
-                </span>
+                <span className="text-sm text-grey-600 dark:text-grey-300">{alertCount === 0 ? "All systems nominal — no active alerts." : `${alertCount} active alert${alertCount > 1 ? "s" : ""}. Check the Alerts tab for details.`}</span>
             </div>
 
             {/* Stat cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                 {statCards.map((card, i) => (
-                    <div
-                        key={card.label}
-                        className={`rounded-xl p-4 bg-white dark:bg-[#1a1030] border border-grey-200/40 dark:border-white/10 shadow-sm flex items-start gap-3 ${ANIMATE_ENTER_UP} ${staggerDelay(i)} ${TRANSITION_SPRING} ${HOVER_LIFT}`}
-                    >
+                    <div key={card.label} className={`rounded-xl p-4 bg-(--bg-surface) dark:bg-(--bg-surface-2) border border-(--color-card-surface-border) dark:border-white/10 shadow-sm flex items-start gap-3 ${ANIMATE_ENTER_UP} ${staggerDelay(i)} ${TRANSITION_SPRING} ${HOVER_LIFT}`}>
                         <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${card.badgeCls}`}>
                             <FontAwesomeIcon icon={card.icon} className={`text-sm ${card.iconCls}`} />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-[11px] text-grey-400 dark:text-white/40 font-aumovio mb-0.5 truncate">
-                                {card.label}
-                            </p>
-                            <p className={`text-[19px] font-aumovio-bold leading-tight ${card.accent}`}>
-                                {card.value}
-                            </p>
-                            <p className={`text-[11px] mt-0.5 ${card.subCls}`}>
-                                {card.sub}
-                            </p>
+                            <p className="text-[11px] text-grey-400 dark:text-white/40 font-aumovio mb-0.5 truncate">{card.label}</p>
+                            <p className={`text-[19px] font-aumovio-bold leading-tight ${card.accent}`}>{card.value}</p>
+                            <p className={`text-[11px] mt-0.5 ${card.subCls}`}>{card.sub}</p>
                         </div>
                     </div>
                 ))}
@@ -160,10 +128,7 @@ export default function OverviewTab({ hook }) {
                     <h2 className="text-sm font-semibold text-grey-700 dark:text-grey-300 mb-3">Top 5 Slowest Routes (p95)</h2>
                     <div className="space-y-2">
                         {summary.topSlowRoutes.map((r, i) => (
-                            <div
-                                key={r.route}
-                                className={`flex items-center justify-between px-4 py-2.5 rounded-xl bg-grey-50 dark:bg-white/5 border border-grey-100 dark:border-white/10 ${ANIMATE_ENTER_UP} ${staggerDelay(i)}`}
-                            >
+                            <div key={r.route} className={`flex items-center justify-between px-4 py-2.5 rounded-xl bg-grey-50 dark:bg-white/5 border border-(--color-card-surface-border) dark:border-white/10 ${ANIMATE_ENTER_UP} ${staggerDelay(i)}`}>
                                 <span className="text-sm font-mono text-grey-700 dark:text-grey-300 truncate max-w-xs">{r.route}</span>
                                 <div className="flex items-center gap-3 shrink-0 ml-3">
                                     <span className="text-xs text-grey-500 dark:text-grey-400">{r.count} req</span>

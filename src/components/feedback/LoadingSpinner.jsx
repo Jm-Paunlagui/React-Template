@@ -27,7 +27,7 @@ export function LoadingSpinner({ size = "md", fullPage = false, label }) {
     );
 
     if (fullPage) {
-        return <div className={`flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14] ${TRANSITION_COLORS}`}>{spinner}</div>;
+        return <div className={`flex items-center justify-center min-h-screen bg-(--bg-surface) ${TRANSITION_COLORS}`}>{spinner}</div>;
     }
 
     return <div className="flex items-center justify-center py-12">{spinner}</div>;

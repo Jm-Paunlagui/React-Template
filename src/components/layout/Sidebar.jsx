@@ -35,28 +35,37 @@ const APP_SHORT_NAME = import.meta.env.VITE_APP_NAME_SHORT || null;
 // ── Group colour palette ──────────────────────────────────────────────────────
 const GROUP_COLOR_MAP = {
     orange: {
-        dot: "bg-orange-400",
-        activeBg: "bg-orange-50  dark:bg-orange-400/10",
-        activeText: "text-orange-500 dark:text-orange-400",
-        hoverBg: "hover:bg-orange-50  dark:hover:bg-orange-400/10",
-        hoverText: "hover:text-orange-500 dark:hover:text-orange-400",
-        collapsedBg: "bg-orange-50/80 dark:bg-orange-400/[.07]",
+        dot: "bg-[var(--side-active-border)]",
+        activeBg: "bg-[var(--side-active-bg)]",
+        activeText: "text-[var(--side-active-text)]",
+        hoverBg: "hover:bg-(--side-hover-bg)",
+        hoverText: "hover:text-(--side-active-text)",
+        // Fix 3 (QA): border-l indicator reserves 2px at rest (no layout shift);
+        // shows at 50%-opacity on hover, full-opacity when active.
+        hoverBorder: "border-l-2 border-transparent hover:border-[var(--side-hover-border)]",
+        activeBorder: "border-l-2 border-[var(--side-active-border)]",
+        collapsedBg: "bg-[var(--side-active-bg)]",
     },
+    // Palette-responsive families (purple/secondary, blue, yellow, turquoise) use
+    // contrast-safe per-family CSS variables computed by applyPaletteVars() so the
+    // dot and active text stay visible on dark palette surfaces (e.g. The Divine,
+    // where the raw yellow/secondary anchors are near-black). Mirrors the orange
+    // entry. Defaults for the brand palette live in index.css.
     purple: {
-        dot: "bg-purple-400",
-        activeBg: "bg-purple-50  dark:bg-purple-400/10",
-        activeText: "text-purple-500 dark:text-purple-400",
-        hoverBg: "hover:bg-purple-50  dark:hover:bg-purple-400/10",
-        hoverText: "hover:text-purple-500 dark:hover:text-purple-400",
-        collapsedBg: "bg-purple-50/80 dark:bg-purple-400/[.07]",
+        dot: "bg-[var(--side-purple-text)]",
+        activeBg: "bg-[var(--side-purple-bg)]",
+        activeText: "text-[var(--side-purple-text)]",
+        hoverBg: "hover:bg-(--side-hover-bg)",
+        hoverText: "hover:text-[var(--side-purple-text)]",
+        collapsedBg: "bg-[var(--side-purple-bg)]",
     },
     blue: {
-        dot: "bg-blue-400",
-        activeBg: "bg-blue-50    dark:bg-blue-400/10",
-        activeText: "text-blue-500 dark:text-blue-400",
-        hoverBg: "hover:bg-blue-50    dark:hover:bg-blue-400/10",
-        hoverText: "hover:text-blue-500 dark:hover:text-blue-400",
-        collapsedBg: "bg-blue-50/80 dark:bg-blue-400/[.07]",
+        dot: "bg-[var(--side-blue-text)]",
+        activeBg: "bg-[var(--side-blue-bg)]",
+        activeText: "text-[var(--side-blue-text)]",
+        hoverBg: "hover:bg-(--side-hover-bg)",
+        hoverText: "hover:text-[var(--side-blue-text)]",
+        collapsedBg: "bg-[var(--side-blue-bg)]",
     },
     success: {
         dot: "bg-success-400",
@@ -86,26 +95,26 @@ const GROUP_COLOR_MAP = {
     // palette system, so sidebar groups using these keys shift colour with the
     // user's chosen accent palette.
     yellow: {
-        dot: "bg-yellow-400",
-        activeBg: "bg-yellow-50  dark:bg-yellow-400/10",
-        activeText: "text-yellow-600 dark:text-yellow-400",
-        hoverBg: "hover:bg-yellow-50  dark:hover:bg-yellow-400/10",
-        hoverText: "hover:text-yellow-600 dark:hover:text-yellow-400",
-        collapsedBg: "bg-yellow-50/80 dark:bg-yellow-400/[.07]",
+        dot: "bg-[var(--side-yellow-text)]",
+        activeBg: "bg-[var(--side-yellow-bg)]",
+        activeText: "text-[var(--side-yellow-text)]",
+        hoverBg: "hover:bg-(--side-hover-bg)",
+        hoverText: "hover:text-[var(--side-yellow-text)]",
+        collapsedBg: "bg-[var(--side-yellow-bg)]",
     },
     turquoise: {
-        dot: "bg-turquoise-400",
-        activeBg: "bg-turquoise-50  dark:bg-turquoise-400/10",
-        activeText: "text-turquoise-600 dark:text-turquoise-400",
-        hoverBg: "hover:bg-turquoise-50  dark:hover:bg-turquoise-400/10",
-        hoverText: "hover:text-turquoise-600 dark:hover:text-turquoise-400",
-        collapsedBg: "bg-turquoise-50/80 dark:bg-turquoise-400/[.07]",
+        dot: "bg-[var(--side-turquoise-text)]",
+        activeBg: "bg-[var(--side-turquoise-bg)]",
+        activeText: "text-[var(--side-turquoise-text)]",
+        hoverBg: "hover:bg-(--side-hover-bg)",
+        hoverText: "hover:text-[var(--side-turquoise-text)]",
+        collapsedBg: "bg-[var(--side-turquoise-bg)]",
     },
     grey: {
         dot: "bg-grey-400",
-        activeBg: "bg-grey-100 dark:bg-[#251d3a]",
+        activeBg: "bg-grey-100 dark:bg-(--bg-surface-3)",
         activeText: "text-grey-700 dark:text-grey-300",
-        hoverBg: "hover:bg-grey-100 dark:hover:bg-[#251d3a]",
+        hoverBg: "hover:bg-grey-100 dark:hover:bg-(--bg-surface-3)",
         hoverText: "hover:text-grey-700 dark:hover:text-grey-300",
         collapsedBg: "bg-grey-100/80 dark:bg-grey-800/50",
     },
@@ -165,12 +174,12 @@ function FlatNavItem({ item, collapsed, colorKey = "orange", danger = false }) {
         flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio
         ${TRANSITION_COLORS}
         ${collapsed ? "justify-center px-0! w-10 h-10 mx-auto" : ""}
-        ${danger ? `text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10 ${collapsed ? GROUP_COLOR_MAP.danger.collapsedBg : ""}` : isActive ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-grey-600 dark:text-grey-400 ${col.hoverBg} ${col.hoverText} ${collapsed ? col.collapsedBg : ""}`}
+        ${danger ? `text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10 ${collapsed ? GROUP_COLOR_MAP.danger.collapsedBg : ""}` : isActive ? `${col.activeBg} ${col.activeText} ${!collapsed ? (col.activeBorder ?? "") : ""} font-aumovio-bold` : `text-(--text-secondary) ${col.hoverBg} ${col.hoverText} ${!collapsed ? (col.hoverBorder ?? "") : ""} ${collapsed ? col.collapsedBg : ""}`}
     `;
 
     const content = (
         <>
-            <span className={`shrink-0 flex items-center justify-center px-3 ${danger ? "text-danger-400" : isActive ? col.activeText : "text-grey-400 dark:text-grey-500"}`}>
+            <span className={`shrink-0 flex items-center justify-center px-3 ${danger ? "text-danger-400" : isActive ? col.activeText : "text-(--text-tertiary)"}`}>
                 <NavIcon icon={item.icon} />
             </span>
             {!collapsed && (
@@ -223,7 +232,7 @@ function SidebarGroup({ group, collapsed, currentPath }) {
                     return (
                         <Tooltip key={item.name} content={item.name} placement="right" delay={100}>
                             <NavLink to={item.href}>
-                                <div className={`w-9 h-9 flex items-center justify-center rounded-xl ${TRANSITION_COLORS} ${active ? `${col.activeBg} ${col.activeText}` : `text-grey-400 dark:text-grey-500 ${col.collapsedBg} ${col.hoverBg} ${col.hoverText}`}`}>
+                                <div className={`w-9 h-9 flex items-center justify-center rounded-xl ${TRANSITION_COLORS} ${active ? `${col.activeBg} ${col.activeText}` : `text-(--text-tertiary) ${col.collapsedBg} ${col.hoverBg} ${col.hoverText}`}`}>
                                     <span className={`flex items-center justify-center ${active ? col.activeText : ""}`}>
                                         <NavIcon icon={item.icon} />
                                     </span>
@@ -238,19 +247,19 @@ function SidebarGroup({ group, collapsed, currentPath }) {
 
     return (
         <div className="mb-1">
-            <button onClick={toggle} className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-aumovio-bold uppercase tracking-wider ${TRANSITION_COLORS} ${isGroupActive ? col.activeText : "text-grey-400 dark:text-grey-500 hover:text-grey-600 dark:hover:text-grey-300"}`}>
+            <button onClick={toggle} className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-aumovio-bold uppercase tracking-wider ${TRANSITION_COLORS} ${isGroupActive ? col.activeText : "text-(--text-tertiary) hover:text-(--text-secondary)"}`}>
                 <span className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 ${col.dot}`} />
                 <span className="flex-1 text-left">{group.label}</span>
                 {expanded ? <ChevronUpIcon className="w-3 h-3" /> : <ChevronDownIcon className="w-3 h-3" />}
             </button>
 
             {expanded && (
-                <div className="mt-0.5 ml-3 pl-3 border-l-2 border-grey-100 dark:border-grey-700/60 space-y-0.5">
+                <div className="mt-0.5 ml-3 pl-3 border-l-2 border-grey-100 dark:border-(--color-dark-muted)/30 space-y-0.5">
                     {group.items.map((item) => {
                         const active = currentPath === item.href || (item.href !== "/" && currentPath.startsWith(item.href + "/"));
                         return (
                             <NavLink key={item.name} to={item.href}>
-                                <div className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_COLORS} ${active ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-grey-600 dark:text-grey-400 ${col.hoverBg} ${col.hoverText}`}`}>
+                                <div className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_COLORS} ${active ? `${col.activeBg} ${col.activeText} font-aumovio-bold` : `text-(--text-secondary) ${col.hoverBg} ${col.hoverText}`}`}>
                                     <span className={`shrink-0 flex items-center justify-center ${active ? col.activeText : ""}`}>
                                         <NavIcon icon={item.icon} />
                                     </span>
@@ -277,12 +286,7 @@ function UserCard({ user, collapsed, onOpenProfile }) {
         return (
             <div className="flex justify-center py-3 shrink-0">
                 <Tooltip content={`${name} · ${role} — View profile`} placement="right" delay={100}>
-                    <button
-                        type="button"
-                        onClick={onOpenProfile}
-                        aria-label="View your profile"
-                        className={`rounded-full ${TRANSITION_SPRING} ${HOVER_LIFT_SM} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50`}
-                    >
+                    <button type="button" onClick={onOpenProfile} aria-label="View your profile" className={`rounded-full ${TRANSITION_SPRING} ${HOVER_LIFT_SM} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50`}>
                         <Avatar name={name} size="md" />
                     </button>
                 </Tooltip>
@@ -296,16 +300,17 @@ function UserCard({ user, collapsed, onOpenProfile }) {
             onClick={onOpenProfile}
             aria-label="View your profile"
             className={`mx-3 mt-3 mb-1 p-3 rounded-xl shrink-0 w-[calc(100%-1.5rem)]
-                bg-orange-50 dark:bg-orange-400/8
-                border border-orange-100 dark:border-orange-400/15
+                bg-(--side-card-bg)
+                border border-(--side-card-border)
+                shadow-sm dark:shadow-md dark:shadow-black/20
                 flex items-center gap-3 text-left
                 ${TRANSITION_SPRING} ${HOVER_LIFT_SM}
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50`}
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50`}
         >
             <Avatar name={name} size="lg" />
             <div className="min-w-0 flex-1">
-                <p className="text-sm font-aumovio-bold text-black/85 dark:text-white/90 truncate leading-tight">{name || "USER"}</p>
-                {division && <p className="text-xs text-grey-500 dark:text-grey-400 truncate mt-0.5">{division}</p>}
+                <p className="text-sm font-aumovio-bold text-(--text-primary) truncate leading-tight">{name || "USER"}</p>
+                {division && <p className="text-xs text-(--text-secondary) truncate mt-0.5">{division}</p>}
                 <div className="mt-1.5">
                     <Badge variant={badgeVariant} size="xs" pill>
                         {role}
@@ -321,7 +326,7 @@ export default function Sidebar() {
     const { layout, sidebarOpen, toggleSidebar } = useLayout();
     const { pathname } = useLocation();
     const [personalizeOpen, setPersonalizeOpen] = useState(false);
-    const { user, isLoading, navGroups, profileItems, publicLinks, profileOpen, openProfile, closeProfile } = useNav();
+    const { user, isLoading, navGroups, authFlatLinks, profileItems, publicLinks, profileOpen, openProfile, closeProfile } = useNav();
 
     // Sidebar is only rendered in sidebar layout mode — guard AFTER all hooks
     if (layout !== "sidebar") return null;
@@ -334,17 +339,17 @@ export default function Sidebar() {
 
     return (
         <>
-            <aside className={["sticky top-0 z-40 h-screen self-start flex flex-col shrink-0", "bg-white dark:bg-[#0d0d14]", "border-r border-grey-100 dark:border-grey-800", "shadow-[1px_0_8px_0_rgba(0,0,0,0.04)] dark:shadow-none", sidebarOpen ? `${ANIMATE_SLIDE_RIGHT} w-auto` : `${ANIMATE_SLIDE_LEFT} w-16`].join(" ")}>
+            <aside className={["sticky top-0 z-40 h-screen self-start flex flex-col shrink-0", "bg-(--surface-2)", "border-r border-(--border-elevation)", "shadow-[1px_0_8px_0_rgba(0,0,0,0.04)] dark:shadow-none", sidebarOpen ? `${ANIMATE_SLIDE_RIGHT} w-auto` : `${ANIMATE_SLIDE_LEFT} w-16`].join(" ")}>
                 {/* Header: Logo + app title + collapse toggle */}
-                <div className={`flex shrink-0 border-b border-grey-100 dark:border-grey-800 ${sidebarOpen ? "flex-col px-4 py-3" : "flex-col items-center px-2 gap-1 py-3"}`}>
+                <div className={`flex shrink-0 border-b border-(--border-elevation) ${sidebarOpen ? "flex-col px-4 py-3" : "flex-col items-center px-2 gap-1 py-3"}`}>
                     {sidebarOpen ? (
                         <div className="flex items-start justify-between gap-2">
                             <NavLink to="/" className="flex flex-col items-start min-w-0 overflow-hidden">
                                 <Logo className="h-8 md:h-10 lg:h-12 w-auto" />
-                                {APP_DISPLAY_NAME && <span className="text-sm font-aumovio-bold text-black/80 dark:text-white/85 tracking-wide truncate mt-0.5">{APP_DISPLAY_NAME}</span>}
+                                {APP_DISPLAY_NAME && <span className="text-sm font-aumovio-bold text-(--text-primary) tracking-wide truncate mt-0.5">{APP_DISPLAY_NAME}</span>}
                             </NavLink>
                             <Tooltip content="Collapse" placement="right" delay={300}>
-                                <button onClick={toggleSidebar} aria-label="Collapse sidebar" className={["p-1.5 rounded-lg shrink-0 mt-1", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
+                                <button onClick={toggleSidebar} aria-label="Collapse sidebar" className={["p-1.5 rounded-lg shrink-0 mt-1", "text-(--text-tertiary)", "hover:bg-(--side-hover-bg)", "hover:text-(--text-accent)", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50"].join(" ")}>
                                     <ChevronDoubleLeftIcon className="w-4 h-4" />
                                 </button>
                             </Tooltip>
@@ -358,7 +363,7 @@ export default function Sidebar() {
                                 </NavLink>
                             </Tooltip>
                             <Tooltip content="Expand" placement="right" delay={300}>
-                                <button onClick={toggleSidebar} aria-label="Expand sidebar" className={["p-1.5 rounded-lg shrink-0", "text-grey-400 dark:text-grey-500", "hover:bg-orange-50 dark:hover:bg-orange-400/10", "hover:text-orange-400", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/50"].join(" ")}>
+                                <button onClick={toggleSidebar} aria-label="Expand sidebar" className={["p-1.5 rounded-lg shrink-0", "text-(--text-tertiary)", "hover:bg-(--side-hover-bg)", "hover:text-(--text-accent)", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50"].join(" ")}>
                                     <ChevronDoubleRightIcon className="w-4 h-4" />
                                 </button>
                             </Tooltip>
@@ -372,31 +377,22 @@ export default function Sidebar() {
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto hide-scrollbar px-2 py-3 space-y-0.5">
                     {!isAuth && publicLinks.map((item) => <FlatNavItem key={item.name} item={item} collapsed={collapsed} />)}
+                    {isAuth && authFlatLinks.map((item) => <FlatNavItem key={item.name} item={item} collapsed={collapsed} colorKey="orange" />)}
                     {isAuth && navGroups.map((group) => <SidebarGroup key={group.label} group={group} collapsed={collapsed} currentPath={pathname} />)}
                 </nav>
 
                 {/* Footer: theme toggle + account links */}
-                <div className="shrink-0 border-t border-grey-100 dark:border-grey-800 px-2 py-3 space-y-1">
+                <div className="shrink-0 border-t border-grey-100 dark:border-(--color-dark-muted)/20 px-2 py-3 space-y-1">
                     {/* Personalize row */}
                     {collapsed ? (
                         <Tooltip content="Personalize" placement="right" delay={100}>
-                            <button
-                                type="button"
-                                onClick={() => setPersonalizeOpen(true)}
-                                aria-label="Personalize"
-                                className={`w-10 h-10 mx-auto flex items-center justify-center rounded-xl bg-grey-100/80 dark:bg-orange-400/[.07] ${TRANSITION_COLORS} text-grey-600 dark:text-grey-400 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-500 dark:hover:text-orange-400`}
-                            >
+                            <button type="button" onClick={() => setPersonalizeOpen(true)} aria-label="Personalize" className={`w-10 h-10 mx-auto flex items-center justify-center rounded-xl bg-grey-100/80 dark:bg-(--accent-subtle) ${TRANSITION_COLORS} text-(--text-secondary) hover:bg-(--side-hover-bg) hover:text-(--side-active-text)`}>
                                 <PaintBrushIcon className="w-4 h-4 shrink-0" />
                             </button>
                         </Tooltip>
                     ) : (
-                        <button
-                            type="button"
-                            onClick={() => setPersonalizeOpen(true)}
-                            aria-label="Personalize"
-                            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio text-left ${TRANSITION_COLORS} text-grey-600 dark:text-grey-400 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-500 dark:hover:text-orange-400`}
-                        >
-                            <span className="shrink-0 flex items-center justify-center px-3 text-grey-400 dark:text-grey-500">
+                        <button type="button" onClick={() => setPersonalizeOpen(true)} aria-label="Personalize" className={`group w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio text-left ${TRANSITION_COLORS} text-(--text-secondary) hover:bg-(--side-hover-bg) hover:text-(--side-active-text)`}>
+                            <span className={`shrink-0 flex items-center justify-center px-3 text-(--text-secondary) group-hover:text-(--side-active-text) ${TRANSITION_COLORS}`}>
                                 <PaintBrushIcon className="w-4 h-4" />
                             </span>
                             <span className="flex-1 truncate">Personalize</span>

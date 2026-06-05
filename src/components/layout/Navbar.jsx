@@ -15,7 +15,7 @@ import { Bars3Icon, PaintBrushIcon, XMarkIcon } from "@heroicons/react/24/outlin
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-import { ACCENT_COLOR_BORDER, ANIMATE_SCALE_IN, ANIMATE_SCALE_OUT, ANIMATE_SLIDE_DOWN, BASE_COLOR_TEXT, DELAY_1, MAIN_FOREGROUND_COLOR_TEXT, MAIN_OVERLAY_COLOR_BG, MAIN_PULSE_COLOR_BG, SECONDARY_COLOR_TEXT, SUBTITLE_COLOR_TEXT, TITLE_COLOR_TEXT, TRANSITION_COLORS, TRANSITION_SNAP, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
+import { ANIMATE_SCALE_IN, ANIMATE_SCALE_OUT, ANIMATE_SLIDE_DOWN, BASE_COLOR_TEXT, DELAY_1, MAIN_FOREGROUND_COLOR_TEXT, MAIN_OVERLAY_COLOR_BG, MAIN_PULSE_COLOR_BG, SECONDARY_COLOR_TEXT, SUBTITLE_COLOR_TEXT, TITLE_COLOR_TEXT, TRANSITION_COLORS, TRANSITION_SNAP, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
 
 import PersonalizeModal from "../../features/personalize/PersonalizeModal";
 import ProfileModal from "../feedback/ProfileModal";
@@ -51,7 +51,7 @@ function NavItem({ item }) {
         <NavLink to={item.href}>
             <div
                 className={`
-                    ${item.current ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow` : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
+                    ${item.current ? `${MAIN_FOREGROUND_COLOR_TEXT} bg-(--nav-active-bg) border border-(--nav-active-border)/25 shadow` : `${TITLE_COLOR_TEXT} hover:bg-(--nav-hover-bg) hover:text-(--nav-active-text)`}
                     px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_COLORS} cursor-pointer
                 `}
             >
@@ -72,11 +72,11 @@ function DropdownGroup({ group, isLoading }) {
         <div className="relative group">
             <div
                 className={`
-                    ${isLoading ? `${SECONDARY_COLOR_TEXT} animate-pulse ${MAIN_PULSE_COLOR_BG} cursor-default` : isActive ? `${MAIN_FOREGROUND_COLOR_TEXT} ${ACCENT_COLOR_BORDER} shadow` : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
+                    ${isLoading ? `${SECONDARY_COLOR_TEXT} animate-pulse ${MAIN_PULSE_COLOR_BG} cursor-default` : isActive ? `${MAIN_FOREGROUND_COLOR_TEXT} bg-(--nav-active-bg) border border-(--nav-active-border)/25 shadow` : `${TITLE_COLOR_TEXT} hover:bg-(--nav-hover-bg) hover:text-(--nav-active-text)`}
                     px-3 py-2 rounded-lg text-sm font-aumovio ${TRANSITION_COLORS} cursor-pointer
                 `}
             >
-                {isLoading ? <span className={`w-20 bg-orange-300 rounded animate-pulse text-transparent ${DELAY_1}`}>{group.label}</span> : group.label}
+                {isLoading ? <span className={`w-20 bg-(--accent-subtle) rounded animate-pulse text-transparent ${DELAY_1}`}>{group.label}</span> : group.label}
             </div>
 
             {group.items.length > 0 && (
@@ -84,8 +84,8 @@ function DropdownGroup({ group, isLoading }) {
                     className={`
                         absolute z-10 invisible py-4 mt-2 ${TRANSITION_SNAP}
                         origin-top transform -translate-x-1/2 left-1/2 w-72
-                        bg-white dark:bg-[#1a1030] rounded-xl shadow-2xl opacity-0
-                        ring-1 ring-black/5 dark:ring-white/10
+                        bg-(--bg-surface-2) rounded-xl shadow-2xl opacity-0
+                        ring-1 ring-black/5 dark:ring-(--color-dark-muted)/20
                         group-hover:opacity-100 group-hover:visible
                     `}
                 >
@@ -100,8 +100,8 @@ function DropdownGroup({ group, isLoading }) {
                                             className={`
                                                 flex items-center justify-between p-2.5 rounded-lg
                                                 ${TRANSITION_COLORS}
-                                                hover:bg-orange-50 dark:hover:bg-orange-400/5
-                                                ${active ? "text-orange-400 font-aumovio-bold" : "text-grey-700 dark:text-grey-300 hover:text-orange-500"}
+                                                hover:bg-(--nav-hover-bg)
+                                                ${active ? "text-(--nav-active-text) font-aumovio-bold" : "text-grey-700 dark:text-grey-300 hover:text-(--nav-active-text)"}
                                             `}
                                         >
                                             <div>
@@ -161,6 +161,7 @@ export default function Navbar() {
                 className={`
                 sticky top-0 z-50 w-full font-aumovio
                 ${MAIN_OVERLAY_COLOR_BG}
+                border-b border-(--border-elevation)
                 ${isScrolled ? "shadow-lg shadow-black/10" : ""}
             `}
             >
@@ -182,7 +183,7 @@ export default function Navbar() {
                                         {navigationLinks.map((item, i) =>
                                             item.isLoading ? (
                                                 <div key={`loading-${i}`} className={`${SECONDARY_COLOR_TEXT} animate-pulse ${MAIN_PULSE_COLOR_BG} px-3 py-2 rounded-lg text-sm`}>
-                                                    <span className={`inline-block w-20 bg-orange-300 rounded animate-pulse text-transparent ${DELAY_1}`}>Loading…</span>
+                                                    <span className={`inline-block w-20 bg-(--accent-subtle) rounded animate-pulse text-transparent ${DELAY_1}`}>Loading…</span>
                                                 </div>
                                             ) : (
                                                 <NavItem key={item.name} item={item} />
@@ -198,12 +199,7 @@ export default function Navbar() {
 
                                 {/* Right rail: Personalize + Avatar + Burger */}
                                 <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => setPersonalizeOpen(true)}
-                                        aria-label="Personalize"
-                                        title="Personalize"
-                                        className={`p-2 border border-transparent rounded-lg text-grey-500 dark:text-grey-400 hover:text-orange-400 hover:bg-orange-400/10 hover:border-orange-400/20 ${TRANSITION_COLORS}`}
-                                    >
+                                    <button onClick={() => setPersonalizeOpen(true)} aria-label="Personalize" title="Personalize" className={`p-2 border border-transparent rounded-lg text-grey-500 dark:text-grey-400 hover:text-(--nav-active-text) hover:bg-(--nav-hover-bg) hover:border-(--accent)/20 ${TRANSITION_COLORS}`}>
                                         <PaintBrushIcon className="w-4 h-4" />
                                     </button>
 
@@ -214,21 +210,21 @@ export default function Navbar() {
                                                 disabled={isLoading}
                                                 className={`
                                                 focus-visible:outline-none
-                                                focus-visible:ring-2 focus-visible:ring-orange-400/50
+                                                focus-visible:ring-2 focus-visible:ring-(--accent)/50
                                                 rounded-full ${TRANSITION_SPRING}
-                                                hover:ring-2 hover:ring-orange-400/40
+                                                hover:ring-2 hover:ring-(--accent)/40
                                             `}
                                             >
-                                                {isLoading ? <div className="w-9 h-9 rounded-full bg-orange-200 animate-pulse" /> : <Avatar name={userName} size="sm" bordered />}
+                                                {isLoading ? <div className="w-9 h-9 rounded-full bg-(--accent-subtle) animate-pulse" /> : <Avatar name={userName} size="sm" bordered />}
                                             </MenuButton>
 
                                             <Transition as="div" enter={ANIMATE_SCALE_IN} leave={ANIMATE_SCALE_OUT}>
                                                 <MenuItems
                                                     className="
                                                     absolute right-0 z-50 mt-2 w-56
-                                                    bg-white dark:bg-[#1a1030]
+                                                    bg-(--bg-surface-2)
                                                     rounded-xl shadow-2xl
-                                                    ring-1 ring-black/5 dark:ring-white/10
+                                                    ring-1 ring-black/5 dark:ring-(--color-dark-muted)/20
                                                     focus:outline-none overflow-hidden
                                                 "
                                                 >
@@ -237,7 +233,7 @@ export default function Navbar() {
                                                         <div className="flex items-center gap-2.5">
                                                             <Avatar name={userName} size="sm" />
                                                             <div className="min-w-0">
-                                                                <p className="text-sm font-aumovio-bold text-black/85 dark:text-white/90 truncate">{userName}</p>
+                                                                <p className="text-sm font-aumovio-bold text-black/85 dark:text-(--color-dark-text) truncate">{userName}</p>
                                                                 <Badge variant={roleBadge} size="xs" pill>
                                                                     {roleLabel}
                                                                 </Badge>
@@ -249,7 +245,7 @@ export default function Navbar() {
                                                     <div className="py-1.5 px-1.5 space-y-0.5">
                                                         {profileItems.map((item, i) => {
                                                             if (item.divider) {
-                                                                return <div key={`divider-${i}`} className="my-1 h-px bg-grey-100 dark:bg-[#251d3a] mx-2" />;
+                                                                return <div key={`divider-${i}`} className="my-1 h-px bg-(--bg-surface-3) mx-2" />;
                                                             }
                                                             const Icon = item.icon;
                                                             return (
@@ -260,7 +256,7 @@ export default function Navbar() {
                                                                         w-full flex items-center gap-2.5
                                                                         px-3 py-2 rounded-lg text-sm font-aumovio
                                                                         ${TRANSITION_COLORS}
-                                                                        ${item.danger ? "text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10" : "text-grey-700 dark:text-grey-300 hover:bg-orange-50 dark:hover:bg-orange-400/5 hover:text-orange-500"}
+                                                                        ${item.danger ? "text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10" : "text-grey-700 dark:text-grey-300 hover:bg-(--nav-hover-bg) hover:text-(--nav-active-text)"}
                                                                     `}
                                                                     >
                                                                         {Icon && <Icon className="w-4 h-4 shrink-0" />}
@@ -281,8 +277,8 @@ export default function Navbar() {
                                         lg:hidden inline-flex items-center justify-center p-2
                                         rounded-lg ${TRANSITION_SPRING}
                                         text-grey-600 dark:text-grey-300
-                                        hover:bg-orange-50 dark:hover:bg-orange-400/10
-                                        hover:text-orange-500
+                                        hover:bg-(--nav-hover-bg)
+                                        hover:text-(--nav-active-text)
                                     `}
                                     >
                                         <span className="sr-only">Open main menu</span>
@@ -305,10 +301,10 @@ export default function Navbar() {
                             >
                                 {/* Mobile user card */}
                                 {user && (
-                                    <div className="flex items-center gap-3 px-3 py-2.5 mb-2 rounded-xl bg-orange-50 dark:bg-orange-400/10 border border-orange-100 dark:border-orange-400/15">
+                                    <div className="flex items-center gap-3 px-3 py-2.5 mb-2 rounded-xl bg-(--accent-subtle) border border-(--border-subtle)">
                                         <Avatar name={userName} size="sm" />
                                         <div className="min-w-0">
-                                            <p className="text-sm font-aumovio-bold text-black/85 dark:text-white/90 truncate">{userName}</p>
+                                            <p className="text-sm font-aumovio-bold text-black/85 dark:text-(--color-dark-text) truncate">{userName}</p>
                                             <Badge variant={roleBadge} size="xs" pill>
                                                 {roleLabel}
                                             </Badge>
@@ -323,10 +319,10 @@ export default function Navbar() {
                                             className={`
                                             px-3 py-2 rounded-xl text-sm font-aumovio
                                             ${TRANSITION_COLORS} block
-                                            ${item.isLoading ? `${SECONDARY_COLOR_TEXT} animate-pulse bg-orange-100/50 cursor-default` : item.current ? `${MAIN_FOREGROUND_COLOR_TEXT} bg-orange-50 dark:bg-orange-400/10 ${ACCENT_COLOR_BORDER}` : `${TITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
+                                            ${item.isLoading ? `${SECONDARY_COLOR_TEXT} animate-pulse bg-(--accent-subtle) cursor-default` : item.current ? `${MAIN_FOREGROUND_COLOR_TEXT} bg-(--nav-active-bg) border border-(--nav-active-border)/25` : `${TITLE_COLOR_TEXT} hover:bg-(--nav-hover-bg) hover:text-(--nav-active-text)`}
                                         `}
                                         >
-                                            {item.isLoading ? <span className="w-20 bg-orange-200 rounded animate-pulse text-transparent">…</span> : item.name}
+                                            {item.isLoading ? <span className="w-20 bg-(--accent-subtle) rounded animate-pulse text-transparent">…</span> : item.name}
                                         </div>
                                     </NavLink>
                                 ))}
@@ -343,7 +339,7 @@ export default function Navbar() {
                                                         className={`
                                                             px-3 py-2 rounded-xl text-sm font-aumovio
                                                             transition-all duration-200 block
-                                                            ${active ? `${MAIN_FOREGROUND_COLOR_TEXT} bg-orange-50 dark:bg-orange-400/10` : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
+                                                            ${active ? `${MAIN_FOREGROUND_COLOR_TEXT} bg-(--nav-active-bg)` : `${SUBTITLE_COLOR_TEXT} hover:bg-(--nav-hover-bg) hover:text-(--nav-active-text)`}
                                                         `}
                                                     >
                                                         {item.name}
@@ -370,7 +366,7 @@ export default function Navbar() {
                                                         w-full flex items-center gap-2.5
                                                         px-3 py-2 rounded-xl text-sm font-aumovio
                                                         transition-colors duration-150 text-left
-                                                        ${item.danger ? "text-danger-500 hover:bg-danger-50 dark:hover:bg-danger-400/10" : `${SUBTITLE_COLOR_TEXT} hover:bg-orange-50 dark:hover:bg-white/5 hover:text-orange-600`}
+                                                        ${item.danger ? "text-danger-500 hover:bg-danger-50 dark:hover:bg-danger-400/10" : `${SUBTITLE_COLOR_TEXT} hover:bg-(--nav-hover-bg) hover:text-(--nav-active-text)`}
                                                     `}
                                                     >
                                                         {Icon && <Icon className="w-4 h-4 shrink-0" />}
@@ -383,10 +379,7 @@ export default function Navbar() {
 
                                 {/* Mobile personalize */}
                                 <div className="pt-3 border-t border-grey-100 dark:border-grey-800">
-                                    <button
-                                        onClick={() => setPersonalizeOpen(true)}
-                                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio text-left ${TRANSITION_COLORS} text-grey-600 dark:text-grey-400 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-500 dark:hover:text-orange-400`}
-                                    >
+                                    <button onClick={() => setPersonalizeOpen(true)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-aumovio text-left ${TRANSITION_COLORS} text-grey-600 dark:text-grey-400 hover:bg-(--nav-hover-bg) hover:text-(--nav-active-text)`}>
                                         <PaintBrushIcon className="w-4 h-4 shrink-0" />
                                         Personalize
                                     </button>

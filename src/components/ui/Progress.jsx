@@ -50,7 +50,7 @@ export function Progress({ value = 0, max = 100, variant = "primary", size = "md
                     <span className="text-xs font-aumovio-bold text-black/70 dark:text-white/70">{Math.round(pct)}%</span>
                 </div>
             )}
-            <div className={`w-full bg-grey-200 dark:bg-[#251d3a] rounded-full overflow-hidden ${HEIGHTS[size] ?? HEIGHTS.md}`}>
+            <div className={`w-full bg-grey-200 dark:bg-(--bg-surface-3) rounded-full overflow-hidden ${HEIGHTS[size] ?? HEIGHTS.md}`}>
                 <div
                     className={`h-full rounded-full ${COLORS[variant] ?? COLORS.primary}
             ${TRANSITION_LAZY}

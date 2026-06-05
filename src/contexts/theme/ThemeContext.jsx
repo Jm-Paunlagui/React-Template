@@ -1,10 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import {
-    applyPaletteVars,
-    clearPaletteVars,
-    findPalette,
-    generateCustomColors,
-} from "../../features/personalize/personalize.palettes";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { applyPaletteVars, clearPaletteVars, findPalette, generateCustomColors } from "../../features/personalize/personalize.palettes";
 
 const ThemeContext = createContext(null);
 
@@ -37,8 +32,6 @@ function loadPrefs() {
     };
 }
 
-const TRANSPARENCY_STYLE_ID = "aumovio-no-transparency";
-
 export function ThemeProvider({ children }) {
     const init = useMemo(loadPrefs, []);
 
@@ -51,7 +44,10 @@ export function ThemeProvider({ children }) {
 
     // OS dark-mode listener
     useEffect(() => {
-        if (mode !== "system") { setResolved(mode); return; }
+        if (mode !== "system") {
+            setResolved(mode);
+            return;
+        }
         setResolved(getSystemTheme());
         const mql = window.matchMedia("(prefers-color-scheme: dark)");
         const handler = (e) => setResolved(e.matches ? "dark" : "light");
@@ -68,52 +64,47 @@ export function ThemeProvider({ children }) {
         } catch {}
     }, [mode, resolved, transparency, palette, customColor]);
 
-    // Transparency — inject/remove a <style> tag appended to <head>.
-    // A dynamically-appended <style> lives AFTER all linked stylesheets in the
-    // cascade, so !important here beats every Tailwind utility regardless of layer.
-    useEffect(() => {
-        const existing = document.getElementById(TRANSPARENCY_STYLE_ID);
-        if (!transparency) {
-            if (!existing) {
-                const style = document.createElement("style");
-                style.id = TRANSPARENCY_STYLE_ID;
-                style.textContent =
-                    "*, *::before, *::after { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }";
-                document.head.appendChild(style);
-            }
-        } else {
-            existing?.remove();
-        }
+    // Transparency — set data-transparency attribute on <html>.
+    // CSS in index.css targets html[data-transparency="off"] to disable all
+    // backdrop-filter effects. useLayoutEffect runs before paint so there is
+    // no flash when the stored preference is "off" on initial load.
+    useLayoutEffect(() => {
+        document.documentElement.setAttribute("data-transparency", transparency ? "on" : "off");
     }, [transparency]);
 
-    // Palette CSS variable overrides
+    // Palette CSS variable overrides.
+    // `resolved` is a dep so dark-mode toggles immediately re-inject the correct
+    // --surface / --text / --text-muted values for named palettes.
     useEffect(() => {
         if (palette === "aumovio-orange") {
             clearPaletteVars();
             return;
         }
         if (palette === "custom") {
-            if (customColor) applyPaletteVars(generateCustomColors(customColor));
+            if (customColor) applyPaletteVars(generateCustomColors(customColor), resolved === "dark", "custom");
             return;
         }
         const entry = findPalette(palette);
-        if (entry?.colors) applyPaletteVars(entry.colors);
-    }, [palette, customColor]);
+        if (entry?.colors) applyPaletteVars(entry.colors, resolved === "dark", entry.id);
+    }, [palette, customColor, resolved]);
 
-    const toggle = useCallback(
-        () => setMode((m) => (m === "system" ? "light" : m === "light" ? "dark" : "system")),
-        [],
-    );
+    const toggle = useCallback(() => setMode((m) => (m === "system" ? "light" : m === "light" ? "dark" : "system")), []);
     const setPalette = useCallback((id) => setPaletteState(id), []);
     const setCustomColor = useCallback((hex) => setCustomColorState(hex), []);
 
     const value = useMemo(
         () => ({
-            mode, theme: resolved, isDark: resolved === "dark",
-            setMode, toggle,
-            transparency, setTransparency,
-            palette, setPalette,
-            customColor, setCustomColor,
+            mode,
+            theme: resolved,
+            isDark: resolved === "dark",
+            setMode,
+            toggle,
+            transparency,
+            setTransparency,
+            palette,
+            setPalette,
+            customColor,
+            setCustomColor,
         }),
         [mode, resolved, toggle, transparency, palette, customColor, setPalette, setCustomColor],
     );

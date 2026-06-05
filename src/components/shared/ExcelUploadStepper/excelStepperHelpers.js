@@ -25,9 +25,9 @@
  */
 export function makeUploadSteps(completeDescription) {
     return [
-        { id: "upload",   label: "Upload File",  description: "Select your .xlsx file" },
-        { id: "verify",   label: "Verify Data",  description: "Review DB-classified rows" },
-        { id: "complete", label: "Complete",     description: completeDescription },
+        { id: "upload", label: "Upload File", description: "Select your .xlsx file" },
+        { id: "verify", label: "Verify Data", description: "Review DB-classified rows" },
+        { id: "complete", label: "Complete", description: completeDescription },
     ];
 }
 
@@ -79,7 +79,7 @@ export function sortAndIndexRows(rows, sortOrder, useExcluded = true) {
  * @param {string}  status       - Row status value (e.g. "Create", "Conflict").
  * @param {boolean} [excluded]   - Whether the row has been manually excluded.
  * @param {{ [status: string]: string }} colorMap - Map of status → Tailwind class.
- * @param {string}  [defaultClass="bg-white dark:bg-[#0D0D14]"] - Fallback class.
+ * @param {string}  [defaultClass="bg-white dark:bg-(--bg-surface)"] - Fallback class.
  * @returns {string}
  *
  * @example
@@ -91,7 +91,7 @@ export function sortAndIndexRows(rows, sortOrder, useExcluded = true) {
  * };
  * const cls = rowTintClass(row.status, row.excluded, COLOR_MAP);
  */
-export function rowTintClass(status, excluded, colorMap, defaultClass = "bg-white dark:bg-[#0D0D14]") {
+export function rowTintClass(status, excluded, colorMap, defaultClass = "bg-(--bg-surface)") {
     if (excluded) return "bg-grey-50 dark:bg-grey-800/30 opacity-50";
     return colorMap[status] ?? defaultClass;
 }

@@ -4,7 +4,7 @@
  * Props:
  *   checked, onChange, label, description, disabled
  *   size     — 'sm'|'md'|'lg'
- *   color    — 'orange'|'success'|'purple'|'danger'
+ *   color    — 'accent'|'orange'|'success'|'purple'|'danger'
  *   labelPosition — 'right'|'left'
  */
 import { TRANSITION_COLORS, TRANSITION_TRANSFORM_SPRING } from "../../assets/styles/pre-set-styles";
@@ -16,6 +16,7 @@ const SIZES = {
 };
 
 const COLORS = {
+    accent: "bg-(--accent)",
     orange: "bg-orange-400",
     success: "bg-success-400",
     purple: "bg-purple-400",
@@ -35,7 +36,7 @@ export function Toggle({ checked = false, onChange, label, description, disabled
             disabled={disabled}
             className={`relative inline-flex items-center rounded-full shrink-0
         ${TRANSITION_COLORS} focus-visible:outline-none
-        focus-visible:ring-2 focus-visible:ring-orange-400/50 focus-visible:ring-offset-2
+        focus-visible:ring-2 focus-visible:ring-(--accent)/50 focus-visible:ring-offset-2
         ${sz.track}
         ${checked ? col : "bg-grey-300 dark:bg-grey-600"}
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}

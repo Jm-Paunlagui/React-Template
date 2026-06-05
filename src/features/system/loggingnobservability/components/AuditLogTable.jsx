@@ -162,7 +162,7 @@ export default function AuditLogTable({ hook }) {
     };
 
     return (
-        <Card className="bg-white dark:bg-[#1a1030] overflow-hidden">
+        <Card className="bg-(--bg-surface) dark:bg-(--bg-surface-2) overflow-hidden">
             {/* ── Filter bar ── */}
             <div className="pb-4 border-b border-grey-100 dark:border-white/10 flex gap-3 items-end">
                 <div className="flex flex-col gap-1">

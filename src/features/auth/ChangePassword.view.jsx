@@ -36,10 +36,9 @@ import { useChangePassword } from "./changePassword.hook";
 function ChangePasswordView() {
     const hook = useChangePassword();
 
-    // isDefaultPassword is derived from the hook's server-validated user data.
-    // The hook reads from the /auth/me endpoint response — not localStorage —
-    // so this is always accurate and avoids calling the async isAuth() at render (H-02).
-    const isDefaultPassword = hook.isDefaultPassword === true;
+    // isDefaultPassword is resolved asynchronously in the hook (H-02).
+    // AuthMiddleware.isAuth() is async — never called synchronously at render.
+    const isDefaultPassword = hook.isDefaultPassword;
 
     const canSubmit = hook.isPasswordValid && hook.form.newPassword === hook.form.confirmPassword && hook.form.newPassword.length > 0 && !hook.loading;
 

@@ -10,7 +10,7 @@
  */
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { TRANSITION_SMOOTH, TRANSITION_SPRING, HOVER_PRESS, ANIMATE_SCALE_SPRING } from "../../assets/styles/pre-set-styles";
+import { ANIMATE_SCALE_SPRING, HOVER_PRESS, TRANSITION_SMOOTH, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
 
 const POSITIONS = {
     "bottom-right": "fixed bottom-6 right-6 z-50",
@@ -33,7 +33,7 @@ export function SpeedDial({ icon: Icon = PlusIcon, actions = [], direction = "up
           ${open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
                     style={{ transitionDelay: open ? `${i * 50}ms` : "0ms" }}
                 >
-                    {tooltip && isReverse && <span className="px-2 py-1 text-xs bg-white dark:bg-[#251d3a] border border-grey-200 dark:border-grey-600 rounded-lg shadow dark:shadow-black/40 font-aumovio-bold text-black/80 dark:text-white/85 whitespace-nowrap">{a.label}</span>}
+                    {tooltip && isReverse && <span className="px-2 py-1 text-xs bg-white dark:bg-(--bg-surface-3) border border-grey-200 dark:border-grey-600 rounded-lg shadow dark:shadow-black/40 font-aumovio-bold text-black/80 dark:text-white/85 whitespace-nowrap">{a.label}</span>}
                     <button
                         onClick={() => {
                             a.onClick?.();

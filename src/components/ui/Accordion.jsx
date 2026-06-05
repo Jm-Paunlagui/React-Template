@@ -52,7 +52,7 @@ export function Accordion({ items = [], defaultOpen = null, multiple = false, va
             {items.map((item) => {
                 const isOpen = openIds.includes(item.id);
                 return (
-                    <div key={item.id} className={`bg-white dark:bg-[#1a1030] ${ITEM_VARIANTS[variant]}`}>
+                    <div key={item.id} className={`bg-(--bg-surface) dark:bg-(--bg-surface-2) ${ITEM_VARIANTS[variant]}`}>
                         <button
                             onClick={() => toggle(item.id)}
                             aria-expanded={isOpen}

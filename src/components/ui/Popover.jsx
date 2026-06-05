@@ -49,7 +49,7 @@ export function Popover({ trigger, content, title, placement = "bottom", width =
             {open && (
                 <div
                     className={`absolute z-50 ${PLACEMENT[placement]} ${WIDTHS[width]}
-          bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700
+          bg-(--bg-surface) dark:bg-(--bg-surface-2) border border-grey-200 dark:border-grey-700
           rounded-xl shadow-2xl ${ANIMATE_SCALE_IN}`}
                 >
                     {title && (

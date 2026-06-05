@@ -42,22 +42,22 @@
 // ============================================================================
 // BACKGROUNDS
 // ============================================================================
-export const BASE_COLOR_BG = "bg-[var(--bg-surface)] bg-gradient-to-br from-[var(--bg-surface)] to-[var(--bg-surface-2)]";
+export const BASE_COLOR_BG = "bg-(--bg-surface) bg-gradient-to-br from-[var(--bg-surface)] to-[var(--bg-surface-2)]";
 export const MAIN_FOREGROUND_COLOR_BG = "bg-orange-400";
 export const MAIN_STRONG_COLOR_BG = "bg-orange-400 shadow-lg shadow-orange-400/25";
-export const MAIN_OVERLAY_COLOR_BG = "bg-[var(--bg-surface)]/95 backdrop-blur-sm";
+export const MAIN_OVERLAY_COLOR_BG = "bg-[var(--surface-3)]/95 backdrop-blur-sm";
 export const MAIN_PULSE_COLOR_BG = "bg-orange-400/15 animate-pulse";
 export const GRADIENT_COLOR_BG = "bg-gradient-to-br from-orange-300 via-orange-400 to-purple-400 dark:from-orange-500 dark:via-orange-500 dark:to-purple-500";
 
 // ============================================================================
 // TEXT
 // ============================================================================
-export const TITLE_COLOR_TEXT = "text-black dark:text-white font-aumovio-bold tracking-tight";
-export const SUBTITLE_COLOR_TEXT = "text-black/75 dark:text-white/75 font-aumovio";
-export const BASE_COLOR_TEXT = "text-black/85 dark:text-white/85 font-normal leading-relaxed";
+export const TITLE_COLOR_TEXT = "text-(--text-primary) font-aumovio-bold tracking-tight";
+export const SUBTITLE_COLOR_TEXT = "text-(--text-primary) font-aumovio";
+export const BASE_COLOR_TEXT = "text-(--text-primary) font-normal leading-relaxed";
 export const BASE_COLOR_TEXT_LIGHT = "text-white font-normal leading-relaxed drop-shadow-sm";
-export const MAIN_COLOR_TEXT = "text-black/80 dark:text-white/80 font-aumovio";
-export const MAIN_FOREGROUND_COLOR_TEXT = "text-orange-400/90 font-aumovio";
+export const MAIN_COLOR_TEXT = "text-black/80 dark:text-(--text-primary) font-aumovio";
+export const MAIN_FOREGROUND_COLOR_TEXT = "text-(--nav-active-text) font-aumovio";
 export const MAIN_STRONG_COLOR_TEXT = "text-orange-400 drop-shadow-sm";
 export const MAIN_OVERLAY_COLOR_TEXT = "text-white drop-shadow-md";
 export const GRADIENT_COLOR_TEXT = "text-orange-400 dark:text-orange-300 font-aumovio-bold tracking-wide drop-shadow-sm";
@@ -97,7 +97,7 @@ export const ICON_PLACE_SELF_CENTER_1 = "place-self-center drop-shadow-sm";
 // FORM FIELDS
 // ============================================================================
 export const TEXT_FIELD = `w-full p-2 font-aumovio-bold tracking-wider rounded-lg shadow-sm
-  bg-white/95 dark:bg-[#1a1030] dark:text-white/85 backdrop-blur-sm
+  bg-white/95 dark:bg-(--bg-surface-2) dark:text-(--text-primary) backdrop-blur-sm
   focus:outline-none focus:ring-2 focus:ring-orange-400/40
   focus:border-orange-400/50 focus:shadow-md focus:shadow-orange-400/10
   transition-all duration-300`;
@@ -154,10 +154,10 @@ export const CONTRAST = `font-aumovio-bold tracking-wide text-orange-400 drop-sh
 // ============================================================================
 // STATUS BADGES
 // ============================================================================
-export const STATUS_GREEN = "font-aumovio-bold tracking-wide text-success-500 dark:text-success-300 bg-success-100/60 dark:bg-success-400/15 border border-success-400/30 dark:border-success-400/25 rounded-lg shadow-sm";
-export const STATUS_RED = "font-aumovio-bold tracking-wide text-danger-400 dark:text-danger-300 bg-danger-100 dark:bg-danger-400/15 border border-danger-400/30 dark:border-danger-400/25 rounded-lg shadow-sm";
-export const STATUS_WARNING = "font-aumovio-bold tracking-wide text-warn-600 dark:text-warn-300 bg-warn-100/20 dark:bg-warn-400/15 border border-warn-400/30 dark:border-warn-400/25 rounded-lg shadow-sm";
-export const STATUS_BLUE = "font-aumovio-bold tracking-wide text-blue-500 dark:text-blue-300 bg-blue-100/25 dark:bg-blue-400/15 border border-blue-400/30 dark:border-blue-400/25 rounded-lg shadow-sm";
+export const STATUS_GREEN = "font-aumovio-bold tracking-wide text-[var(--status-success-text)] bg-[var(--status-success-bg)] border border-[var(--status-success-base)]/20 rounded-lg shadow-sm";
+export const STATUS_RED = "font-aumovio-bold tracking-wide text-[var(--status-danger-text)] bg-[var(--status-danger-bg)] border border-[var(--status-danger-base)]/20 rounded-lg shadow-sm";
+export const STATUS_WARNING = "font-aumovio-bold tracking-wide text-[var(--status-warning-text)] bg-[var(--status-warning-bg)] border border-[var(--status-warning-base)]/20 rounded-lg shadow-sm";
+export const STATUS_BLUE = "font-aumovio-bold tracking-wide text-[var(--status-info-text)] bg-[var(--status-info-bg)] border border-[var(--status-info-base)]/20 rounded-lg shadow-sm";
 export const STATUS_PURPLE = "font-aumovio-bold tracking-wide text-purple-400 dark:text-purple-300 bg-purple-100/28 dark:bg-purple-400/15 border border-purple-400/35 dark:border-purple-400/25 rounded-lg shadow-sm";
 export const STATUS_CYAN = "font-aumovio-bold tracking-wide text-turquoise-500 dark:text-turquoise-300 bg-turquoise-100/22 dark:bg-turquoise-400/15 border border-turquoise-400/25 dark:border-turquoise-400/20 rounded-lg shadow-sm";
 export const STATUS_AMBER = "font-aumovio-bold tracking-wide text-yellow-600 dark:text-warn-300 bg-yellow-100 dark:bg-yellow-400/15 border border-yellow-400/30 dark:border-yellow-400/25 rounded-lg shadow-sm";
@@ -165,10 +165,10 @@ export const STATUS_AMBER = "font-aumovio-bold tracking-wide text-yellow-600 dar
 // ============================================================================
 // HEALTH INDICATOR DOTS
 // ============================================================================
-export const STATUS_INDICATOR_ACTIVE = "w-2.5 h-2.5 bg-success-400 dark:bg-success-400 rounded-full flex-shrink-0 shadow-sm ring-2 ring-success-400/30 dark:ring-success-400/40 animate-pulse";
-export const STATUS_INDICATOR_INACTIVE = "w-2.5 h-2.5 bg-grey-400 dark:bg-grey-500 rounded-full flex-shrink-0 shadow-sm";
-export const STATUS_INDICATOR_WARNING = "w-2.5 h-2.5 bg-warn-400 dark:bg-warn-400 rounded-full flex-shrink-0 shadow-sm ring-2 ring-warn-400/30 dark:ring-warn-400/40";
-export const STATUS_INDICATOR_ERROR = "w-2.5 h-2.5 bg-danger-400 dark:bg-danger-400 rounded-full flex-shrink-0 shadow-sm ring-2 ring-danger-400/30 dark:ring-danger-400/40 animate-pulse";
+export const STATUS_INDICATOR_ACTIVE = "w-2.5 h-2.5 bg-[var(--status-success-base)] rounded-full shrink-0 shadow-sm ring-2 ring-[var(--status-success-base)]/30 animate-pulse";
+export const STATUS_INDICATOR_INACTIVE = "w-2.5 h-2.5 bg-[var(--status-neutral-base)] rounded-full shrink-0 shadow-sm";
+export const STATUS_INDICATOR_WARNING = "w-2.5 h-2.5 bg-[var(--status-warning-base)] rounded-full shrink-0 shadow-sm ring-2 ring-[var(--status-warning-base)]/30";
+export const STATUS_INDICATOR_ERROR = "w-2.5 h-2.5 bg-[var(--status-danger-base)] rounded-full shrink-0 shadow-sm ring-2 ring-[var(--status-danger-base)]/30 animate-pulse";
 
 // ============================================================================
 // STATUS TEXT / BG / BORDER MAPS  (keyed by colour name)
@@ -195,7 +195,7 @@ export const STATUS_BG_COLORS = {
     cyan: "bg-turquoise-100/22 dark:bg-turquoise-400/15 shadow-sm",
     turquoise: "bg-turquoise-100 dark:bg-turquoise-400/15 shadow-sm",
     amber: "bg-yellow-100 dark:bg-yellow-400/15 shadow-sm",
-    grey: "bg-grey-100 dark:bg-[#251d3a] shadow-sm",
+    grey: "bg-grey-100 dark:bg-(--bg-surface-3) shadow-sm",
     orange: "bg-orange-100/20 dark:bg-orange-400/15 shadow-sm",
 };
 
@@ -251,14 +251,14 @@ export const INFO_MESSAGE = "font-aumovio-bold text-purple-400  bg-purple-100/15
 // ============================================================================
 // RADIO / CHECKBOX
 // ============================================================================
-export const PRIMARY_RADIO = `bg-white dark:bg-[#1a1030] border border-purple-400/30 dark:border-purple-400/40 shadow-sm cursor-pointer focus:outline-none
+export const PRIMARY_RADIO = `bg-white dark:bg-(--bg-surface-2) border border-purple-400/30 dark:border-purple-400/40 shadow-sm cursor-pointer focus:outline-none
   hover:bg-purple-100/10 dark:hover:bg-purple-400/15 hover:shadow-md
   peer-checked:ring-2 peer-checked:ring-purple-400/50
   peer-checked:text-purple-400 peer-checked:bg-purple-100/15 dark:peer-checked:bg-purple-400/20
   peer-checked:border-purple-400 peer-checked:shadow-lg
   ${DEFAULT_BUTTON_TRANSITION}`;
 
-export const DANGER_RADIO = `bg-white dark:bg-[#1a1030] border border-danger-400/30 dark:border-danger-400/40 rounded-lg shadow-sm cursor-pointer focus:outline-none
+export const DANGER_RADIO = `bg-white dark:bg-(--bg-surface-2) border border-danger-400/30 dark:border-danger-400/40 rounded-lg shadow-sm cursor-pointer focus:outline-none
   hover:bg-danger-100/70 dark:hover:bg-danger-400/15 hover:shadow-md
   peer-checked:ring-2 peer-checked:ring-danger-400/50
   peer-checked:text-danger-400 peer-checked:bg-danger-100 dark:peer-checked:bg-danger-400/20

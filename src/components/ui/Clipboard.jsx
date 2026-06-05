@@ -52,7 +52,7 @@ export function Clipboard({ value = "", label, showCode = false, variant = "inli
     }
 
     return (
-        <div className="inline-flex items-center gap-2 px-3 py-2 border rounded-lg bg-grey-100 dark:bg-[#251d3a] border-grey-200 dark:border-grey-700 font-aumovio">
+        <div className="inline-flex items-center gap-2 px-3 py-2 border rounded-lg bg-grey-100 dark:bg-(--bg-surface-3) border-grey-200 dark:border-grey-700 font-aumovio">
             <span className="max-w-xs font-mono text-sm truncate text-black/70 dark:text-white/70">{label ?? value}</span>
             <button
                 onClick={copy}

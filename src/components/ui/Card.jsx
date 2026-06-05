@@ -15,10 +15,10 @@
 import { HOVER_LIFT, TRANSITION_SMOOTH, TRANSITION_TRANSFORM_SPRING } from "../../assets/styles/pre-set-styles";
 
 const VARIANTS = {
-    default: "bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700 shadow-sm",
-    elevated: "bg-white dark:bg-[#1a1030] shadow-xl border border-grey-100 dark:border-grey-800",
+    default: "bg-(--bg-surface) dark:bg-(--bg-surface-2) border border-grey-200 dark:border-grey-700 shadow-sm",
+    elevated: "bg-(--bg-surface) dark:bg-(--bg-surface-2) shadow-xl border border-(--color-card-surface-border) dark:border-grey-800",
     outlined: "bg-transparent border-2 border-orange-400/30 dark:border-orange-400/20",
-    filled: "bg-orange-400/5 dark:bg-orange-400/10 border border-orange-400/20",
+    filled: "bg-orange-400/5 dark:bg-orange-400/10 border border-(--color-card-surface-border)",
     glass: "bg-white/60 dark:bg-white/5 backdrop-blur-md border border-white/30 dark:border-white/15 shadow-xl dark:shadow-black/40",
 };
 

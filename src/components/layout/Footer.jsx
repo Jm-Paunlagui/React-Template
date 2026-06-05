@@ -12,7 +12,7 @@ export function Footer() {
     const year = new Date().getFullYear();
 
     return (
-        <footer className="w-full border-t border-grey-200 dark:border-grey-700 bg-white/80 dark:bg-[#0D0D14]/80 backdrop-blur-sm font-aumovio">
+        <footer className="w-full border-t border-grey-200 dark:border-(--color-dark-muted)/20 bg-(--bg-surface)/80 backdrop-blur-sm font-aumovio">
             <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
                 {/* Brand */}
                 <div className="flex items-center gap-2">

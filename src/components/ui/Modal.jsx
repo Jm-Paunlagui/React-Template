@@ -8,6 +8,7 @@
  *   size     — 'sm'|'md'|'lg'|'xl'|'2xl'|'full'
  *   variant  — 'default'|'danger'|'success'
  *   footer   — ReactNode
+ *   bodyClassName — extra classes for the scrollable body (e.g. 'hide-scrollbar')
  *   children
  *
  * Blur strategy: `filter: blur` is applied directly to #root and the modal is
@@ -35,7 +36,7 @@ const VARIANTS = {
     success: "border-t-4 border-success-400",
 };
 
-export function Modal({ open, onClose, title, size = "md", variant = "default", footer, children }) {
+export function Modal({ open, onClose, title, size = "md", variant = "default", footer, bodyClassName = "", children }) {
     useEffect(() => {
         if (!open) return;
 
@@ -58,15 +59,10 @@ export function Modal({ open, onClose, title, size = "md", variant = "default", 
     if (!open) return null;
 
     return createPortal(
-        <div
-            className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 ${ANIMATE_FADE_IN}`}
-            role="dialog"
-            aria-modal="true"
-            onClick={onClose}
-        >
+        <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 ${ANIMATE_FADE_IN}`} role="dialog" aria-modal="true" onClick={onClose}>
             <div
                 className={`relative w-full ${SIZES[size] ?? SIZES.md}
-                    bg-white dark:bg-[#1a1030] rounded-2xl shadow-2xl
+                    bg-(--bg-surface) dark:bg-(--bg-surface-2) rounded-2xl shadow-2xl
                     ${ANIMATE_SCALE_IN} overflow-hidden font-aumovio ${VARIANTS[variant]}`}
                 onClick={(e) => e.stopPropagation()}
             >
@@ -74,22 +70,18 @@ export function Modal({ open, onClose, title, size = "md", variant = "default", 
                 {title && (
                     <div className="flex items-center justify-between px-6 py-4 border-b border-grey-200 dark:border-grey-700">
                         <h2 className="text-base font-aumovio-bold text-black/85 dark:text-white/90">{title}</h2>
-                        <button onClick={onClose} aria-label="Close" className={`flex items-center justify-center ${TRANSITION_COLORS} rounded-lg w-7 h-7 text-grey-400 hover:text-grey-600 dark:hover:text-grey-300 hover:bg-grey-100 dark:hover:bg-[#251d3a]`}>
+                        <button onClick={onClose} aria-label="Close" className={`flex items-center justify-center ${TRANSITION_COLORS} rounded-lg w-7 h-7 text-grey-400 hover:text-grey-600 dark:hover:text-grey-300 hover:bg-grey-100 dark:hover:bg-(--bg-surface-3)`}>
                             <XMarkIcon className="w-4 h-4" />
                         </button>
                     </div>
                 )}
-                {/* Body */}
-                <div className="px-6 py-5 overflow-y-auto max-h-[70vh]">{children}</div>
+                {/* Body — scroll kept, scrollbar hidden across all modals (hide-scrollbar) */}
+                <div className={`px-6 py-5 overflow-y-auto max-h-[70vh] hide-scrollbar ${bodyClassName}`}>{children}</div>
                 {/* Footer */}
-                {footer && (
-                    <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-grey-200 dark:border-grey-700 bg-grey-50 dark:bg-white/5">
-                        {footer}
-                    </div>
-                )}
+                {footer && <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-grey-200 dark:border-grey-700 bg-grey-50 dark:bg-white/5">{footer}</div>}
             </div>
         </div>,
-        document.body
+        document.body,
     );
 }
 

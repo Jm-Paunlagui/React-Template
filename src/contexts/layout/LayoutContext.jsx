@@ -2,29 +2,44 @@
  * LayoutContext — Controls the application shell layout.
  *
  * Two modes:
- *   "top"     → Traditional sticky top navbar (default)
+ *   "top"     → Traditional sticky top navbar
  *   "sidebar" → Collapsible left sidebar + slim top bar
  *
- * Consumers:
- *   - App.jsx reads `layout` to wrap content correctly
- *   - Navbar.jsx renders as top navbar when layout === "top"
- *   - Sidebar.jsx renders when layout === "sidebar"
+ * User preference is persisted to localStorage under LAYOUT_KEY.
+ * Falls back to VITE_LAYOUT_MODE env var, then "sidebar".
  */
 
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 /* eslint-disable react-refresh/only-export-components */
 
 const LayoutContext = createContext(null);
 
-const DEFAULT_LAYOUT = import.meta.env.VITE_LAYOUT_MODE === "sidebar" ? "sidebar" : "top";
+const LAYOUT_KEY = "aumovio-layout";
+const ENV_DEFAULT = import.meta.env.VITE_LAYOUT_MODE === "top" ? "top" : "sidebar";
+
+function loadLayout() {
+    try {
+        const stored = localStorage.getItem(LAYOUT_KEY);
+        if (stored === "top" || stored === "sidebar") return stored;
+    } catch {}
+    return ENV_DEFAULT;
+}
 
 export function LayoutProvider({ children }) {
-    const [layout, setLayout] = useState(DEFAULT_LAYOUT);
+    const [layout, setLayoutState] = useState(loadLayout);
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
+    useEffect(() => {
+        try { localStorage.setItem(LAYOUT_KEY, layout); } catch {}
+    }, [layout]);
+
+    const setLayout = useCallback((mode) => {
+        if (mode === "top" || mode === "sidebar") setLayoutState(mode);
+    }, []);
+
     const toggleSidebar = useCallback(() => setSidebarOpen((o) => !o), []);
-    const toggleLayout = useCallback(() => setLayout((l) => (l === "top" ? "sidebar" : "top")), []);
+    const toggleLayout = useCallback(() => setLayoutState((l) => (l === "top" ? "sidebar" : "top")), []);
 
     return (
         <LayoutContext.Provider

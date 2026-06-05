@@ -13,8 +13,8 @@ const SZ = {
     lg: "text-sm px-2.5 py-1.5",
 };
 const V = {
-    default: "bg-white dark:bg-[#251d3a] border border-grey-300 dark:border-grey-600 text-grey-700 dark:text-grey-200 shadow-sm",
-    dark: "bg-grey-800 dark:bg-[#0D0D14] border border-grey-700 text-grey-200 shadow-sm",
+    default: "bg-white dark:bg-(--bg-surface-3) border border-grey-300 dark:border-grey-600 text-grey-700 dark:text-grey-200 shadow-sm",
+    dark: "bg-grey-800 dark:bg-(--bg-surface) border border-grey-700 text-grey-200 shadow-sm",
 };
 
 export function KBD({ keys = [], size = "md", variant = "default" }) {

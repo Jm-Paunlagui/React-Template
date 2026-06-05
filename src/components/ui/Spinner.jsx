@@ -45,7 +45,7 @@ export function Spinner({ size = "md", variant = "ring", color = "primary", labe
         element = <div className={`${SZ[size] ?? SZ.md} ${pulseCol} rounded-full animate-ping opacity-75`} />;
     }
 
-    if (fullPage) return <div className="flex items-center justify-center min-h-screen bg-white dark:bg-[#0D0D14]">{element}</div>;
+    if (fullPage) return <div className="flex items-center justify-center min-h-screen bg-(--bg-surface)">{element}</div>;
 
     return <div className="flex items-center justify-center py-8">{element}</div>;
 }

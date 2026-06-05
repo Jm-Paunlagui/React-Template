@@ -1,18 +1,18 @@
 /**
  * useSessionWarning — Proactive session-expiry modal controller.
  *
- * Reads `_sessionExpiresAt` from the stored user object and schedules a
- * warning modal `WARNING_SECS` before the session expires.
+ * Reads `session_exp` (a non-PII numeric ms timestamp) from localStorage and
+ * schedules a warning modal `WARNING_SECS` before the session expires.
  *
  * Config (Vite env vars):
  *   VITE_SESSION_TIMEOUT_MS   — total session lifetime in ms  (default: 30 min)
  *   VITE_SESSION_WARNING_SECS — modal countdown in seconds    (default: 30 s)
  *
  * Flow:
- *   1. On mount, read _sessionExpiresAt and schedule the warning timer.
+ *   1. On mount, read session_exp and schedule the warning timer.
  *   2. When the timer fires, show the modal and start the countdown.
  *   3a. USER clicks "Extend Session" → POST auth/refresh → update
- *       _sessionExpiresAt → reschedule timer → close modal.
+ *       session_exp → reschedule timer → close modal.
  *   3b. Countdown hits 0 → signout → navigate to /login-timeout.
  *   3c. USER clicks "Sign Out" → same as 3b.
  */

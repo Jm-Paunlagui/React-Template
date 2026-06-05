@@ -21,7 +21,7 @@ export function FloatingLabel({ label, name, type = "text", value = "", onChange
                 required={required}
                 placeholder=" "
                 className={`peer w-full px-3.5 pt-5 pb-2 text-sm rounded-xl border
-          bg-white dark:bg-[#1a1030] text-black/85 dark:text-white/85
+          bg-white dark:bg-(--bg-surface-2) text-black/85 dark:text-(--text-primary)
           focus:outline-none focus:ring-2 focus:shadow-md ${TRANSITION_COLORS}
           disabled:opacity-50 disabled:cursor-not-allowed placeholder-transparent
           ${error ? "border-danger-400 focus:ring-danger-400/30" : "border-grey-300 dark:border-grey-700 focus:ring-orange-400/30 focus:border-orange-400"}`}

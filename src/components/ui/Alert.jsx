@@ -19,28 +19,28 @@ import { ANIMATE_FADE_IN, TRANSITION_COLORS } from "../../assets/styles/pre-set-
 
 const CONFIG = {
     info: {
-        bg: "bg-purple-100/20 dark:bg-purple-400/10",
-        border: "border-purple-400/30 dark:border-purple-400/25",
-        text: "text-purple-500 dark:text-purple-300",
-        icon: InformationCircleIcon,
+        bg:     "bg-[var(--status-info-bg)]",
+        border: "border-[var(--status-info-base)]/20",
+        text:   "text-[var(--status-info-text)]",
+        icon:   InformationCircleIcon,
     },
     success: {
-        bg: "bg-success-100/40 dark:bg-success-400/10",
-        border: "border-success-400/30 dark:border-success-400/25",
-        text: "text-success-500 dark:text-success-300",
-        icon: CheckCircleIcon,
+        bg:     "bg-[var(--status-success-bg)]",
+        border: "border-[var(--status-success-base)]/20",
+        text:   "text-[var(--status-success-text)]",
+        icon:   CheckCircleIcon,
     },
     warning: {
-        bg: "bg-warn-100/30 dark:bg-warn-400/10",
-        border: "border-warn-400/30 dark:border-warn-400/25",
-        text: "text-warn-600 dark:text-warn-300",
-        icon: ExclamationTriangleIcon,
+        bg:     "bg-[var(--status-warning-bg)]",
+        border: "border-[var(--status-warning-base)]/20",
+        text:   "text-[var(--status-warning-text)]",
+        icon:   ExclamationTriangleIcon,
     },
     danger: {
-        bg: "bg-danger-100/40 dark:bg-danger-400/10",
-        border: "border-danger-400/30 dark:border-danger-400/25",
-        text: "text-danger-500 dark:text-danger-300",
-        icon: XCircleIcon,
+        bg:     "bg-[var(--status-danger-bg)]",
+        border: "border-[var(--status-danger-base)]/20",
+        text:   "text-[var(--status-danger-text)]",
+        icon:   XCircleIcon,
     },
 };
 

@@ -49,7 +49,7 @@ export function Timepicker({ value = "", onChange, label, error, disabled = fals
                 disabled={disabled}
                 onClick={() => setOpen((o) => !o)}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl border text-sm text-left
-          bg-white dark:bg-[#1a1030] text-black/80 dark:text-white/80 transition-all duration-200
+          bg-white dark:bg-(--bg-surface-2) text-black/80 dark:text-white/80 transition-all duration-200
           ${open ? "border-orange-400 ring-2 ring-orange-400/30" : "border-grey-300 dark:border-grey-700"}
           ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
             >
@@ -58,7 +58,7 @@ export function Timepicker({ value = "", onChange, label, error, disabled = fals
             </button>
             {open && (
                 <div
-                    className="absolute top-full left-0 mt-2 z-50 bg-white dark:bg-[#1a1030]
+                    className="absolute top-full left-0 mt-2 z-50 bg-white dark:bg-(--bg-surface-2)
           border border-grey-200 dark:border-grey-700 rounded-xl shadow-2xl overflow-hidden animate-scale-in"
                 >
                     <div className="flex">

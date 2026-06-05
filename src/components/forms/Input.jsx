@@ -47,8 +47,8 @@ export function Input({ label, name, type = "text", value, onChange, placeholder
                     disabled={disabled}
                     required={required}
                     autoComplete={autoComplete}
-                    className={`w-full bg-white dark:bg-[#1a1030] font-aumovio
-            text-black/85 dark:text-white/85
+                    className={`w-full bg-white dark:bg-(--bg-surface-2) font-aumovio
+            text-black/85 dark:text-(--text-primary)
             border ${TRANSITION_COLORS} 
             placeholder-grey-400 dark:placeholder-grey-600
             focus:outline-none focus:ring-2 focus:shadow-md

@@ -38,7 +38,7 @@ export function Jumbotron({ title, subtitle, description, primaryAction, seconda
             }
         >
             {/* Overlay */}
-            {(backgroundImage || gradient) && <div className={`absolute inset-0 ${gradient && !backgroundImage ? "bg-linear-to-br from-[#ff850a] via-orange-400 to-purple-400" : "bg-black/50 backdrop-blur-sm"}`} />}
+            {(backgroundImage || gradient) && <div className={`absolute inset-0 ${gradient && !backgroundImage ? "bg-linear-to-br from-(--color-gradient-from) to-(--color-gradient-to)" : "bg-black/50 backdrop-blur-sm"}`} />}
 
             <div
                 className={`relative z-10 max-w-5xl mx-auto px-6

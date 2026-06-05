@@ -23,7 +23,7 @@ export function ListGroup({ items = [], variant = "default", selectable = false,
                 <li
                     key={item.id ?? i}
                     onClick={() => !item.disabled && item.onClick?.()}
-                    className={`flex items-center gap-3 px-4 py-3 bg-white dark:bg-[#1a1030] text-sm
+                    className={`flex items-center gap-3 px-4 py-3 bg-(--bg-surface) dark:bg-(--bg-surface-2) text-sm
             ${TRANSITION_COLORS}
             ${variant === "separated" ? "rounded-xl border border-grey-200 dark:border-grey-700" : ""}
             ${selectable && !item.disabled ? "cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-400/5 hover:text-orange-400" : ""}

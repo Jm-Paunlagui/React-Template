@@ -50,7 +50,7 @@ export function Textarea({ label, name, value = "", onChange, placeholder, rows 
                 required={required}
                 maxLength={maxLength}
                 className={`w-full rounded-xl border font-aumovio leading-relaxed
-          bg-white dark:bg-[#1a1030] text-black/85 dark:text-white/85
+          bg-white dark:bg-(--bg-surface-2) text-black/85 dark:text-white/85
           placeholder-grey-400 dark:placeholder-grey-600
           focus:outline-none focus:ring-2 focus:shadow-md ${TRANSITION_COLORS}
           disabled:opacity-50 disabled:cursor-not-allowed

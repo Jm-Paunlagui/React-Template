@@ -32,7 +32,6 @@ const LoggingAndObservabilityView = lazy(() => import("./features/system/logging
 // Other
 const ChangelogView = lazy(() => import("./features/other/changelog/Changelog.view"));
 
-
 // Role constants — must match the strings stored in T_EMP_MGMT_ADMIN.EMP_ROLE
 // and returned in the JWT payload as user.role.
 // APPROVER and VIEWER are valid admin roles introduced in the Admin Management feature.
@@ -98,7 +97,7 @@ function AppContent() {
     const bare = isBareRoute(pathname);
 
     return (
-        <div className="flex min-h-screen bg-white dark:bg-[#0D0D14] transition-colors duration-300">
+        <div className="flex min-h-screen bg-(--bg-surface) transition-colors duration-300">
             <ConditionalSidebar />
             <div className="flex flex-col flex-1 min-h-screen transition-all duration-300">
                 <ConditionalNavbar />

@@ -22,24 +22,16 @@ const SIZES = {
 };
 
 const STATUS_DOT = {
-    online: "bg-success-400 ring-2 ring-white dark:ring-[#1a1030]",
-    offline: "bg-grey-400 dark:bg-grey-500 ring-2 ring-white dark:ring-[#1a1030]",
-    busy: "bg-danger-400 ring-2 ring-white dark:ring-[#1a1030]",
-    away: "bg-warn-400 ring-2 ring-white dark:ring-[#1a1030]",
+    online: "bg-[var(--status-success-base)] ring-2 ring-white dark:ring-[var(--surface-1)]",
+    offline: "bg-[var(--status-neutral-base)] ring-2 ring-white dark:ring-[var(--surface-1)]",
+    busy: "bg-[var(--status-danger-base)] ring-2 ring-white dark:ring-[var(--surface-1)]",
+    away: "bg-[var(--status-warning-base)] ring-2 ring-white dark:ring-[var(--surface-1)]",
 };
 
 // Deterministic colour from name — all entries use palette-responsive CSS variable
 // families (orange, purple, blue, turquoise, yellow) so they shift when the user
 // picks a different accent palette in Personalize.
-const PALETTE = [
-    "bg-orange-400 text-white",
-    "bg-purple-400 text-white",
-    "bg-blue-400 text-white",
-    "bg-turquoise-500 text-white",
-    "bg-yellow-600 text-white",
-    "bg-orange-600 text-white",
-    "bg-purple-600 text-white",
-];
+const PALETTE = ["bg-orange-400 text-white", "bg-purple-400 text-white", "bg-blue-400 text-white", "bg-turquoise-500 text-white", "bg-yellow-600 text-white", "bg-orange-600 text-white", "bg-purple-600 text-white"];
 
 function getInitials(name = "") {
     const parts = name.trim().split(" ").filter(Boolean);
@@ -65,13 +57,13 @@ export function Avatar({ src, name = "", size = "md", shape = "circle", status, 
                     src={src}
                     alt={name || "Avatar"}
                     className={`${sz.wrap} ${radius} object-cover
-            ${bordered ? "ring-2 ring-white dark:ring-[#1a1030]" : ""}`}
+            ${bordered ? "ring-2 ring-white dark:ring-(--bg-surface-2)" : ""}`}
                 />
             ) : (
                 <span
                     className={`flex items-center justify-center w-full h-full font-aumovio-bold
           ${radius} ${color} ${sz.text}
-          ${bordered ? "ring-2 ring-white dark:ring-[#1a1030]" : ""}`}
+          ${bordered ? "ring-2 ring-white dark:ring-(--bg-surface-2)" : ""}`}
                 >
                     {initials}
                 </span>
@@ -98,8 +90,8 @@ export function AvatarGroup({ avatars = [], max = 4, size = "md", shape = "circl
             {overflow > 0 && (
                 <span
                     className={`-ml-3 flex items-center justify-center ${sz.wrap}
-          rounded-full bg-grey-200 dark:bg-[#251d3a] text-grey-600 dark:text-grey-300
-          font-aumovio-bold ${sz.text} ring-2 ring-white dark:ring-[#1a1030]`}
+          rounded-full bg-grey-200 dark:bg-(--bg-surface-3) text-grey-600 dark:text-grey-300
+          font-aumovio-bold ${sz.text} ring-2 ring-white dark:ring-(--bg-surface-2)`}
                 >
                     +{overflow}
                 </span>

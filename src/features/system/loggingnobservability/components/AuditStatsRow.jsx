@@ -1,75 +1,60 @@
+import { faArrowRightArrowLeft, faBug, faCircleCheck, faCircleXmark, faServer, faShield, faStopwatch, faTriangleExclamation, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRightArrowLeft,
-  faBug,
-  faCircleCheck,
-  faCircleXmark,
-  faServer,
-  faShield,
-  faStopwatch,
-  faTriangleExclamation,
-  faUsers,
-} from "@fortawesome/free-solid-svg-icons";
+import { ANIMATE_ENTER_UP, HOVER_LIFT, staggerDelay, TRANSITION_SPRING } from "../../../../assets/styles/pre-set-styles";
 import { Skeleton } from "../../../../components/ui/Skeleton";
-import {
-  ANIMATE_ENTER_UP,
-  TRANSITION_SPRING,
-  HOVER_LIFT,
-  staggerDelay,
-} from "../../../../assets/styles/pre-set-styles";
 
 // ─── Design token colour map (mirrors MetricCards.jsx) ───────────────────────
 
 const COLOR = {
-  orange: {
-    icon:  "text-orange-400",
-    badge: "bg-orange-400/10 border-orange-400/20 dark:bg-orange-400/5 dark:border-orange-400/15",
-    value: "text-orange-400",
-  },
-  purple: {
-    icon:  "text-purple-400",
-    badge: "bg-purple-400/10 border-purple-400/20 dark:bg-purple-400/5 dark:border-purple-400/15",
-    value: "text-purple-400",
-  },
-  green: {
-    icon:  "text-success-400",
-    badge: "bg-success-400/10 border-success-400/20 dark:bg-success-400/5 dark:border-success-400/15",
-    value: "text-success-400",
-  },
-  blue: {
-    icon:  "text-blue-400",
-    badge: "bg-blue-400/10 border-blue-400/20 dark:bg-blue-400/5 dark:border-blue-400/15",
-    value: "text-blue-400",
-  },
-  amber: {
-    icon:  "text-warn-400",
-    badge: "bg-warn-400/10 border-warn-400/20 dark:bg-warn-400/5 dark:border-warn-400/15",
-    value: "text-warn-400",
-  },
-  red: {
-    icon:  "text-danger-400",
-    badge: "bg-danger-400/10 border-danger-400/20 dark:bg-danger-400/5 dark:border-danger-400/15",
-    value: "text-danger-400",
-  },
+    orange: {
+        icon: "text-(--accent-icon)",
+        badge: "bg-orange-400/10 border-orange-400/20 dark:bg-orange-400/5 dark:border-orange-400/15",
+        value: "text-(--accent-foreground)",
+    },
+    purple: {
+        icon: "text-purple-400",
+        badge: "bg-purple-400/10 border-purple-400/20 dark:bg-purple-400/5 dark:border-purple-400/15",
+        value: "text-purple-400",
+    },
+    green: {
+        icon: "text-success-400",
+        badge: "bg-success-400/10 border-success-400/20 dark:bg-success-400/5 dark:border-success-400/15",
+        value: "text-success-400",
+    },
+    blue: {
+        icon: "text-blue-400",
+        badge: "bg-blue-400/10 border-blue-400/20 dark:bg-blue-400/5 dark:border-blue-400/15",
+        value: "text-blue-400",
+    },
+    amber: {
+        icon: "text-warn-400",
+        badge: "bg-warn-400/10 border-warn-400/20 dark:bg-warn-400/5 dark:border-warn-400/15",
+        value: "text-warn-400",
+    },
+    red: {
+        icon: "text-danger-400",
+        badge: "bg-danger-400/10 border-danger-400/20 dark:bg-danger-400/5 dark:border-danger-400/15",
+        value: "text-danger-400",
+    },
 };
 
 // ─── Primary stat definitions ─────────────────────────────────────────────────
 
 const PRIMARY_STATS = [
-  { key: "total",       label: "Total Requests",    icon: faServer,              colorKey: "orange" },
-  { key: "success",     label: "Success (2xx)",      icon: faCircleCheck,         colorKey: "green" },
-  { key: "redirect",    label: "Redirect (3xx)",     icon: faArrowRightArrowLeft, colorKey: "blue"  },
-  { key: "clientError", label: "Client Error (4xx)", icon: faTriangleExclamation, colorKey: "amber" },
-  { key: "serverError", label: "Server Error (5xx)", icon: faCircleXmark,         colorKey: "red"   },
+    { key: "total", label: "Total Requests", icon: faServer, colorKey: "orange" },
+    { key: "success", label: "Success (2xx)", icon: faCircleCheck, colorKey: "green" },
+    { key: "redirect", label: "Redirect (3xx)", icon: faArrowRightArrowLeft, colorKey: "blue" },
+    { key: "clientError", label: "Client Error (4xx)", icon: faTriangleExclamation, colorKey: "amber" },
+    { key: "serverError", label: "Server Error (5xx)", icon: faCircleXmark, colorKey: "red" },
 ];
 
 // ─── Supplemental stat definitions ───────────────────────────────────────────
 
 const SUPPLEMENTAL_STATS = [
-  { key: "uniqueUsers",     label: "Unique Users",      icon: faUsers,     colorKey: "purple", format: (v) => v              },
-  { key: "avgResponseTime", label: "Avg Response Time", icon: faStopwatch, colorKey: "blue",  format: (v) => `${v} ms`      },
-  { key: "successRate",     label: "Availability",      icon: faShield,    colorKey: "green", format: (v) => `${v}%`        },
-  { key: "errorRate",       label: "Error Rate",        icon: faBug,       colorKey: "red",   format: (v) => `${v}%`        },
+    { key: "uniqueUsers", label: "Unique Users", icon: faUsers, colorKey: "purple", format: (v) => v },
+    { key: "avgResponseTime", label: "Avg Response Time", icon: faStopwatch, colorKey: "blue", format: (v) => `${v} ms` },
+    { key: "successRate", label: "Availability", icon: faShield, colorKey: "green", format: (v) => `${v}%` },
+    { key: "errorRate", label: "Error Rate", icon: faBug, colorKey: "red", format: (v) => `${v}%` },
 ];
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -86,29 +71,19 @@ const SUPPLEMENTAL_STATS = [
  * @param {boolean} props.loading    - When true renders a skeleton
  */
 function AuditMetricCard({ icon, label, value, colorKey, staggerIdx, loading }) {
-  const c = COLOR[colorKey] ?? COLOR.orange;
+    const c = COLOR[colorKey] ?? COLOR.orange;
 
-  return (
-    <div
-      className={`rounded-xl p-4 bg-white dark:bg-[#1a1030] border border-grey-200/40 dark:border-white/10 shadow-sm flex items-start gap-3 ${ANIMATE_ENTER_UP} ${staggerDelay(staggerIdx)} ${TRANSITION_SPRING} ${HOVER_LIFT}`}
-    >
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${c.badge}`}>
-        <FontAwesomeIcon icon={icon} className={`text-sm ${c.icon}`} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-[11px] text-grey-400 dark:text-white/40 font-aumovio mb-0.5 truncate">
-          {label}
-        </p>
-        {loading ? (
-          <Skeleton variant="text" lines={1} />
-        ) : (
-          <p className={`text-[19px] font-aumovio-bold leading-tight ${c.value}`}>
-            {value}
-          </p>
-        )}
-      </div>
-    </div>
-  );
+    return (
+        <div className={`rounded-xl p-4 bg-(--bg-surface) dark:bg-(--bg-surface-2) border border-(--color-card-surface-border) dark:border-white/10 shadow-sm flex items-start gap-3 ${ANIMATE_ENTER_UP} ${staggerDelay(staggerIdx)} ${TRANSITION_SPRING} ${HOVER_LIFT}`}>
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${c.badge}`}>
+                <FontAwesomeIcon icon={icon} className={`text-sm ${c.icon}`} />
+            </div>
+            <div className="flex-1 min-w-0">
+                <p className="text-[11px] text-grey-400 dark:text-white/40 font-aumovio mb-0.5 truncate">{label}</p>
+                {loading ? <Skeleton variant="text" lines={1} /> : <p className={`text-[19px] font-aumovio-bold leading-tight ${c.value}`}>{value}</p>}
+            </div>
+        </div>
+    );
 }
 
 // ─── Main export ──────────────────────────────────────────────────────────────
@@ -119,43 +94,25 @@ function AuditMetricCard({ icon, label, value, colorKey, staggerIdx, loading }) 
  * @param {{ hook: object }} props
  */
 export default function AuditStatsRow({ hook }) {
-  const { statsData, statsLoading } = hook;
-  const stats = statsData?.data ?? {};
+    const { statsData, statsLoading } = hook;
+    const stats = statsData?.data ?? {};
 
-  return (
-    <div className="space-y-2.5">
-      {/* Primary stat cards — 5 across */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
-        {PRIMARY_STATS.map((stat, i) => (
-          <AuditMetricCard
-            key={stat.key}
-            icon={stat.icon}
-            label={stat.label}
-            value={String(stats[stat.key] ?? 0)}
-            colorKey={stat.colorKey}
-            staggerIdx={i}
-            loading={statsLoading}
-          />
-        ))}
-      </div>
+    return (
+        <div className="space-y-2.5">
+            {/* Primary stat cards — 5 across */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
+                {PRIMARY_STATS.map((stat, i) => (
+                    <AuditMetricCard key={stat.key} icon={stat.icon} label={stat.label} value={String(stats[stat.key] ?? 0)} colorKey={stat.colorKey} staggerIdx={i} loading={statsLoading} />
+                ))}
+            </div>
 
-      {/* Supplemental stat cards — 4 across */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-        {SUPPLEMENTAL_STATS.map((stat, i) => {
-          const raw = stats[stat.key] ?? (['successRate', 'errorRate'].includes(stat.key) ? '0.0' : 0);
-          return (
-            <AuditMetricCard
-              key={stat.key}
-              icon={stat.icon}
-              label={stat.label}
-              value={stat.format(raw)}
-              colorKey={stat.colorKey}
-              staggerIdx={PRIMARY_STATS.length + i}
-              loading={statsLoading}
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
+            {/* Supplemental stat cards — 4 across */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                {SUPPLEMENTAL_STATS.map((stat, i) => {
+                    const raw = stats[stat.key] ?? (["successRate", "errorRate"].includes(stat.key) ? "0.0" : 0);
+                    return <AuditMetricCard key={stat.key} icon={stat.icon} label={stat.label} value={stat.format(raw)} colorKey={stat.colorKey} staggerIdx={PRIMARY_STATS.length + i} loading={statsLoading} />;
+                })}
+            </div>
+        </div>
+    );
 }

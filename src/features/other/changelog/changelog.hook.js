@@ -4,7 +4,7 @@
  * State, server data, modals, and form logic for the Version History page.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "../../../components/ui/toast.utils";
 import { AuthMiddleware } from "../../../middleware/authentication/AuthMiddleware";
 import { changelogApi } from "./changelog.api";
@@ -13,7 +13,8 @@ const EMPTY_FORM = {
     displayDate: "",
     version: "",
     title: "",
-    summary: "",
+    message: "",
+    whatChanged: "",
     type: "feat",
     authors: "",
     coAuthors: "",
@@ -34,6 +35,7 @@ const TYPE_BUMP = {
     feat: "minor",
     security: "patch",
     fix: "patch",
+    patch: "patch",
     perf: "patch",
     refactor: "patch",
     docs: "patch",
@@ -55,7 +57,6 @@ function parseVersion(v) {
  *
  *   MAJOR bumps (breaking changes, removed endpoints, schema changes)
  *   require a manual override — no form type maps to them automatically.
- *   When bumping MINOR, PATCH resets to 0. When bumping MAJOR, both reset.
  *
  * @param {object[]} entries - sorted newest-first
  * @param {string}   type    - one of the TYPE_BUMP keys
@@ -70,6 +71,53 @@ function suggestNextVersion(entries, type) {
     return `${major}.${minor}.${patch + 1}`;
 }
 
+// ── whatChanged textarea helpers ──────────────────────────────────────────────
+
+/**
+ * Converts a whatChanged structured array to a textarea-friendly string.
+ * Top-level items are plain lines; nested items are indented with 2 spaces.
+ *
+ * @param {Array<{ text: string, items?: string[] }>} items
+ * @returns {string}
+ */
+export function serializeWhatChanged(items) {
+    if (!items?.length) return "";
+    return items
+        .map((item) => {
+            const lines = [item.text ?? ""];
+            (item.items ?? []).forEach((nested) => lines.push(`  ${nested}`));
+            return lines.join("\n");
+        })
+        .join("\n");
+}
+
+/**
+ * Parses a textarea string back into a whatChanged structured array.
+ * Lines with 2+ leading spaces are nested under the previous top-level item.
+ *
+ * @param {string} text
+ * @returns {Array<{ text: string, items?: string[] }>}
+ */
+export function parseWhatChanged(text) {
+    if (!text?.trim()) return [];
+    const lines = text
+        .split("\n")
+        .map((l) => l.trimEnd())
+        .filter((l) => l.trim());
+    const result = [];
+    for (const line of lines) {
+        const isNested = /^ {2,}/.test(line);
+        if (isNested && result.length > 0) {
+            const last = result[result.length - 1];
+            if (!last.items) last.items = [];
+            last.items.push(line.trim());
+        } else {
+            result.push({ text: line.trim() });
+        }
+    }
+    return result;
+}
+
 /**
  * @returns {object} hook
  */
@@ -77,6 +125,10 @@ export function useChangelog() {
     const [entries, setEntries] = useState([]);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
+
+    // Survives React Strict Mode's artificial unmount/remount — prevents
+    // fetchEntries from firing a second network request on the remount.
+    const initFiredRef = useRef(false);
 
     // Modal state
     const [createOpen, setCreateOpen] = useState(false);
@@ -116,12 +168,17 @@ export function useChangelog() {
     }, []);
 
     useEffect(() => {
+        if (initFiredRef.current) return;
+        initFiredRef.current = true;
         fetchEntries();
     }, [fetchEntries]);
 
     // ── Create ────────────────────────────────────────────────────────────────
     const openCreate = useCallback(() => {
-        setForm({ ...EMPTY_FORM, version: suggestNextVersion(entries, EMPTY_FORM.type) });
+        setForm({
+            ...EMPTY_FORM,
+            version: suggestNextVersion(entries, EMPTY_FORM.type),
+        });
         setCreateOpen(true);
     }, [entries]);
 
@@ -152,7 +209,8 @@ export function useChangelog() {
             displayDate: entry.displayDate ?? "",
             version: entry.version ?? "",
             title: entry.title ?? "",
-            summary: entry.summary ?? "",
+            message: entry.message ?? "",
+            whatChanged: serializeWhatChanged(entry.whatChanged ?? []),
             type: entry.type ?? "feat",
             authors: (entry.authors ?? []).join(", "),
             coAuthors: (entry.coAuthors ?? []).join(", "),
@@ -248,13 +306,18 @@ export function useChangelog() {
 /**
  * Converts form state to a clean API payload.
  * Authors/coAuthors: comma-separated string → trimmed string array.
+ * whatChanged: textarea string → structured array.
+ *
+ * @param {object} form
+ * @returns {object}
  */
 function buildPayload(form) {
     return {
         displayDate: form.displayDate.trim(),
         version: form.version.trim(),
         title: form.title.trim(),
-        summary: form.summary.trim(),
+        message: form.message.trim(),
+        whatChanged: parseWhatChanged(form.whatChanged),
         type: form.type,
         authors: form.authors
             ? form.authors

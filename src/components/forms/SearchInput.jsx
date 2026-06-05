@@ -50,7 +50,7 @@ export function SearchInput({ value = "", onChange, onSubmit, placeholder = "Sea
                 placeholder={placeholder}
                 disabled={disabled}
                 className={`w-full rounded-xl border font-aumovio
-          bg-white dark:bg-[#1a1030] text-black/85 dark:text-white/85 placeholder-grey-400
+          bg-white dark:bg-(--bg-surface-2) text-black/85 dark:text-(--text-primary) placeholder-grey-400
           border-grey-300 dark:border-grey-700
           focus:outline-none focus:ring-2 focus:ring-orange-400/30 focus:border-orange-400
           ${TRANSITION_COLORS} disabled:opacity-50
@@ -74,7 +74,7 @@ export function SearchInput({ value = "", onChange, onSubmit, placeholder = "Sea
             </span>
             {showSug && suggestions.length > 0 && (
                 <ul
-                    className="absolute top-full left-0 right-0 mt-1 z-50 bg-white dark:bg-[#1a1030]
+                    className="absolute top-full left-0 right-0 mt-1 z-50 bg-white dark:bg-(--bg-surface-2)
           border border-grey-200 dark:border-grey-700 rounded-xl shadow-2xl overflow-hidden"
                 >
                     {suggestions.map((s, i) => (

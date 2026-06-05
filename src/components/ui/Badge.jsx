@@ -13,24 +13,24 @@
  */
 const V = {
     green: {
-        solid: "text-success-500 dark:text-success-300 bg-success-100/60 dark:bg-success-400/15 border-success-400/30 dark:border-success-400/25",
-        outline: "text-success-500 dark:text-success-300 border-success-400 dark:border-success-400/60 bg-transparent",
-        dot: "bg-success-400",
+        solid: "text-[var(--status-success-text)] bg-[var(--status-success-bg)] border border-[var(--status-success-base)]/20",
+        outline: "text-[var(--status-success-text)] bg-transparent border border-[var(--status-success-base)]/50",
+        dot: "bg-[var(--status-success-base)]",
     },
     red: {
-        solid: "text-danger-400 dark:text-danger-300 bg-danger-100 dark:bg-danger-400/15 border-danger-400/30 dark:border-danger-400/25",
-        outline: "text-danger-400 dark:text-danger-300 border-danger-400 dark:border-danger-400/60 bg-transparent",
-        dot: "bg-danger-400",
+        solid: "text-[var(--status-danger-text)] bg-[var(--status-danger-bg)] border border-[var(--status-danger-base)]/20",
+        outline: "text-[var(--status-danger-text)] bg-transparent border border-[var(--status-danger-base)]/50",
+        dot: "bg-[var(--status-danger-base)]",
     },
     warning: {
-        solid: "text-warn-600 dark:text-warn-300 bg-warn-100/30 dark:bg-warn-400/15 border-warn-400/30 dark:border-warn-400/25",
-        outline: "text-warn-600 dark:text-warn-300 border-warn-400 dark:border-warn-400/60 bg-transparent",
-        dot: "bg-warn-400",
+        solid: "text-[var(--status-warning-text)] bg-[var(--status-warning-bg)] border border-[var(--status-warning-base)]/20",
+        outline: "text-[var(--status-warning-text)] bg-transparent border border-[var(--status-warning-base)]/50",
+        dot: "bg-[var(--status-warning-base)]",
     },
     blue: {
-        solid: "text-blue-500 dark:text-blue-300 bg-blue-100/30 dark:bg-blue-400/15 border-blue-400/30 dark:border-blue-400/25",
-        outline: "text-blue-500 dark:text-blue-300 border-blue-400 dark:border-blue-400/60 bg-transparent",
-        dot: "bg-blue-400",
+        solid: "text-[var(--status-info-text)] bg-[var(--status-info-bg)] border border-[var(--status-info-base)]/20",
+        outline: "text-[var(--status-info-text)] bg-transparent border border-[var(--status-info-base)]/50",
+        dot: "bg-[var(--status-info-base)]",
     },
     purple: {
         solid: "text-purple-400 dark:text-purple-300 bg-purple-100/25 dark:bg-purple-400/15 border-purple-400/35 dark:border-purple-400/25",
@@ -48,7 +48,7 @@ const V = {
         dot: "bg-yellow-400",
     },
     grey: {
-        solid: "text-grey-500 dark:text-grey-300 bg-grey-100 dark:bg-[#251d3a] border-grey-400/30 dark:border-grey-600/30",
+        solid: "text-grey-500 dark:text-grey-300 bg-grey-100 dark:bg-(--bg-surface-3) border-grey-400/30 dark:border-grey-600/30",
         outline: "text-grey-500 dark:text-grey-300 border-grey-400 dark:border-grey-500 bg-transparent",
         dot: "bg-grey-400 dark:bg-grey-500",
     },

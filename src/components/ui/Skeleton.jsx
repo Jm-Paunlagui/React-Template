@@ -32,7 +32,7 @@ export function Skeleton({ variant = "text", width = "100%", height, lines = 3, 
 
     if (variant === "card")
         return (
-            <div className="bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden p-5 space-y-4" style={{ width }}>
+            <div className="bg-(--bg-surface) dark:bg-(--bg-surface-2) border border-grey-200 dark:border-grey-700 rounded-xl overflow-hidden p-5 space-y-4" style={{ width }}>
                 <div className={`${base} ${pulse} h-36 rounded-lg`} />
                 <SkeletonLine w="60%" h="1.125rem" />
                 <SkeletonLine />

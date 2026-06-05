@@ -89,12 +89,12 @@ export function Breadcrumb({ items, auto = false, separator = "chevron", size = 
                         {i > 0 && (seps[separator] ?? seps.chevron)}
 
                         {isLast ? (
-                            <span className={`flex items-center gap-1 font-aumovio-bold ${isBar ? `${MAIN_OVERLAY_COLOR_TEXT} dark:text-orange-400 dark:drop-shadow-none rounded px-2 py-0.5` : "text-orange-400"}`} aria-current="page">
+                            <span className={`flex items-center gap-1 font-aumovio-bold ${isBar ? `${MAIN_OVERLAY_COLOR_TEXT} dark:text-(--text-accent) dark:drop-shadow-none rounded px-2 py-0.5` : "text-(--text-accent)"}`} aria-current="page">
                                 {item.icon && <item.icon className="w-3.5 h-3.5" />}
                                 {item.label}
                             </span>
                         ) : item.href ? (
-                            <NavLink to={item.href} className={`flex items-center gap-1 transition-colors duration-200 ${isBar ? "text-white/70 hover:text-white dark:text-grey-400 dark:hover:text-orange-400" : "text-grey-500 dark:text-grey-400 hover:text-orange-400"}`}>
+                            <NavLink to={item.href} className={`flex items-center gap-1 transition-colors duration-200 ${isBar ? "text-white/70 hover:text-white dark:text-grey-400 dark:hover:text-(--text-accent)" : "text-grey-500 dark:text-grey-400 hover:text-(--text-accent)"}`}>
                                 {i === 0 && homeIcon ? <HomeIcon className="w-3.5 h-3.5" /> : item.icon && <item.icon className="w-3.5 h-3.5" />}
                                 {item.label}
                             </NavLink>
@@ -112,7 +112,7 @@ export function Breadcrumb({ items, auto = false, separator = "chevron", size = 
 
     if (isBar) {
         return (
-            <div className={`${MAIN_STRONG_COLOR_BG} dark:bg-[#1a1030] dark:shadow-none dark:border-b dark:border-orange-400/15 shadow`}>
+            <div className={`${MAIN_STRONG_COLOR_BG} dark:bg-(--surface-1) dark:shadow-none dark:border-b dark:border-(--border-elevation) shadow`}>
                 <div className="px-4  mx-auto">
                     <div className="flex items-center w-full py-3">{crumbs}</div>
                 </div>

@@ -67,12 +67,22 @@ const IN_FLIGHT = new Map();
 /** @type {Map<string, { data: any, timestamp: number }>} Resolved cache */
 const CACHE = new Map();
 
-/**
- * Maximum number of entries the CACHE map may hold at once.
- * When exceeded, the oldest entry (first key in insertion order) is evicted.
- * This prevents unbounded memory growth in long-running SPA sessions (L-01).
- */
+/** Maximum number of cache entries before the oldest is evicted (L-01). */
 const MAX_CACHE_SIZE = 200;
+
+/**
+ * Set a value in CACHE, evicting the oldest entry when the size limit is reached.
+ * @param {string} key
+ * @param {{ data: any, timestamp: number }} value
+ */
+function _cacheSet(key, value) {
+    if (CACHE.size >= MAX_CACHE_SIZE && !CACHE.has(key)) {
+        // Evict the oldest entry (Map iteration order = insertion order)
+        const oldestKey = CACHE.keys().next().value;
+        CACHE.delete(oldestKey);
+    }
+    CACHE.set(key, value);
+}
 
 // ─── Public cache utilities ───────────────────────────────────────────────────
 
@@ -88,20 +98,6 @@ export function invalidateCache(key) {
     } else {
         CACHE.delete(key);
         IN_FLIGHT.delete(key);
-    }
-}
-
-/**
- * Internal helper — set a cache entry and evict the oldest if MAX_CACHE_SIZE is exceeded.
- * @param {string} key
- * @param {any}    value
- */
-function _cacheSet(key, value) {
-    CACHE.set(key, value);
-    if (CACHE.size > MAX_CACHE_SIZE) {
-        // Map preserves insertion order — the first key is the oldest entry.
-        const oldest = CACHE.keys().next().value;
-        CACHE.delete(oldest);
     }
 }
 

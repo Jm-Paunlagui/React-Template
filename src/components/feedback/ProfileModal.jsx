@@ -25,13 +25,13 @@ import { Modal } from "../ui/Modal";
 // All entries use palette-responsive CSS variable families so they shift
 // when the user picks a different accent in Personalize.
 const PALETTE = [
-    { bg: "bg-orange-400",    text: "text-white" },
-    { bg: "bg-purple-400",    text: "text-white" },
-    { bg: "bg-blue-400",      text: "text-white" },
+    { bg: "bg-orange-400", text: "text-white" },
+    { bg: "bg-purple-400", text: "text-white" },
+    { bg: "bg-blue-400", text: "text-white" },
     { bg: "bg-turquoise-500", text: "text-white" },
-    { bg: "bg-yellow-600",    text: "text-white" },
-    { bg: "bg-orange-600",    text: "text-white" },
-    { bg: "bg-purple-600",    text: "text-white" },
+    { bg: "bg-yellow-600", text: "text-white" },
+    { bg: "bg-orange-600", text: "text-white" },
+    { bg: "bg-purple-600", text: "text-white" },
 ];
 
 /** Deterministic colour from a name string (same hash as Avatar.jsx). */
@@ -102,7 +102,7 @@ export default function ProfileModal({ open, onClose, user }) {
                     className={`flex items-center justify-center w-24 h-24 rounded-full
                         ${color.bg} ${color.text}
                         text-3xl font-aumovio-bold
-                        ring-4 ring-white dark:ring-[#1a1030]
+                        ring-4 ring-white dark:ring-(--bg-surface-2)
                         shadow-lg select-none`}
                 >
                     {initials}

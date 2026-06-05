@@ -20,7 +20,7 @@ export function Radio({ name, options = [], value, onChange, label: groupLabel, 
                             key={opt.value}
                             className={`px-4 py-2 text-sm font-aumovio-bold cursor-pointer ${TRANSITION_COLORS}
               ${opt.disabled || disabled ? "opacity-40 cursor-not-allowed" : ""}
-              ${value === opt.value ? "bg-orange-400 text-white" : "bg-white dark:bg-[#1a1030] text-grey-600 dark:text-grey-300 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-400"}`}
+              ${value === opt.value ? "bg-orange-400 text-white" : "bg-(--bg-surface) dark:bg-(--bg-surface-2) text-grey-600 dark:text-grey-300 hover:bg-orange-50 dark:hover:bg-orange-400/10 hover:text-orange-400"}`}
                         >
                             <input type="radio" name={name} value={opt.value} checked={value === opt.value} onChange={() => !opt.disabled && !disabled && onChange?.(opt.value)} disabled={opt.disabled || disabled} className="sr-only" />
                             {opt.label}
@@ -50,7 +50,7 @@ export function Radio({ name, options = [], value, onChange, label: groupLabel, 
                             <input type="radio" name={name} value={opt.value} checked={value === opt.value} onChange={() => !opt.disabled && !disabled && onChange?.(opt.value)} disabled={opt.disabled || disabled} className="sr-only" />
                             <div
                                 className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${TRANSITION_COLORS}
-                ${value === opt.value ? "border-orange-400 bg-orange-400" : "border-grey-300 dark:border-grey-600 hover:border-orange-400 bg-white dark:bg-[#251d3a]"}`}
+                ${value === opt.value ? "border-orange-400 bg-orange-400" : "border-grey-300 dark:border-grey-600 hover:border-orange-400 bg-white dark:bg-(--bg-surface-3)"}`}
                             >
                                 {value === opt.value && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                             </div>

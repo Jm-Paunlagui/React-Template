@@ -39,7 +39,7 @@ export function Dropdown({ trigger, items = [], placement = "bottom-start", widt
             {open && (
                 <div
                     className={`absolute z-50 ${PLACEMENT[placement]} ${WIDTHS[width]}
-          bg-white dark:bg-[#1a1030] border border-grey-200 dark:border-grey-700
+          bg-(--bg-surface) dark:bg-(--bg-surface-2) border border-grey-200 dark:border-grey-700
           rounded-xl shadow-2xl py-1.5 animate-scale-in origin-top ${TRANSITION_SNAP}`}
                 >
                     {items.map((item, i) => {
@@ -63,7 +63,7 @@ export function Dropdown({ trigger, items = [], placement = "bottom-start", widt
                                 <span className="flex-1">{item.label}</span>
                                 {item.shortcut && (
                                     <kbd
-                                        className="text-xs text-grey-400 font-mono bg-grey-100 dark:bg-[#251d3a]
+                                        className="text-xs text-grey-400 font-mono bg-grey-100 dark:bg-(--bg-surface-3)
                     border border-grey-200 dark:border-grey-700 rounded px-1.5 py-0.5"
                                     >
                                         {item.shortcut}

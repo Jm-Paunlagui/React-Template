@@ -2683,7 +2683,20 @@ function ServerRightDecor() {
    ══════════════════════════════════════════════════════════════════════════════ */
 export function BadRequest({ title: titleProp, subtitle: subtitleProp } = {}) {
     const { title, subtitle } = useErrorOverrides("You said what now?", "The request arrived garbled beyond comprehension. Even the server looked twice.", titleProp, subtitleProp);
-    return <ErrorLayout code="400" title={title} subtitle={subtitle} linkTo="/" linkLabel="Start fresh" accentClass="text-warn-500 dark:text-warn-400" bgClass="bg-gradient-to-br from-white via-warn-50/30 to-yellow-50/20 dark:from-[#0D0D14] dark:via-[#1a1030] dark:to-[#0D0D14]" illustration={<BadRequestIllustration />} leftDecor={<TerminalLeftDecor />} rightDecor={<TerminalRightDecor />} />;
+    return (
+        <ErrorLayout
+            code="400"
+            title={title}
+            subtitle={subtitle}
+            linkTo="/"
+            linkLabel="Start fresh"
+            accentClass="text-warn-500 dark:text-warn-400"
+            bgClass="bg-gradient-to-br from-white via-warn-50/30 to-yellow-50/20 dark:from-[var(--bg-surface)] dark:via-[var(--bg-surface-2)] dark:to-[var(--bg-surface)]"
+            illustration={<BadRequestIllustration />}
+            leftDecor={<TerminalLeftDecor />}
+            rightDecor={<TerminalRightDecor />}
+        />
+    );
 }
 
 function BadRequestIllustration() {
@@ -2745,7 +2758,7 @@ function BadRequestIllustration() {
    ══════════════════════════════════════════════════════════════════════════════ */
 export function Unauthorized({ title: titleProp, subtitle: subtitleProp } = {}) {
     const { title, subtitle } = useErrorOverrides("Access denied.", "You don't have clearance for this zone. Credentials, please.", titleProp, subtitleProp);
-    return <ErrorLayout code="401" title={title} subtitle={subtitle} linkTo="/" linkLabel="Return to safety" accentClass="text-purple-400" bgClass="bg-gradient-to-br from-white via-purple-50/20 to-white dark:from-[#0D0D14] dark:via-purple-950/30 dark:to-[#0D0D14]" illustration={<UnauthorizedIllustration />} leftDecor={<VaultLeftDecor />} rightDecor={<VaultRightDecor />} />;
+    return <ErrorLayout code="401" title={title} subtitle={subtitle} linkTo="/" linkLabel="Return to safety" accentClass="text-purple-400" bgClass="bg-gradient-to-br from-white via-purple-50/20 to-white dark:from-[var(--bg-surface)] dark:via-purple-950/30 dark:to-[var(--bg-surface)]" illustration={<UnauthorizedIllustration />} leftDecor={<VaultLeftDecor />} rightDecor={<VaultRightDecor />} />;
 }
 
 function UnauthorizedIllustration() {
@@ -2780,7 +2793,7 @@ function UnauthorizedIllustration() {
                 ))}
             </div>
             <div
-                className="relative flex items-center justify-center border-4 border-purple-400 rounded-full bg-grey-100 dark:bg-[#251d3a]"
+                className="relative flex items-center justify-center border-4 border-purple-400 rounded-full bg-grey-100 dark:bg-(--bg-surface-3)"
                 style={{
                     width: 120,
                     height: 120,
@@ -2900,7 +2913,7 @@ export function LoginTimeOut({ title: titleProp, subtitle: subtitleProp } = {}) 
         CsrfMiddleware.clearToken();
     }, []);
 
-    return <ErrorLayout code="440" title={title} subtitle={subtitle} linkTo="/auth" linkLabel="Sign in again" accentClass="text-orange-400" bgClass="bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[#0D0D14] dark:via-[#180a00] dark:to-[#0D0D14]" illustration={<LoginTimeOutIllustration />} leftDecor={<TimeLeftDecor />} rightDecor={<TimeRightDecor />} />;
+    return <ErrorLayout code="440" title={title} subtitle={subtitle} linkTo="/auth" linkLabel="Sign in again" accentClass="text-orange-400" bgClass="bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[var(--bg-surface)] dark:via-[#180a00] dark:to-[var(--bg-surface)]" illustration={<LoginTimeOutIllustration />} leftDecor={<TimeLeftDecor />} rightDecor={<TimeRightDecor />} />;
 }
 
 function LoginTimeOutIllustration() {
@@ -2992,7 +3005,9 @@ export function InvalidToken({ title: titleProp, subtitle: subtitleProp } = {}) 
         CsrfMiddleware.clearToken();
     }, []);
 
-    return <ErrorLayout code="498" title={title} subtitle={subtitle} linkTo="/auth" linkLabel="Get a fresh token" accentClass="text-danger-400" bgClass="bg-gradient-to-br from-white via-danger-50/20 to-white dark:from-[#0D0D14] dark:via-[#160606] dark:to-[#0D0D14]" illustration={<InvalidTokenIllustration />} leftDecor={<CircuitLeftDecor />} rightDecor={<CircuitRightDecor />} />;
+    return (
+        <ErrorLayout code="498" title={title} subtitle={subtitle} linkTo="/auth" linkLabel="Get a fresh token" accentClass="text-danger-400" bgClass="bg-gradient-to-br from-white via-danger-50/20 to-white dark:from-[var(--bg-surface)] dark:via-[#160606] dark:to-[var(--bg-surface)]" illustration={<InvalidTokenIllustration />} leftDecor={<CircuitLeftDecor />} rightDecor={<CircuitRightDecor />} />
+    );
 }
 
 function InvalidTokenIllustration() {
@@ -3080,7 +3095,18 @@ function InvalidTokenIllustration() {
 export function ServiceUnavailable({ title: titleProp, subtitle: subtitleProp } = {}) {
     const { title, subtitle } = useErrorOverrides("The server is napping.", "This is usually caused by a temporary network issue, server restart, or the application service being unavailable.", titleProp, subtitleProp);
     return (
-        <ErrorLayout code="523" title={title} subtitle={subtitle} linkTo="/" linkLabel="Try the home page" accentClass="text-purple-400 dark:text-purple-300" bgClass="bg-gradient-to-br from-white via-purple-50/20 to-white dark:from-[#0D0D14] dark:via-[#120a1e] dark:to-[#0D0D14]" illustration={<ServiceUnavailableIllustration />} leftDecor={<ServerLeftDecor />} rightDecor={<ServerRightDecor />}>
+        <ErrorLayout
+            code="523"
+            title={title}
+            subtitle={subtitle}
+            linkTo="/"
+            linkLabel="Try the home page"
+            accentClass="text-purple-400 dark:text-purple-300"
+            bgClass="bg-gradient-to-br from-white via-purple-50/20 to-white dark:from-[var(--bg-surface)] dark:via-[#120a1e] dark:to-[var(--bg-surface)]"
+            illustration={<ServiceUnavailableIllustration />}
+            leftDecor={<ServerLeftDecor />}
+            rightDecor={<ServerRightDecor />}
+        >
             <div className="p-4 mt-4 text-sm text-left border bg-white/60 dark:bg-white/5 border-purple-400/20 rounded-xl text-grey-600 dark:text-grey-400 font-aumovio">
                 <p className="mb-2 font-aumovio-bold text-black/70 dark:text-white/70">If this keeps happening, note:</p>
                 <ul className="space-y-1 list-disc list-inside">
@@ -3097,7 +3123,7 @@ function ServiceUnavailableIllustration() {
     return (
         <div className="relative flex items-center justify-center" style={{ width: 220, height: 220 }}>
             <div className="relative" style={{ animation: "err-float 4s ease-in-out infinite" }}>
-                <div className="relative overflow-hidden border-2 bg-grey-100 dark:bg-[#251d3a] border-grey-300 dark:border-grey-600 rounded-xl" style={{ width: 110, height: 130 }}>
+                <div className="relative overflow-hidden border-2 bg-grey-100 dark:bg-(--bg-surface-3) border-grey-300 dark:border-grey-600 rounded-xl" style={{ width: 110, height: 130 }}>
                     {[0, 1, 2, 3].map((i) => (
                         <div key={i} className="flex items-center gap-2 px-3 py-2 border-b border-grey-200 dark:border-grey-700">
                             <div
@@ -3398,7 +3424,7 @@ export function SignatureMismatch() {
             linkTo="/"
             linkLabel="Start over"
             accentClass="text-orange-400"
-            bgClass="bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[#0D0D14] dark:via-[#180a00] dark:to-[#0D0D14]"
+            bgClass="bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[var(--bg-surface)] dark:via-[#180a00] dark:to-[var(--bg-surface)]"
             illustration={<SignatureMismatchIllustration />}
             leftDecor={<SealLeftDecor />}
             rightDecor={<SealRightDecor />}
@@ -3437,7 +3463,7 @@ function SignatureMismatchIllustration() {
             </div>
 
             {/* Core shield */}
-            <div className="relative flex items-center justify-center border-4 border-orange-400 rounded-full bg-grey-100 dark:bg-[#251d3a]" style={{ width: 110, height: 110, animation: "err-float 3.5s ease-in-out infinite" }}>
+            <div className="relative flex items-center justify-center border-4 border-orange-400 rounded-full bg-grey-100 dark:bg-(--bg-surface-3)" style={{ width: 110, height: 110, animation: "err-float 3.5s ease-in-out infinite" }}>
                 {/* Hash-grid lines behind icon */}
                 {[0, 45, 90, 135].map((deg) => (
                     <div key={deg} className="absolute bg-orange-400/30" style={{ width: 2, height: 48, borderRadius: 2, transform: `rotate(${deg}deg)`, transformOrigin: "50% 50%" }} />

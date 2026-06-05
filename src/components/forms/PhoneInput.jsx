@@ -34,7 +34,7 @@ export function PhoneInput({ value = "", onChange, label, error, disabled = fals
         <div className="font-aumovio">
             {label && <label className="block text-xs font-aumovio-bold text-black/70 dark:text-white/70 mb-1.5">{label}</label>}
             <div
-                className={`flex rounded-xl border overflow-hidden bg-white dark:bg-[#1a1030]
+                className={`flex rounded-xl border overflow-hidden bg-white dark:bg-(--bg-surface-2)
         ${error ? "border-danger-400" : "border-grey-300 dark:border-grey-700 focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-400/30"}`}
             >
                 <select
@@ -44,7 +44,7 @@ export function PhoneInput({ value = "", onChange, label, error, disabled = fals
                         emit(e.target.value, num);
                     }}
                     disabled={disabled}
-                    className={`bg-grey-50 dark:bg-[#251d3a] text-sm font-aumovio-bold
+                    className={`bg-grey-50 dark:bg-(--bg-surface-3) text-sm font-aumovio-bold
             border-r border-grey-200 dark:border-grey-700 px-2 focus:outline-none
             text-black/80 dark:text-white/80 cursor-pointer ${SZ[size] ?? SZ.md}`}
                 >

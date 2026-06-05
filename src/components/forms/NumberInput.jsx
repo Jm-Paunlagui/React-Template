@@ -29,7 +29,7 @@ export function NumberInput({ value = 0, onChange, min = -Infinity, max = Infini
             <div
                 className={`inline-flex items-center border rounded-xl overflow-hidden
         ${error ? "border-danger-400" : "border-grey-300 dark:border-grey-700"}
-        bg-white dark:bg-[#1a1030]`}
+        bg-white dark:bg-(--bg-surface-2)`}
             >
                 <button
                     onClick={dec}

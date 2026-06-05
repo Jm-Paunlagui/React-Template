@@ -131,13 +131,13 @@ function ObservabilityTab({ logsHook, metricsHook }) {
             {/* ── Historical Audit Statistics ───────────────────────────────── */}
             <section className="space-y-4">
                 <div className="flex items-center gap-2 pb-3 border-b border-black/10 dark:border-white/10">
-                    <ChartBarIcon className="w-4 h-4 text-orange-400 shrink-0" />
+                    <ChartBarIcon className="w-4 h-4 text-(--accent-icon) shrink-0" />
                     <h2 className="text-xs font-aumovio-bold text-black/55 dark:text-white/55 tracking-widest uppercase">Historical Audit Statistics</h2>
                 </div>
 
                 {/* Time-range selector */}
                 <div className="flex flex-col gap-2">
-                    <div className="flex flex-wrap gap-1 p-1 bg-grey-100 dark:bg-[#251d3a] rounded-xl w-fit">
+                    <div className="flex flex-wrap gap-1 p-1 bg-grey-100 dark:bg-(--bg-surface-3) rounded-xl w-fit">
                         {PRESETS.map((preset) => {
                             const isActive = activePreset === preset.label;
                             return (
@@ -146,7 +146,7 @@ function ObservabilityTab({ logsHook, metricsHook }) {
                                     type="button"
                                     onClick={() => handlePreset(preset)}
                                     className={`px-3 py-1.5 rounded-lg text-xs font-aumovio-bold ${TRANSITION_COLORS}
-                                        ${isActive ? "bg-white dark:bg-[#1a1030] text-orange-400 shadow-sm" : "text-grey-500 hover:text-orange-400"}`}
+                                        ${isActive ? "bg-(--bg-surface) dark:bg-(--bg-surface-2) text-(--accent-foreground) shadow-sm" : "text-grey-500 hover:text-(--accent-foreground)"}`}
                                 >
                                     {preset.label}
                                 </button>
@@ -180,7 +180,7 @@ function ObservabilityTab({ logsHook, metricsHook }) {
 
 // ─── View ─────────────────────────────────────────────────────────────────────
 
-function LoggingAndObservabilityView() {
+function LogsManagementView() {
     const logsHook = useLogsManagement();
     const metricsHook = useMetrics();
 
@@ -218,15 +218,8 @@ function LoggingAndObservabilityView() {
                 </div>
 
                 {activeTab !== "delete-logging" && (
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={logsHook.triggerRefresh}
-                        disabled={logsHook.isAutoRefreshing}
-                    >
-                        <ArrowPathIcon
-                            className={`w-3.5 h-3.5 mr-1.5 ${logsHook.isAutoRefreshing ? "animate-spin text-orange-400" : ""}`}
-                        />
+                    <Button variant="ghost" size="sm" onClick={logsHook.triggerRefresh} disabled={logsHook.isAutoRefreshing}>
+                        <ArrowPathIcon className={`w-3.5 h-3.5 mr-1.5 ${logsHook.isAutoRefreshing ? "animate-spin text-(--accent-icon)" : ""}`} />
                         {logsHook.isAutoRefreshing ? "Refreshing…" : `Refreshes in ${logsHook.countdown}s`}
                     </Button>
                 )}

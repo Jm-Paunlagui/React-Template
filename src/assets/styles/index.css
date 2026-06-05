@@ -160,12 +160,94 @@
 
 /* ─── CSS Custom Properties (runtime, not @theme) ──────────────────────── */
 :root {
-    --bg-surface: var(--palette-surface-light, #ffffff);
-    --bg-surface-2: var(--palette-surface-2-light, #fafafa);
-    --bg-surface-3: var(--palette-surface-3-light, #f0f0f0);
+    /* Named-palette light tints — set by JS for named palettes, fallback white */
+    --color-light-surface: #ffffff;
+    --color-light-surface-alt: #fafafa;
+
+    /* Gradient button tokens — brand defaults; overridden by JS for non-brand palettes */
+    --color-gradient-from: #ff4208;
+    --color-gradient-to: #4827af;
+    --color-gradient-text: #ffffff;
+
+    /* Derived interaction tokens — brand defaults; overridden by JS for named palettes */
+    --accent: #ff4208;
+    --accent-subtle: rgba(255, 66, 8, 0.08);
+    --accent-muted: rgba(255, 66, 8, 0.40);
+    --accent-on-dark: #ff7040;
+    --shadow-tint: rgba(255, 66, 8, 0.04);
+    --border-subtle: rgba(0, 0, 0, 0.08);
+    --text-on-accent: #ffffff;
+
+    /* Sidebar user card — light keeps a faint accent tint; dark uses a white
+       overlay (palette-agnostic) so the card lifts off the dark sidebar surface
+       instead of disappearing into it for low-chroma palettes. */
+    --side-card-bg:     var(--accent-subtle);
+    --side-card-border: var(--border-subtle);
+
+    /* ── Surface elevation ladder (brand default — neutral grey) ─────────── */
+    --surface-0: #ffffff;
+    --surface-1: #fafafa;
+    --surface-2: #f5f5f5;
+    --surface-3: #f0f0f0;
+    --surface-4: #ffffff;
+    --border-elevation: rgba(0, 0, 0, 0.06);
+
+    /* ── Active state tokens (brand default — orange primary) ─────────────── */
+    --nav-active-text:    #d83806;
+    --nav-active-bg:      rgba(255, 66, 8, 0.08);
+    --nav-active-border:  #ff4208;
+    --side-active-text:   #d83806;
+    --side-active-bg:     rgba(255, 66, 8, 0.08);
+    --side-active-border: #ff4208;
+    --nav-hover-bg:       rgba(255, 66, 8, 0.04);
+    --side-hover-bg:      rgba(255, 66, 8, 0.04);
+    /* ── Hover border + foreground contrast tokens (brand default) ─────────── */
+    --nav-hover-border:   transparent;
+    --side-hover-border:  transparent;
+    --accent-foreground:  #b82e05;        /* orange-600 — ≥ 4.5:1 on white */
+    --accent-icon:        #da3806;        /* orange-500 — ≥ 3:1 on white */
+    --color-card-surface-border: rgba(255, 66, 8, 0.04);
+
+    /* ── Per-group nav family colours (brand default — distinct hues) ──────── */
+    /* Each sidebar group has its own hue (Finance=yellow, Records=blue,
+       Management=purple, …). Overridden per-palette by applyPaletteVars() with
+       contrast-safe values so dots / active text stay visible on dark surfaces. */
+    --side-purple-text:    var(--color-purple-500);
+    --side-purple-bg:      color-mix(in srgb, var(--color-purple-400) 8%, transparent);
+    --side-blue-text:      var(--color-blue-500);
+    --side-blue-bg:        color-mix(in srgb, var(--color-blue-400) 8%, transparent);
+    --side-yellow-text:    var(--color-yellow-600);
+    --side-yellow-bg:      color-mix(in srgb, var(--color-yellow-400) 8%, transparent);
+    --side-turquoise-text: var(--color-turquoise-600);
+    --side-turquoise-bg:   color-mix(in srgb, var(--color-turquoise-400) 8%, transparent);
+
+    /* ── Status colour tokens (brand default — calibrated for white surface) ─ */
+    --status-success-bg:   #ecfdf5;
+    --status-success-base: #22c55e;
+    --status-success-text: #166534;
+    --status-warning-bg:   #fffbeb;
+    --status-warning-base: #f59e0b;
+    --status-warning-text: #92400e;
+    --status-danger-bg:    #fef2f2;
+    --status-danger-base:  #ef4444;
+    --status-danger-text:  #991b1b;
+    --status-info-bg:      #eff6ff;
+    --status-info-base:    #3b82f6;
+    --status-info-text:    #1e40af;
+    --status-neutral-bg:   #f9fafb;
+    --status-neutral-base: #6b7280;
+    --status-neutral-text: #374151;
+
+    --bg-surface: var(--surface-0);
+    --bg-surface-2: var(--surface-1);
+    --bg-surface-3: var(--surface-2);
     --text-primary: #1a1a1a;
     --text-secondary: #484848;
     --text-muted: #787878;
+    --text-tertiary: #787878;
+    --text-accent: #ff4208;
+    --text-accent-hover: #d83806;
+    --text-on-surface-alt: #1a1a1a;
     --border-color: #dcdcdc;
     --track-bg: #dcdcdc;
     --ring-track: #f0f0f0;
@@ -213,12 +295,82 @@
 }
 
 [data-theme="dark"] {
-    --bg-surface: var(--palette-surface-dark, #0d0d14);
-    --bg-surface-2: var(--palette-surface-2-dark, #1a1030);
-    --bg-surface-3: var(--palette-surface-3-dark, #251d3a);
-    --text-primary: #f0f0f0;
+    /* Named-palette dark vars — CSS defaults for brand; overridden by JS for named palettes */
+    --color-dark-text: rgba(255, 255, 255, 0.85);
+    --color-dark-muted: rgba(255, 255, 255, 0.55);
+    --color-dark-surface-elevated: var(--palette-surface-2-dark, #1a1030);
+
+    /* Derived token dark-mode defaults — keeps brand palette borders visible on dark surfaces */
+    --border-subtle: rgba(255, 255, 255, 0.10);
+
+    /* Sidebar user card — white overlay lifts the card off the dark sidebar
+       surface regardless of the active palette's hue/chroma. */
+    --side-card-bg:     rgba(255, 255, 255, 0.06);
+    --side-card-border: rgba(255, 255, 255, 0.14);
+
+    /* ── Surface elevation ladder (brand dark default) ───────────────────── */
+    --surface-0: #0d0d14;
+    --surface-1: #141520;
+    --surface-2: #1a1d2c;
+    --surface-3: #222538;
+    --surface-4: #2a2d44;
+    --border-elevation: rgba(255, 255, 255, 0.06);
+
+    /* ── Active state tokens (brand dark default) ──────────────────────────── */
+    --nav-active-text:    #ff7040;
+    --nav-active-bg:      rgba(255, 112, 64, 0.12);
+    --nav-active-border:  #ff7040;
+    --side-active-text:   #ff7040;
+    --side-active-bg:     rgba(255, 112, 64, 0.12);
+    --side-active-border: #ff7040;
+    --nav-hover-bg:       rgba(255, 255, 255, 0.10);  /* Fix 3: white/10 floor — visible on any dark surface */
+    --side-hover-bg:      rgba(255, 255, 255, 0.10);
+    /* ── Hover border + foreground contrast tokens (brand dark default) ──── */
+    --nav-hover-border:   rgba(255, 112, 64, 0.50);
+    --side-hover-border:  rgba(255, 112, 64, 0.50);
+    --accent-foreground:  #ff7040;        /* orange-on-dark — ≥ 4.5:1 on dark surface */
+    --accent-icon:        #ff7040;        /* same for icons at 3:1 minimum */
+    --color-card-surface-border: rgba(255, 255, 255, 0.08);
+
+    /* ── Per-group nav family colours (brand dark default) ────────────────── */
+    /* Brand family -400 anchors are bright enough on the dark sidebar; named
+       palettes override these with contrast-safe values via applyPaletteVars(). */
+    --side-purple-text:    var(--color-purple-400);
+    --side-purple-bg:      color-mix(in srgb, var(--color-purple-400) 12%, transparent);
+    --side-blue-text:      var(--color-blue-400);
+    --side-blue-bg:        color-mix(in srgb, var(--color-blue-400) 12%, transparent);
+    --side-yellow-text:    var(--color-yellow-400);
+    --side-yellow-bg:      color-mix(in srgb, var(--color-yellow-400) 12%, transparent);
+    --side-turquoise-text: var(--color-turquoise-400);
+    --side-turquoise-bg:   color-mix(in srgb, var(--color-turquoise-400) 12%, transparent);
+
+    /* ── Status colour tokens (brand dark default — calibrated for dark surface) */
+    --status-success-bg:   #052e16;
+    --status-success-base: #4ade80;
+    --status-success-text: #86efac;
+    --status-warning-bg:   #1c1003;
+    --status-warning-base: #fbbf24;
+    --status-warning-text: #fde68a;
+    --status-danger-bg:    #1c0404;
+    --status-danger-base:  #f87171;
+    --status-danger-text:  #fca5a5;
+    --status-info-bg:      #0c1a2e;
+    --status-info-base:    #60a5fa;
+    --status-info-text:    #93c5fd;
+    --status-neutral-bg:   #111827;
+    --status-neutral-base: #9ca3af;
+    --status-neutral-text: #d1d5db;
+
+    --bg-surface: var(--surface-0);
+    --bg-surface-2: var(--surface-1);
+    --bg-surface-3: var(--surface-2);
+    --text-primary: var(--color-dark-text, rgba(255, 255, 255, 0.85));
     --text-secondary: #c8c8c8;
-    --text-muted: #787878;
+    --text-muted: var(--color-dark-muted, #787878);
+    --text-tertiary: rgba(255, 255, 255, 0.40);
+    --text-accent: var(--accent-on-dark, #ff7040);
+    --text-accent-hover: #ff9060;
+    --text-on-surface-alt: var(--color-dark-text, rgba(255, 255, 255, 0.85));
     --border-color: #303030;
     --track-bg: #484848;
     --ring-track: #303030;
@@ -1551,4 +1703,21 @@
 .gpu {
     will-change: transform;
     transform: translateZ(0);
+}
+
+/* ─── Transparency toggle ────────────────────────────────────────────────── */
+/* Targets the data-transparency="off" attribute set by ThemeContext.         */
+/* Rule 1 — kill all backdrop-filter (Navbar, Drawer overlay, alerts, etc.)   */
+html[data-transparency="off"] *,
+html[data-transparency="off"] *::before,
+html[data-transparency="off"] *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+/* Rule 2 — kill the filter:blur that Modal.jsx adds to #root via blur-sm.    */
+/* This makes the toggle visibly work while a modal is open, because the      */
+/* blurred background the user sees comes from filter:blur on #root           */
+/* (a createPortal side-effect), not from backdrop-filter.                    */
+html[data-transparency="off"] #root {
+    filter: none !important;
 }

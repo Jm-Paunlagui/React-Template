@@ -32,7 +32,7 @@ export const useAuth = () => {
      * A non-PII session hint is written to localStorage for the isAuth() fast-path.
      */
     const login = useCallback(
-        async (credentials, redirectPath = import.meta.env.VITE_DEFAULT_REDIRECT || "system/logging-observability") => {
+        async (credentials, redirectPath = import.meta.env.VITE_DEFAULT_REDIRECT || "/operations/consumption") => {
             setLoading(true);
             setError(null);
             setIntegrityError(false);
