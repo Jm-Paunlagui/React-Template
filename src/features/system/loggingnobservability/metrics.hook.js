@@ -38,18 +38,20 @@ export function formatBytes(bytes) {
 }
 
 /**
- * Format a ratio (0–1) as a percentage string with one decimal place.
+ * Format a ratio (0–1) as a percentage string.
  *
  * @param {number} ratio - 0.0–1.0
+ * @param {number} [decimals=1] - Decimal places (use 2 for SLO-grade availability)
  * @returns {string}
  */
-export function formatPct(ratio) {
+export function formatPct(ratio, decimals = 1) {
     if (ratio == null || isNaN(ratio)) return "—";
-    return `${(ratio * 100).toFixed(1)}%`;
+    return `${(ratio * 100).toFixed(decimals)}%`;
 }
 
 /**
- * Derive a Badge variant from an error rate ratio.
+ * Derive a Badge variant from a server-error rate ratio (5xx-only).
+ * Thresholds match the backend alert tiers (1% warning, 5% critical).
  *
  * @param {number} rate - 0.0–1.0
  * @returns {"success"|"warning"|"danger"}
@@ -58,6 +60,18 @@ export function errorRateVariant(rate) {
     if (rate >= 0.05) return "danger";
     if (rate >= 0.01) return "warning";
     return "success";
+}
+
+/**
+ * Derive a Badge variant from an availability ratio (higher is better).
+ *
+ * @param {number} ratio - 0.0–1.0
+ * @returns {"success"|"warning"|"danger"}
+ */
+export function availabilityVariant(ratio) {
+    if (ratio >= 0.99) return "success";
+    if (ratio >= 0.95) return "warning";
+    return "danger";
 }
 
 /**
@@ -105,6 +119,7 @@ export function alertSeverityVariant(severity) {
  * @property {Function}     formatBytes      - Byte formatter
  * @property {Function}     formatPct        - Percentage formatter
  * @property {Function}     errorRateVariant - Badge variant helper for error rates
+ * @property {Function}     availabilityVariant - Badge variant helper for availability
  * @property {Function}     lagVariant       - Badge variant helper for EL lag
  * @property {Function}     alertSeverityVariant - Badge variant for alert severity
  */
@@ -191,6 +206,7 @@ export function useMetrics() {
         formatBytes,
         formatPct,
         errorRateVariant,
+        availabilityVariant,
         lagVariant,
         alertSeverityVariant,
     };

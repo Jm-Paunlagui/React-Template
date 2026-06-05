@@ -54,8 +54,12 @@ const SUPPLEMENTAL_STATS = [
     { key: "uniqueUsers", label: "Unique Users", icon: faUsers, colorKey: "purple", format: (v) => v },
     { key: "avgResponseTime", label: "Avg Response Time", icon: faStopwatch, colorKey: "blue", format: (v) => `${v} ms` },
     { key: "successRate", label: "Availability", icon: faShield, colorKey: "green", format: (v) => `${v}%` },
-    { key: "errorRate", label: "Error Rate", icon: faBug, colorKey: "red", format: (v) => `${v}%` },
+    { key: "clientErrorRate", label: "Client Error Rate (4xx)", icon: faTriangleExclamation, colorKey: "amber", format: (v) => `${v}%` },
+    { key: "serverErrorRate", label: "Server Error Rate (5xx)", icon: faBug, colorKey: "red", format: (v) => `${v}%` },
 ];
+
+// Keys that represent a percentage ratio — default to "0.0" instead of 0 when absent.
+const RATE_KEYS = ["successRate", "clientErrorRate", "serverErrorRate"];
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -106,10 +110,10 @@ export default function AuditStatsRow({ hook }) {
                 ))}
             </div>
 
-            {/* Supplemental stat cards — 4 across */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            {/* Supplemental stat cards — 5 across (mirrors the primary row) */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
                 {SUPPLEMENTAL_STATS.map((stat, i) => {
-                    const raw = stats[stat.key] ?? (["successRate", "errorRate"].includes(stat.key) ? "0.0" : 0);
+                    const raw = stats[stat.key] ?? (RATE_KEYS.includes(stat.key) ? "0.0" : 0);
                     return <AuditMetricCard key={stat.key} icon={stat.icon} label={stat.label} value={stat.format(raw)} colorKey={stat.colorKey} staggerIdx={PRIMARY_STATS.length + i} loading={statsLoading} />;
                 })}
             </div>

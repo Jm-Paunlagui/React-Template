@@ -7,7 +7,7 @@ import { faBolt, faCircleExclamation, faClockRotateLeft, faServer } from "@forta
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ANIMATE_ENTER_UP, HOVER_LIFT, TRANSITION_SPRING, staggerDelay } from "../../../../assets/styles/pre-set-styles";
 import Badge from "../../../../components/ui/Badge";
-import { PILL_BASE, badgeCls, getErrorRateStyle, getLagStyle, textCls } from "../metricsStyles";
+import { PILL_BASE, badgeCls, getAvailabilityStyle, getErrorRateStyle, getLagStyle, textCls } from "../metricsStyles";
 
 // ─── Fixed-colour badge classes (mirrors MetricCards.jsx COLOR map) ───────────
 
@@ -40,10 +40,14 @@ export default function OverviewTab({ hook }) {
     }
 
     const totalReqs = summary?.totals?.requestsTotal ?? 0;
-    const errorRate = summary?.totals?.errorRate ?? 0;
+    const errorRate = summary?.totals?.errorRate ?? 0; // server-only (5xx); 4xx excluded
+    const clientErrorRate = summary?.totals?.clientErrorRate ?? 0;
+    const availability = summary?.totals?.availability ?? 1;
     const alertCount = summary?.alertCount ?? alerts.length;
     const elLag = summary?.system?.eventLoopLag ?? 0;
     const uptime = summary?.uptime ?? 0;
+
+    const availabilityStyle = getAvailabilityStyle(availability);
 
     const hasHard = alerts.some((a) => a.severity === "critical" || a.severity === "emergency");
     const hasSoft = alerts.some((a) => a.severity === "warning");
@@ -65,9 +69,9 @@ export default function OverviewTab({ hook }) {
             subCls: "text-grey-400 dark:text-white/40",
         },
         {
-            label: "Global Error Rate",
+            label: "Server Error Rate",
             value: formatPct(errorRate),
-            sub: errorRate >= 0.05 ? "Above threshold (5%)" : "Within normal range",
+            sub: `${errorRate >= 0.05 ? "Critical (>5%)" : errorRate >= 0.01 ? "Elevated (>1%)" : "Within range"} · 4xx excluded: ${formatPct(clientErrorRate)}`,
             icon: faCircleExclamation,
             badgeCls: badgeCls(errorRateStyle),
             iconCls: textCls(errorRateStyle),
@@ -100,10 +104,16 @@ export default function OverviewTab({ hook }) {
         <div className="space-y-6 mt-4">
             {/* System health banner */}
             <div className="flex items-center gap-3 p-4 rounded-xl bg-grey-50 dark:bg-(--bg-surface-2) border border-grey-200 dark:border-white/10">
-                <Badge variant={healthVariant} size="lg">
-                    {healthLabel}
-                </Badge>
-                <span className="text-sm text-grey-600 dark:text-grey-300">{alertCount === 0 ? "All systems nominal — no active alerts." : `${alertCount} active alert${alertCount > 1 ? "s" : ""}. Check the Alerts tab for details.`}</span>
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <Badge variant={healthVariant} size="lg">
+                        {healthLabel}
+                    </Badge>
+                    <span className="text-sm text-grey-600 dark:text-grey-300 truncate">{alertCount === 0 ? "All systems nominal — no active alerts." : `${alertCount} active alert${alertCount > 1 ? "s" : ""}. Check the Alerts tab for details.`}</span>
+                </div>
+                <div className="text-right shrink-0 pl-3" title="Request availability — success ÷ (success + 5xx). Client errors (4xx) are excluded.">
+                    <p className="text-[11px] text-grey-400 dark:text-white/40 font-aumovio leading-tight">Availability</p>
+                    <p className={`text-[19px] font-aumovio-bold leading-tight ${textCls(availabilityStyle)}`}>{formatPct(availability, 2)}</p>
+                </div>
             </div>
 
             {/* Stat cards */}

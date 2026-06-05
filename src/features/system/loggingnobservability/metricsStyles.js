@@ -55,6 +55,26 @@ export function getErrorRateStyle(rate) {
     return "bg-danger-600/15 text-danger-600";
 }
 
+// ─── Availability  (0.0 – 1.0 ratio, higher is better) ───────────────────────
+
+/**
+ * Style for a request-based availability ratio (success / (success + 5xx)).
+ * Inverse polarity to error rate: closer to 1.0 (100%) is healthier.
+ * Thresholds mirror common SLO tiers (three-nines / two-nines).
+ *
+ * @param {number} ratio - 0.0–1.0 availability
+ * @returns {string} "bg-X/opacity text-X" pill class
+ */
+export function getAvailabilityStyle(ratio) {
+    const r = Number.isFinite(Number(ratio)) ? Number(ratio) : 1;
+    if (r >= 0.999) return "bg-success-300/15 text-success-300";
+    if (r >= 0.995) return "bg-success-400/15 text-success-400";
+    if (r >= 0.99) return "bg-success-500/15 text-success-500";
+    if (r >= 0.95) return "bg-warn-400/20 text-warn-400";
+    if (r >= 0.9) return "bg-warn-600/20 text-warn-600";
+    return "bg-danger-400/15 text-danger-400";
+}
+
 // ─── Response / query latency  (ms) ──────────────────────────────────────────
 
 export function getLatencyStyle(ms) {
