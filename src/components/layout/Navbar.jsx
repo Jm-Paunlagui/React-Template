@@ -80,39 +80,49 @@ function DropdownGroup({ group, isLoading }) {
             </div>
 
             {group.items.length > 0 && (
+                // Outer wrapper is the full hover target. `pt-2` is a transparent
+                // bridge spanning the visual gap so the cursor never leaves the
+                // `group` while travelling from the trigger down to the menu card —
+                // this is what stops the dropdown vanishing mid-navigation.
                 <div
                     className={`
-                        absolute z-10 invisible py-4 mt-2 ${TRANSITION_SNAP}
+                        absolute z-10 invisible top-full pt-2 ${TRANSITION_SNAP}
                         origin-top transform -translate-x-1/2 left-1/2 w-72
-                        bg-(--bg-surface-2) rounded-xl shadow-2xl opacity-0
-                        ring-1 ring-black/5 dark:ring-(--color-dark-muted)/20
-                        group-hover:opacity-100 group-hover:visible
+                        opacity-0 translate-y-1
+                        group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
                     `}
                 >
-                    <div className="px-4">
-                        <p className="mb-3 text-[10px] font-aumovio-bold uppercase tracking-widest text-grey-400">{group.label}</p>
-                        <div className="space-y-1">
-                            {group.items.map((item) => {
-                                const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"));
-                                return (
-                                    <NavLink key={item.name} to={item.href}>
-                                        <div
-                                            className={`
-                                                flex items-center justify-between p-2.5 rounded-lg
-                                                ${TRANSITION_COLORS}
-                                                hover:bg-(--nav-hover-bg)
-                                                ${active ? "text-(--nav-active-text) font-aumovio-bold" : "text-grey-700 dark:text-grey-300 hover:text-(--nav-active-text)"}
-                                            `}
-                                        >
-                                            <div>
-                                                <p className="text-sm font-aumovio">{item.name}</p>
-                                                {item.description && <p className="text-xs text-grey-400 mt-0.5">{item.description}</p>}
+                    <div
+                        className="
+                            py-4 bg-(--bg-surface-2) rounded-xl shadow-2xl
+                            ring-1 ring-black/5 dark:ring-(--color-dark-muted)/20
+                        "
+                    >
+                        <div className="px-4">
+                            <p className="mb-3 text-[10px] font-aumovio-bold uppercase tracking-widest text-grey-400">{group.label}</p>
+                            <div className="space-y-1">
+                                {group.items.map((item) => {
+                                    const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"));
+                                    return (
+                                        <NavLink key={item.name} to={item.href}>
+                                            <div
+                                                className={`
+                                                    flex items-center justify-between p-2.5 rounded-lg
+                                                    ${TRANSITION_COLORS}
+                                                    hover:bg-(--nav-hover-bg)
+                                                    ${active ? "text-(--nav-active-text) font-aumovio-bold" : "text-grey-700 dark:text-grey-300 hover:text-(--nav-active-text)"}
+                                                `}
+                                            >
+                                                <div>
+                                                    <p className="text-sm font-aumovio">{item.name}</p>
+                                                    {item.description && <p className="text-xs text-grey-400 mt-0.5">{item.description}</p>}
+                                                </div>
+                                                <span className="text-grey-300 dark:text-grey-600 text-sm">→</span>
                                             </div>
-                                            <span className="text-grey-300 dark:text-grey-600 text-sm">→</span>
-                                        </div>
-                                    </NavLink>
-                                );
-                            })}
+                                        </NavLink>
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>

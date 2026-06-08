@@ -14,12 +14,13 @@
  *   Function component  — icon: MyIcon                 (typeof === "function")
  */
 
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronDownIcon, ChevronUpIcon, PaintBrushIcon } from "@heroicons/react/24/outline";
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronDownIcon, ChevronUpIcon, EllipsisVerticalIcon, PaintBrushIcon } from "@heroicons/react/24/outline";
 import { useCallback, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-import { ANIMATE_SLIDE_LEFT, ANIMATE_SLIDE_RIGHT, HOVER_LIFT_SM, TRANSITION_COLORS, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
+import { ANIMATE_SCALE_IN, ANIMATE_SCALE_OUT, ANIMATE_SLIDE_LEFT, ANIMATE_SLIDE_RIGHT, TRANSITION_COLORS, TRANSITION_SPRING } from "../../assets/styles/pre-set-styles";
 import { useLayout } from "../../contexts/layout/LayoutContext";
 import PersonalizeModal from "../../features/personalize/PersonalizeModal";
 import ProfileModal from "../feedback/ProfileModal";
@@ -30,7 +31,6 @@ import { Tooltip } from "../ui/Tooltip";
 import { useNav } from "./config/useNav";
 
 const APP_DISPLAY_NAME = import.meta.env.VITE_APP_NAME || null;
-const APP_SHORT_NAME = import.meta.env.VITE_APP_NAME_SHORT || null;
 
 // ── Group colour palette ──────────────────────────────────────────────────────
 const GROUP_COLOR_MAP = {
@@ -221,18 +221,12 @@ function SidebarGroup({ group, collapsed, currentPath }) {
     if (collapsed) {
         return (
             <div className="flex flex-col items-center gap-0.5 py-1">
-                {/* <Tooltip content={group.label} placement="right" delay={100}>
-                    <div className={`w-auto h-7 rounded-lg flex items-center justify-center text-xs font-aumovio-bold uppercase cursor-default p-2 ${isGroupActive ? `${col.activeBg} ${col.activeText}` : `text-grey-400 dark:text-grey-500 ${col.collapsedBg} ${col.hoverBg} ${col.hoverText}`}`}>
-                        
-                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isGroupActive ? col.activeText : col.dot}`} />
-                    </div>
-                </Tooltip> */}
                 {group.items.map((item) => {
                     const active = currentPath === item.href || (item.href !== "/" && currentPath.startsWith(item.href + "/"));
                     return (
                         <Tooltip key={item.name} content={item.name} placement="right" delay={100}>
-                            <NavLink to={item.href}>
-                                <div className={`w-9 h-9 flex items-center justify-center rounded-xl ${TRANSITION_COLORS} ${active ? `${col.activeBg} ${col.activeText}` : `text-(--text-tertiary) ${col.collapsedBg} ${col.hoverBg} ${col.hoverText}`}`}>
+                            <NavLink to={item.href} className="block">
+                                <div className={`w-10 h-10 flex items-center justify-center rounded-xl ${TRANSITION_COLORS} ${active ? `${col.activeBg} ${col.activeText}` : `text-(--text-tertiary) ${col.collapsedBg} ${col.hoverBg} ${col.hoverText}`}`}>
                                     <span className={`flex items-center justify-center ${active ? col.activeText : ""}`}>
                                         <NavIcon icon={item.icon} />
                                     </span>
@@ -275,49 +269,96 @@ function SidebarGroup({ group, collapsed, currentPath }) {
     );
 }
 
-// ── UserCard ──────────────────────────────────────────────────────────────────
-function UserCard({ user, collapsed, onOpenProfile }) {
+// ── SidebarUserMenu ───────────────────────────────────────────────────────────
+// Footer account control that mirrors the navbar avatar dropdown, adapted for a
+// bottom-anchored sidebar: a compact avatar + length-aware name button that opens
+// an UPWARD menu (origin-bottom) carrying the navbar header (avatar + name + role
+// badge) and the shared profileItems — Your Profile (opens modal) + Sign out.
+function SidebarUserMenu({ user, collapsed, profileItems }) {
     const name = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
-    const division = user?.segmentDesc ?? "";
     const role = resolveRoleLabel(user?.role);
     const badgeVariant = resolveRoleBadgeVariant(user?.role);
 
+    // Collapsed → fixed-width panel overflowing the rail; expanded → matches button width.
+    const panelPosition = collapsed ? "left-0 w-60" : "left-0 right-0";
+
+    const panel = (
+        <Transition as="div" enter={ANIMATE_SCALE_IN} leave={ANIMATE_SCALE_OUT}>
+            <MenuItems
+                className={`
+                    absolute bottom-full mb-2 z-50 origin-bottom ${panelPosition}
+                    bg-(--bg-surface-2) rounded-xl shadow-2xl
+                    ring-1 ring-black/5 dark:ring-(--color-dark-muted)/20
+                    focus:outline-none overflow-hidden
+                `}
+            >
+                {/* USER info header — same lockup as the navbar profile menu */}
+                <div className="px-4 py-3 border-b border-grey-100 dark:border-grey-800">
+                    <div className="flex items-center gap-2.5">
+                        <Avatar name={name} size="sm" />
+                        <div className="min-w-0">
+                            <p className="text-sm font-aumovio-bold text-(--text-primary) truncate">{name || "USER"}</p>
+                            <Badge variant={badgeVariant} size="xs" pill>
+                                {role}
+                            </Badge>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Profile menu items */}
+                <div className="py-1.5 px-1.5 space-y-0.5">
+                    {profileItems.map((item, i) => {
+                        if (item.divider) {
+                            return <div key={`divider-${i}`} className="my-1 h-px bg-(--bg-surface-3) mx-2" />;
+                        }
+                        const Icon = item.icon;
+                        return (
+                            <MenuItem key={item.id}>
+                                <button
+                                    onClick={item.onClick ?? (() => {})}
+                                    className={`
+                                        w-full flex items-center gap-2.5
+                                        px-3 py-2 rounded-lg text-sm font-aumovio
+                                        ${TRANSITION_COLORS}
+                                        ${item.danger ? "text-danger-500 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-400/10" : "text-(--text-secondary) hover:bg-(--side-hover-bg) hover:text-(--side-active-text)"}
+                                    `}
+                                >
+                                    {Icon && <Icon className="w-4 h-4 shrink-0" />}
+                                    {item.label}
+                                </button>
+                            </MenuItem>
+                        );
+                    })}
+                </div>
+            </MenuItems>
+        </Transition>
+    );
+
     if (collapsed) {
         return (
-            <div className="flex justify-center py-3 shrink-0">
-                <Tooltip content={`${name} · ${role} — View profile`} placement="right" delay={100}>
-                    <button type="button" onClick={onOpenProfile} aria-label="View your profile" className={`rounded-full ${TRANSITION_SPRING} ${HOVER_LIFT_SM} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50`}>
-                        <Avatar name={name} size="md" />
-                    </button>
+            <Menu as="div" className="relative flex justify-center">
+                <Tooltip content={`${name} · ${role}`} placement="right" delay={100}>
+                    <MenuButton aria-label="Account menu" className={`rounded-full ${TRANSITION_SPRING} hover:ring-2 hover:ring-(--accent)/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50`}>
+                        <Avatar name={name} size="md" bordered />
+                    </MenuButton>
                 </Tooltip>
-            </div>
+                {panel}
+            </Menu>
         );
     }
 
     return (
-        <button
-            type="button"
-            onClick={onOpenProfile}
-            aria-label="View your profile"
-            className={`mx-3 mt-3 mb-1 p-3 rounded-xl shrink-0 w-[calc(100%-1.5rem)]
-                bg-(--side-card-bg)
-                border border-(--side-card-border)
-                shadow-sm dark:shadow-md dark:shadow-black/20
-                flex items-center gap-3 text-left
-                ${TRANSITION_SPRING} ${HOVER_LIFT_SM}
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50`}
-        >
-            <Avatar name={name} size="lg" />
-            <div className="min-w-0 flex-1">
-                <p className="text-sm font-aumovio-bold text-(--text-primary) truncate leading-tight">{name || "USER"}</p>
-                {division && <p className="text-xs text-(--text-secondary) truncate mt-0.5">{division}</p>}
-                <div className="mt-1.5">
-                    <Badge variant={badgeVariant} size="xs" pill>
-                        {role}
-                    </Badge>
+        <Menu as="div" className="relative">
+            <MenuButton className={`group w-full flex items-center gap-2.5 px-2 py-2 rounded-xl text-left ${TRANSITION_COLORS} hover:bg-(--side-hover-bg) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50`}>
+                <Avatar name={name} size="sm" bordered />
+                <div className="min-w-0 flex-1">
+                    <p className="text-sm font-aumovio-bold text-(--text-primary) truncate leading-tight">{name || "USER"}</p>
+                    <p className="text-xs text-(--text-secondary) truncate leading-tight mt-0.5">{role}</p>
                 </div>
-            </div>
-        </button>
+                <EllipsisVerticalIcon className="w-4 h-4 shrink-0 text-(--text-tertiary) group-hover:text-(--text-secondary)" />
+            </MenuButton>
+            {panel}
+        </Menu>
     );
 }
 
@@ -326,44 +367,37 @@ export default function Sidebar() {
     const { layout, sidebarOpen, toggleSidebar } = useLayout();
     const { pathname } = useLocation();
     const [personalizeOpen, setPersonalizeOpen] = useState(false);
-    const { user, isLoading, navGroups, authFlatLinks, profileItems, publicLinks, profileOpen, openProfile, closeProfile } = useNav();
+    const { user, isLoading, navGroups, authFlatLinks, profileItems, publicLinks, profileOpen, closeProfile } = useNav();
 
     // Sidebar is only rendered in sidebar layout mode — guard AFTER all hooks
     if (layout !== "sidebar") return null;
 
     const isAuth = Boolean(user) && !isLoading;
     const collapsed = !sidebarOpen;
-    // Only Logout (and any future non-profile, non-divider items) remain in the footer.
-    // "Your Profile" is now accessible exclusively by clicking the UserCard.
-    const sidebarProfileLinks = profileItems.filter((item) => !item.divider && item.id !== "profile");
 
     return (
         <>
             <aside className={["sticky top-0 z-40 h-screen self-start flex flex-col shrink-0", "bg-(--surface-2)", "border-r border-(--border-elevation)", "shadow-[1px_0_8px_0_rgba(0,0,0,0.04)] dark:shadow-none", sidebarOpen ? `${ANIMATE_SLIDE_RIGHT} w-auto` : `${ANIMATE_SLIDE_LEFT} w-16`].join(" ")}>
-                {/* Header: Logo + app title + collapse toggle */}
-                <div className={`flex shrink-0 border-b border-(--border-elevation) ${sidebarOpen ? "flex-col px-4 py-3" : "flex-col items-center px-2 gap-1 py-3"}`}>
+                {/* Header: Logo + collapse toggle */}
+                <div className={`flex shrink-0 border-b border-(--border-elevation) ${sidebarOpen ? "flex-col px-4 py-4" : "flex-col items-center px-2 gap-1 py-3"}`}>
                     {sidebarOpen ? (
-                        <div className="flex items-start justify-between gap-2">
-                            <NavLink to="/" className="flex flex-col items-start min-w-0 overflow-hidden">
-                                <Logo className="h-8 md:h-10 lg:h-12 w-auto" />
-                                {APP_DISPLAY_NAME && <span className="text-sm font-aumovio-bold text-(--text-primary) tracking-wide truncate mt-0.5">{APP_DISPLAY_NAME}</span>}
-                            </NavLink>
+                        <div className="flex items-center justify-between gap-2">
+                            <Tooltip content={APP_DISPLAY_NAME ?? "Home"} placement="right" delay={300}>
+                                <NavLink to="/" className={`group flex flex-col items-start min-w-0 overflow-hidden rounded-lg -ml-1 px-1 py-1 ${TRANSITION_SPRING} hover:bg-(--side-hover-bg)`}>
+                                    <Logo className="h-8 md:h-10 lg:h-12 w-auto" />
+                                    {APP_DISPLAY_NAME && <span className="mt-1 pl-0.5 text-[11px] font-aumovio-bold uppercase tracking-[0.22em] text-(--text-secondary) truncate max-w-full">{APP_DISPLAY_NAME}</span>}
+                                </NavLink>
+                            </Tooltip>
                             <Tooltip content="Collapse" placement="right" delay={300}>
-                                <button onClick={toggleSidebar} aria-label="Collapse sidebar" className={["p-1.5 rounded-lg shrink-0 mt-1", "text-(--text-tertiary)", "hover:bg-(--side-hover-bg)", "hover:text-(--text-accent)", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50"].join(" ")}>
+                                <button onClick={toggleSidebar} aria-label="Collapse sidebar" className={["p-1.5 rounded-lg shrink-0", "text-(--text-tertiary)", "hover:bg-(--side-hover-bg)", "hover:text-(--text-accent)", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50"].join(" ")}>
                                     <ChevronDoubleLeftIcon className="w-4 h-4" />
                                 </button>
                             </Tooltip>
                         </div>
                     ) : (
                         <>
-                            <Tooltip content={APP_DISPLAY_NAME ?? "Home"} placement="right" delay={100}>
-                                <NavLink to="/" className="flex flex-col items-center gap-0.5">
-                                    {/* <Logo className="w-auto h-8" /> */}
-                                    {/* {(APP_SHORT_NAME || APP_DISPLAY_NAME) && <span className="text-[9px] font-aumovio-bold text-grey-400 dark:text-grey-500 tracking-wider uppercase leading-none text-center">{APP_SHORT_NAME || APP_DISPLAY_NAME}</span>} */}
-                                </NavLink>
-                            </Tooltip>
                             <Tooltip content="Expand" placement="right" delay={300}>
-                                <button onClick={toggleSidebar} aria-label="Expand sidebar" className={["p-1.5 rounded-lg shrink-0", "text-(--text-tertiary)", "hover:bg-(--side-hover-bg)", "hover:text-(--text-accent)", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50"].join(" ")}>
+                                <button onClick={toggleSidebar} aria-label="Expand sidebar" className={["w-10 h-10 flex items-center justify-center rounded-lg shrink-0", "text-(--text-tertiary)", "hover:bg-(--side-hover-bg)", "hover:text-(--text-accent)", TRANSITION_SPRING, "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)/50"].join(" ")}>
                                     <ChevronDoubleRightIcon className="w-4 h-4" />
                                 </button>
                             </Tooltip>
@@ -371,18 +405,15 @@ export default function Sidebar() {
                     )}
                 </div>
 
-                {/* USER card — clicking opens the Profile modal */}
-                {isAuth && <UserCard user={user} collapsed={collapsed} onOpenProfile={openProfile} />}
-
                 {/* Navigation */}
-                <nav className="flex-1 overflow-y-auto hide-scrollbar px-2 py-3 space-y-0.5">
+                <nav className={`flex-1 overflow-y-auto hide-scrollbar px-2 py-3 space-y-0.5 ${collapsed ? "flex flex-col items-center" : ""}`}>
                     {!isAuth && publicLinks.map((item) => <FlatNavItem key={item.name} item={item} collapsed={collapsed} />)}
                     {isAuth && authFlatLinks.map((item) => <FlatNavItem key={item.name} item={item} collapsed={collapsed} colorKey="orange" />)}
                     {isAuth && navGroups.map((group) => <SidebarGroup key={group.label} group={group} collapsed={collapsed} currentPath={pathname} />)}
                 </nav>
 
-                {/* Footer: theme toggle + account links */}
-                <div className="shrink-0 border-t border-grey-100 dark:border-(--color-dark-muted)/20 px-2 py-3 space-y-1">
+                {/* Footer: personalize + account menu (avatar pinned at the bottom) */}
+                <div className={`shrink-0 border-t border-grey-100 dark:border-(--color-dark-muted)/20 px-2 py-3 space-y-1 ${collapsed ? "flex flex-col items-center" : ""}`}>
                     {/* Personalize row */}
                     {collapsed ? (
                         <Tooltip content="Personalize" placement="right" delay={100}>
@@ -399,9 +430,12 @@ export default function Sidebar() {
                         </button>
                     )}
 
-                    {sidebarProfileLinks.map((item) => (
-                        <FlatNavItem key={item.id} item={item} collapsed={collapsed} danger={item.danger ?? false} />
-                    ))}
+                    {/* Account: avatar + name → upward dropdown (Your Profile / Sign out) */}
+                    {isAuth && (
+                        <div className="w-full pt-1 mt-1 border-t border-grey-100 dark:border-(--color-dark-muted)/20">
+                            <SidebarUserMenu user={user} collapsed={collapsed} profileItems={profileItems} />
+                        </div>
+                    )}
                 </div>
             </aside>
 
